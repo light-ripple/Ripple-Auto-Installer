@@ -100,11 +100,10 @@ Make sure you set your DNS like this:
 |1|[![](https://github.com/light-ripple/Ripple-Auto-Installer/blob/master/X/pass.svg)](https://github.com/uniminin)| Bedrock
 |2|[![](https://github.com/light-ripple/Ripple-Auto-Installer/blob/master/X/fail.svg)](https://github.com/uniminin)| Archlinux
 
-### Need Help?
-You can ask for any kinds of help regarding this project via Discord DMs or through Github Issues.<br>
-<br>
-Discord:`uniminin#1151`
-Discord Server: <a href=https://discord.gg/qyD3sPe>Ripple Talks</a>
+### Contact
+You can add me on Discord and ask for help or join the discord server.
+* My Discord:`uniminin#1151`
+* Discord Server: <a href=https://discord.gg/qyD3sPe>Ripple Talks</a>
 
 ### License :scroll: [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 This project is licenced under the GNU Affero General Public License V3. For more information, see the file `LICENSE` or visit https://www.gnu.org/licenses/agpl-3.0.
