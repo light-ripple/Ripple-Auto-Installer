@@ -9,7 +9,7 @@
 
 ### Attention
 <b>**THIS SCRIPT IS NOT FOR LOCAL PC (localhost)**</b><br>
-* Github: https://github.com/Uniminin/Ripple-Auto-Installer
+* ORIGIN: https://github.com/Uniminin/Ripple-Auto-Installer
 * MIRROR: https://zxq.co/Uniminin/Ripple-Auto-Installer
 
 ### Requirements
