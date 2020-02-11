@@ -1,12 +1,16 @@
-# <a href=https://ripple.moe>Ripple</a> Stack Installation Helper [![made-with-bash](https://img.shields.io/badge/Made%20with-Bash-1f425f.svg)](https://www.gnu.org/software/bash/)
-
-<b>**THIS SCRIPT IS NOT FOR LOCAL PC (localhost)**</b><br>
-* Github: https://github.com/Uniminin/Ripple-Auto-Installer
-* MIRROR: https://zxq.co/Uniminin/Ripple-Auto-Installer
+<h1 align="center">
+  <a href=https://ripple.moe>Ripple</a> Auto Installer.
+</h1>
+<h4 align="center"><a href=https://ripple.moe>Ripple</a> Stack Installation Helper</h4>
 
 <p align="center">
   <img src="https://github.com/light-Ripple/Ripple-Auto-Installer/blob/master/X/ripple.svg"/>
 </p>
+
+### Attention
+<b>**THIS SCRIPT IS NOT FOR LOCAL PC (localhost)**</b><br>
+* Github: https://github.com/Uniminin/Ripple-Auto-Installer
+* MIRROR: https://zxq.co/Uniminin/Ripple-Auto-Installer
 
 ### Requirements
 * Ubuntu/Debian/Bedrock VPS with debian/ubuntu stratum<br>
@@ -42,22 +46,20 @@ Edit and include <a href=https://github.com/light-ripple/Ripple-Auto-Installer/b
 
 ### Enable/Restart/Start Services
 ```
-sudo systemctl enable vsftpd
 sudo systemctl enable nginx
 sudo systemctl enable php7.0-fpm
 sudo systemctl enable redis-server
 sudo systemctl enable mysql
-sudo systemctl start vsftpd
 sudo systemctl start nginx
 sudo systemctl start php7.0-fpm
 sudo systemctl start redis-server
 sudo systemctl start mysql
-sudo systemctl restart vsftpd
 sudo systemctl restart nginx
 sudo systemctl restart php7.0-fpm
 sudo systemctl restart redis-server
 sudo systemctl restart mysql
 ```
+
 ### Edit Config
 Edit all configs.
 * /RIPPLE/pep.py and run `nano config.ini`
@@ -98,12 +100,13 @@ Make sure you set your DNS like this:
 | NO | Status| Platform|
 |----|-------|---------|
 |1|[![](https://github.com/light-ripple/Ripple-Auto-Installer/blob/master/X/pass.svg)](https://github.com/uniminin)| Bedrock
-|2|[![](https://github.com/light-ripple/Ripple-Auto-Installer/blob/master/X/fail.svg)](https://github.com/uniminin)| Archlinux
+|2|[![](https://github.com/light-ripple/Ripple-Auto-Installer/blob/master/X/pass.svg)](https://github.com/uniminin)| Ubuntu 19.10
+|3|[![](https://github.com/light-ripple/Ripple-Auto-Installer/blob/master/X/fail.svg)](https://github.com/uniminin)| Archlinux
 
 ### Contact
 You can add me on Discord and ask for help or join the discord server.
 * My Discord:`uniminin#1151`
-* Discord Server: <a href=https://discord.gg/qyD3sPe>Ripple Talks</a>
+* Discord Server: <a href=https://discord.gg/qyD3sPe>Developer I/O</a>
 
 ### License :scroll: [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 This project is licenced under the GNU Affero General Public License V3. For more information, see the file `LICENSE` or visit https://www.gnu.org/licenses/agpl-3.0.
