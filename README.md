@@ -1,5 +1,5 @@
 <h1 align="center">
-  <a href=https://ripple.moe>Ripple</a> Auto Installer.
+  <a href=https://ripple.moe>Ripple</a> Auto Installer
 </h1>
 <h4 align="center"><a href=https://ripple.moe>Ripple</a> Stack Installation Helper</h4>
 
