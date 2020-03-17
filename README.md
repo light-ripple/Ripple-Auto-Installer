@@ -13,11 +13,8 @@
 * MIRROR: https://zxq.co/Uniminin/Ripple-Auto-Installer
 
 ### Requirements
-* Ubuntu/Debian/Bedrock VPS with debian/ubuntu stratum<br>
-Note: Ubuntu 16.04/17.04 is atleast recommended if you want to directly start without any additional tweaking!<br>
-If you end up going with 18.04 then please run:<br>
-```add-apt-repository ppa:ondrej/php ; apt-get update```<br>
-and define the php version in the bash file by switching out php with php7.0
+* A Linux VPS. Debian Based Distros are recommended.<br>
+Note: Ubuntu 16.04/18.04 is atleast recommended if you want to directly start without any additional tweaking!<br>
 
 ### Features
 * A configurable shell script for installing Ripple Stack
@@ -28,7 +25,8 @@ and define the php version in the bash file by switching out php with php7.0
 ### Running the Script (Instructions)
 ```bash
 $ wget https://raw.githubusercontent.com/Light-Ripple/Ripple-Auto-Installer/master/Main/ripple.sh
-$ chmod +x ripple.sh ; sudo ./ripple.sh --help
+$ chmod +x ripple.sh 
+$ sudo ./ripple.sh --help
 ```
 Note: use sudo. for example: `sudo ripple.sh --all` to install & setup full ripple stack with dependencies.
 
@@ -43,22 +41,6 @@ cd acme.sh
 ```  
 * Proxy  
 Edit and include <a href=https://github.com/light-ripple/Ripple-Auto-Installer/blob/master/Main/ripple.conf>ripple.conf</a> in your nginx.conf
-
-### Enable/Restart/Start Services
-```
-sudo systemctl enable nginx
-sudo systemctl enable php7.0-fpm
-sudo systemctl enable redis-server
-sudo systemctl enable mysql
-sudo systemctl start nginx
-sudo systemctl start php7.0-fpm
-sudo systemctl start redis-server
-sudo systemctl start mysql
-sudo systemctl restart nginx
-sudo systemctl restart php7.0-fpm
-sudo systemctl restart redis-server
-sudo systemctl restart mysql
-```
 
 ### Edit Config
 Edit all configs.
@@ -87,9 +69,9 @@ Make sure you set your DNS like this:
 * old.YOUR-DOMAIN
 ```
 
-### Fixing Nginx Errors
-`$ sudo pkill -f nginx ; sudo nginx`
-
+<p align="center">
+  <img src="https://i.imgur.com/0ksWZR9.png"/>
+</p>
 
 ### OSU!API
 * You can get OSU!API Key Here:<a href=https://old.ppy.sh/p/api>OSU!API</a>
@@ -99,12 +81,13 @@ Make sure you set your DNS like this:
 
 | NO | Status| Platform|
 |----|-------|---------|
-|1|[![](https://github.com/light-ripple/Ripple-Auto-Installer/blob/master/X/pass.svg)](https://github.com/uniminin)| Bedrock
+|1|[![](https://github.com/light-ripple/Ripple-Auto-Installer/blob/master/X/fail.svg)](https://github.com/uniminin)| Bedrock
 |2|[![](https://github.com/light-ripple/Ripple-Auto-Installer/blob/master/X/pass.svg)](https://github.com/uniminin)| Ubuntu 19.10
-|3|[![](https://github.com/light-ripple/Ripple-Auto-Installer/blob/master/X/fail.svg)](https://github.com/uniminin)| Archlinux
+|3|[![](https://github.com/light-ripple/Ripple-Auto-Installer/blob/master/X/pass.svg)](https://github.com/uniminin)| Debian
+|4|[![](https://github.com/light-ripple/Ripple-Auto-Installer/blob/master/X/pass.svg)](https://github.com/uniminin)| Centos
 
 ### Contact
-You can add me on Discord and ask for help or join the discord server.
+You can add me on Discord or join my discord server and ask for help.
 * My Discord:`uniminin#5959`
 * Discord Server: <a href=https://discord.gg/qyD3sPe>Developer I/O</a>
 
