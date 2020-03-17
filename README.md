@@ -7,10 +7,14 @@
   <img src="https://github.com/light-Ripple/Ripple-Auto-Installer/blob/master/X/ripple.svg"/>
 </p>
 
-### Attention
-<b>**THIS SCRIPT IS NOT FOR LOCAL PC (localhost)**</b><br>
+## Attention
+<b>**THIS SCRIPT IS NOT FOR LOCAL PC (localhost) AND IT IS FOR ADVANCED USERS/PEOPLE WHO WANTS TO LEARN!**</b><br>
 * ORIGIN: https://github.com/Uniminin/Ripple-Auto-Installer
 * MIRROR: https://zxq.co/Uniminin/Ripple-Auto-Installer
+
+<b>**If You Want A Bit less painful and Easier Version Then visit:**</b><br>
+* Hazuki's RAI: ~~https://github.com/osuthailand/ripple-auto-installer~~ Removed/Private
+* You Might want to look at Ripple's Wiki: https://github.com/osuripple/ripple/wiki/How-to-setup-ripple
 
 ### Requirements
 * A Linux VPS. Debian Based Distros are recommended.<br>
