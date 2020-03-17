@@ -96,5 +96,8 @@ You can add me on Discord or join my discord server and ask for help.
 * My Discord:`uniminin#5959`
 * Discord Server: <a href=https://discord.gg/qyD3sPe>Developer I/O</a>
 
+### Credits
+Thanks to <a href=https://github.com/semyon422>semyon422</a> for your <a href=https://github.com/semyon422/open-ripple>open-ripple</a> guide.
+
 ### License :scroll: [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 This project is licenced under the GNU Affero General Public License V3. For more information, see the file `LICENSE` or visit https://www.gnu.org/licenses/agpl-3.0.
