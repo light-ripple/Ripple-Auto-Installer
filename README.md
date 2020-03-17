@@ -44,14 +44,15 @@ Edit and include <a href=https://github.com/light-ripple/Ripple-Auto-Installer/b
 
 ### Edit Config
 Edit all configs.
-* /RIPPLE/pep.py and run `nano config.ini`
-* /RIPPLE/lets and run `nano config.ini`
-* /RIPPLE/hanayo and run `nano hanayo.conf`
-* /RIPPLE/rippleapi and run `nano api.conf`
-* /RIPPLE/old-frontend and run `nano inc/config.php`
+* /RIPPLE/pep.py and run/edit `nano config.ini`
+* /RIPPLE/lets and run/edit `nano config.ini`
+* /RIPPLE/hanayo and run/edit `nano hanayo.conf`
+* /RIPPLE/rippleapi and run/edit `nano api.conf`
+* /RIPPLE/old-frontend and run/edit `nano inc/config.php`
 
 ### Start Server
-Create tmux sessions:`tmux new -s tmux_session_name` and go to
+You might want to look at this tmux cheatsheet first: <a href=https://tmuxcheatsheet.com/v>Click ME!</a> |
+Create tmux sessions:`tmux new -s tmux_session_name` and go to:
 * /RIPPLE/pep.py and run `python3.6 pep.py`
 * /RIPPLE/lets and run `python3.6 lets.py`
 * /RIPPLE/OSU-AVATAR-SERVER and run `python3.6 avatar-server.py`
