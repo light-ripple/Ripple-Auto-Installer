@@ -8,8 +8,8 @@ prompt = no
 distinguished_name = req_distinguished_name
 
 [req_distinguished_name]
-C = AU
-L = Chelyabinsk
+C = IS
+L = Reykjavík
 CN = *.ppy.sh
 emailAddress = uniminin@zoho.com
 
@@ -30,4 +30,3 @@ DNS.9 = c5.ppy.sh
 DNS.10 = c6.ppy.sh
 DNS.11 = s.ppy.sh
 DNS.12 = i.ppy.sh
-DNS.13 = bm6.ppy.sh
