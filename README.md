@@ -4,7 +4,7 @@
 <h4 align="center"><a href=https://ripple.moe>Ripple</a> Stack Installation Helper</h4>
 
 <p align="center">
-  <img src="https://github.com/light-Ripple/Ripple-Auto-Installer/blob/master/X/ripple.svg"/>
+  <img src="https://github.com/light-ripple/Ripple-Auto-Installer/blob/master/X/ripple.svg"/>
 </p>
 
 ## Attention
