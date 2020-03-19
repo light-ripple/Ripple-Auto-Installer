@@ -8,7 +8,8 @@
 </p>
 
 ## Attention
-<b>**THIS SCRIPT IS NOT FOR LOCAL PC (localhost) AND IT IS FOR ADVANCED USERS/PEOPLE WHO WANTS TO LEARN!**</b><br>
+<b>**THIS SCRIPT IS NOT FOR LOCAL PC (localhost) AND IT IS FOR ADVANCED USERS!**</b><br>
+This script gives you a base and foundation if you're willing to install your own Ripple instance. You should try to figure out most of the things by yourself. If you fail or unable to do then you're not qualified enough but keep trying hopefully you'll evolve one day.
 * ORIGIN: https://github.com/Uniminin/Ripple-Auto-Installer
 * MIRROR: https://zxq.co/Uniminin/Ripple-Auto-Installer
 
@@ -92,7 +93,7 @@ Make sure you set your DNS like this:
 |4|[![](https://github.com/light-ripple/Ripple-Auto-Installer/blob/master/X/pass.svg)](https://github.com/uniminin)| Centos
 
 ### Contact
-You can add me on Discord or join my discord server and ask for help.
+You can ~~add me on Discord or~~ join my discord server and ask for help but don't expect us to create a server for youself.
 * My Discord:`uniminin#5959`
 * Discord Server: <a href=https://discord.gg/qyD3sPe>Developer I/O</a>
 
