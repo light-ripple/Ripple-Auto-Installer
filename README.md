@@ -9,8 +9,7 @@
 
 ## Attention
 <b>**THIS SCRIPT IS NOT FOR LOCAL PC (localhost) AND IT IS FOR ADVANCED USERS!**</b><br>
-THIS SCRIPT GIVES YOU A BASE AND FOUNDATION IF YOU'RE WILLING TO INSTALL YOUR OWN RIPPLE INSTACE!
-YOU SHOULD TRY TO FIGURE OUT MOST OF THE THINGS BY YOURSELF. IF YOU FAIL THEN YOU'RE NOT QUALIFED BUT KEEP TRYING, HOPEFULLY YOU'LL EVOLVE ONE DAY.
+This script gives you a base and foundation if you're willing to install your own Ripple instance. You should try to figure out most of the things by yourself. If you fail or unable to do then you're not qualified enough but keep trying hopefully you'll evolve one day.
 * ORIGIN: https://github.com/Uniminin/Ripple-Auto-Installer
 * MIRROR: https://zxq.co/Uniminin/Ripple-Auto-Installer
 
