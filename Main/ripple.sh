@@ -88,7 +88,7 @@ rippleapi() {
 # Avatar-Server part of frontend and in game, manages avatars of users.
 avatar_server() {
 	printf "Cloning & Setting up avatar-server!" ; sleep 2
-	git clone https://github.com/Uniminin/OSU-AVATAR-SERVER ; cd OSU-AVATAR-SERVER || exit
+	git clone https://github.com/Uniminin/avatar-server ; cd avatar-server || exit
 	python3.6 -m pip install -r requirements.txt ; cd /home/RIPPLE || exit
 	printf "Setting up avatar-server is completed!" ; sleep 1
 }
@@ -136,7 +136,7 @@ while [ $# -ge 1 ]; do case $1 in
 		"    --lets           To Clone and Setup lets with dependencies." \
 		"    --hanayo         To Clone and Setup hanayo with dependencies." \
 		"    --rippleapi      To Clone and Setup rippleapi with dependencies." \
-	        "    --avatarserver   To Clone and Setup avatarserver with dependencies." \
+	        "    --avatarserver   To Clone and Setup avatar-server with dependencies." \
 		"    --oldfrontend    To Clone and Setup oldfrontend with dependencies." \
 		"" \
 		"Report bugs to: uniminin@zoho.com" \
