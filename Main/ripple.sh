@@ -39,14 +39,17 @@ peppy () {
 # LETS is the ripple's score server. It manages scores, osu!direct.
 lets() {
 	printf "Cloning & Setting up LETS" ; sleep 2
-	git clone https://github.com/xxCherry/LETS ; cd LETS || exit
-	git submodule init ; git submodule update ; rm -rf secret
+	git clone https://github.com/osuthailand/lets ; cd lets || exit
 	python3.6 -m pip install -r requirements.txt
-	git clone https://github.com/osufx/secret
-	cd secret
-	git submodule init && git submodule update
-	cd ..
+	git submodule init ; git submodule update
+	# Patches From Aoba.
+	cd pp/oppai-ng/ ; chmod +x ./build ; ./build ; cd ..
+	cd .. ; cd objects || exit
+	sed -i 's#dataCtb["difficultyrating"]#'dataCtb["diff_aim"]'#g' beatmap.pyx
+	cd .. ; cd secret || exit
+	git submodule init ; git submodule update ; cd ..
 	python3.6 setup.py build_ext --inplace
+	cd secret || exit ; git submodule init ; git submodule update
 	python3.6 lets.py ; cd /home/RIPPLE || exit
 	printf "Setting up LETS is completed!" ; sleep 1
 }
