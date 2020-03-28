@@ -40,7 +40,7 @@ peppy () {
 lets() {
 	printf "Cloning & Setting up LETS" ; sleep 2
 	git clone https://github.com/xxCherry/LETS ; cd LETS || exit
-	git submodule init ; git submodule update
+	git submodule init ; git submodule update ; rm -rf secret
 	python3.6 -m pip install -r requirements.txt
 	git clone https://github.com/osufx/secret
 	cd secret
