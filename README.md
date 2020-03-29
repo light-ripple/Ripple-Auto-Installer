@@ -14,6 +14,7 @@ This script gives you a base and foundation if you're willing to install your ow
 * MIRROR: https://zxq.co/Uniminin/Ripple-Auto-Installer
 
 <b>**If You Want A Bit less painful and Easier Version Then visit:**</b><br>
+* Kanaze's RAI: https://github.com/Kanaze-chan/ripple-auto-installer 
 * Hazuki's RAI: ~~https://github.com/osuthailand/ripple-auto-installer~~ Removed/Private
 * You Might want to look at Ripple's Wiki: https://github.com/osuripple/ripple/wiki/How-to-setup-ripple
 
