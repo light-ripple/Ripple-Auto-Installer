@@ -5,12 +5,21 @@
 dependencies() {
 	if command -v apt >/dev/null; then
    		printf "Starting To Install Required/Necessary Dependencies [<>]" ; sleep 2
-		sudo apt-get install gcc g++ build-essential git tmux nginx wget mysql-server redis-server libmariadbclient-dev libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev -y
-		sudo apt-get install nginx php-fpm composer php7.0-mbstring php7.0-curl php-mysql vsftpd luajit -y
-		sudo apt-get install checkinstall golang-go cython -y ; cd /usr/src || exit ; sudo wget https://www.python.org/ftp/python/3.6.8/Python-3.6.8.tgz
-		sudo tar xzf Python-3.6.8.tgz ; cd Python-3.6.8 || exit
-		sudo ./configure --enable-optimizations ; sudo make altinstall ; sudo apt-get install python3-pip -y
-		sudo apt-get update ; sudo apt-get upgrade -y
+		apt install gcc g++ build-essential git tmux nginx wget mysql-server redis-server checkinstall golang-go cython \
+		libmariadbclient-dev libreadline-gplv2-dev libncursesw5-dev libssl-dev libssl1.0-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev \
+		nginx php-fpm composer php7.0-mbstring php7.0-curl php-mysql vsftpd luajit -y
+
+		# Python 3.5 for peppy
+		cd /usr/src || exit ; wget https://www.python.org/ftp/python/3.5.9/Python-3.5.9.tar.xz
+		tar -xvf Python-3.5.9.tar.xz ; cd Python-3.5.9 || exit
+		./configure --enable-loadable-sqlite-extensions --enable-optimizations ; make ; sudo make install
+
+		# Python 3.6 for lets
+		cd /usr/src || exit ; wget https://www.python.org/ftp/python/3.6.8/Python-3.6.8.tgz
+		tar -xvf Python-3.6.8.tgz ; cd Python-3.6.8 || exit
+		./configure --enable-optimizations ; make ; sudo make install
+
+		apt-get update ; apt-get upgrade -y
 		printf "Done Installing all the necessary Dependencies!" ; sleep 1
 	elif ! command -v apt >/dev/null; then
     	die "apt is not executable on this system"
@@ -30,9 +39,9 @@ peppy () {
 	printf "Cloning and Setting it up pep.py" ; sleep 2
 	git clone https://zxq.co/ripple/pep.py ; cd pep.py || exit
 	git submodule init ; git submodule update
-	python3.6 -m pip install -r requirements.txt
-	python3.6 setup.py build_ext --inplace
-	python3.6 pep.py ; cd /home/RIPPLE || exit
+	python3.5 -m pip install -r requirements.txt
+	python3.5 setup.py build_ext --inplace
+	python3.5 pep.py ; cd /home/RIPPLE || exit
 	printf "Setting up pep.py is completed!" ; sleep 1
 }
 
