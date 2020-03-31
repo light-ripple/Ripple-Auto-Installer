@@ -95,7 +95,7 @@ Make sure you set your DNS like this:
 
 ### Contact
 You can ~~add me on Discord or~~ join my discord server and ask for help but don't expect us to create a server for youself.
-* My Discord:`uniminin#5959`
+ My Discord:~~`uniminin#5959`~~ you may contact with me on the server.
 * Discord Server: <a href=https://discord.gg/qyD3sPe>Developer I/O</a>
 
 ### Credits
