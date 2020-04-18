@@ -96,7 +96,7 @@ Make sure you set your DNS like this:
 ### Contact
 You can ~~add me on Discord or~~ join my discord server and ask for help but don't expect us to create a server for youself.
  ~~My Discord:`uniminin#7522`~~ you may contact with me on the server.
-* Discord Server: <a href=https://discord.gg/qyD3sPe>Developer I/O</a>
+* Discord Server: <a href=https://discord.gg/b44kuYv>Developer I/O</a>
 
 ### Credits
 Thanks to <a href=https://github.com/semyon422>semyon422</a> for your <a href=https://github.com/semyon422/open-ripple>open-ripple</a> guide.
