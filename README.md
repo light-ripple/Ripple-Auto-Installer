@@ -11,14 +11,6 @@
 <b>**THIS SCRIPT IS NOT FOR LOCAL PC (localhost) AND IT IS FOR ADVANCED USERS!**</b><br>
 This script gives you a base and foundation if you're willing to install your own Ripple instance.You’re to think for yourself. Ripple is not a Stack system where we document everything so you’ll need a basic understanding of how Linux systems and full stack web applications work to be able to set up Ripple properly and work out problems efficiently when necessary.
 * You Might want to look at Ripple's Wiki(old): https://github.com/osuripple/ripple/wiki/How-to-setup-ripple
-This script gives you a base and foundation if you're willing to install your own Ripple instance. You should try to figure out most of the things by yourself. If you fail or unable to do then you're not qualified enough but keep trying hopefully you'll evolve one day.
-* ORIGIN: https://github.com/Uniminin/Ripple-Auto-Installer
-* MIRROR: https://zxq.co/Uniminin/Ripple-Auto-Installer
-
-<b>**If You Want A Bit less painful and Easier Version Then visit:**</b><br>
-* Kanaze's RAI: https://github.com/Kanaze-chan/ripple-auto-installer 
-* Hazuki's RAI: ~~https://github.com/osuthailand/ripple-auto-installer~~ Removed/Private
-* You Might want to look at Ripple's Wiki: https://github.com/osuripple/ripple/wiki/How-to-setup-ripple
 
 ### Requirements
 * A Linux VPS with Debian Based Distros are recommended.<br>
