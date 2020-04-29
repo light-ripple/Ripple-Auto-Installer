@@ -10,12 +10,10 @@
 ## Attention
 <b>**THIS SCRIPT IS NOT FOR LOCAL PC (localhost) AND IT IS FOR ADVANCED USERS!**</b><br>
 This script gives you a base and foundation if you're willing to install your own Ripple instance.You’re to think for yourself. Ripple is not a Stack system where we document everything so you’ll need a basic understanding of how Linux systems and full stack web applications work to be able to set up Ripple properly and work out problems efficiently when necessary.
-* ORIGIN: https://github.com/Uniminin/Ripple-Auto-Installer
-* MIRROR: https://zxq.co/Uniminin/Ripple-Auto-Installer
 * You Might want to look at Ripple's Wiki: https://github.com/osuripple/ripple/wiki/How-to-setup-ripple
 
 ### Requirements
-* A Linux VPS. Debian Based Distros are recommended.<br>
+* A Linux VPS with Debian Based Distros are recommended.<br>
 Note: Ubuntu 16.04/18.04 is atleast recommended if you want to directly start without any additional tweaking!<br>
 
 ### Features
