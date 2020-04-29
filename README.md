@@ -9,6 +9,8 @@
 
 ## Attention
 <b>**THIS SCRIPT IS NOT FOR LOCAL PC (localhost) AND IT IS FOR ADVANCED USERS!**</b><br>
+This script gives you a base and foundation if you're willing to install your own Ripple instance.You’re to think for yourself. Ripple is not a Stack system where we document everything so you’ll need a basic understanding of how Linux systems and full stack web applications work to be able to set up Ripple properly and work out problems efficiently when necessary.
+* You Might want to look at Ripple's Wiki(old): https://github.com/osuripple/ripple/wiki/How-to-setup-ripple
 This script gives you a base and foundation if you're willing to install your own Ripple instance. You should try to figure out most of the things by yourself. If you fail or unable to do then you're not qualified enough but keep trying hopefully you'll evolve one day.
 * ORIGIN: https://github.com/Uniminin/Ripple-Auto-Installer
 * MIRROR: https://zxq.co/Uniminin/Ripple-Auto-Installer
@@ -19,7 +21,7 @@ This script gives you a base and foundation if you're willing to install your ow
 * You Might want to look at Ripple's Wiki: https://github.com/osuripple/ripple/wiki/How-to-setup-ripple
 
 ### Requirements
-* A Linux VPS. Debian Based Distros are recommended.<br>
+* A Linux VPS with Debian Based Distros are recommended.<br>
 Note: Ubuntu 16.04/18.04 is atleast recommended if you want to directly start without any additional tweaking!<br>
 
 ### Features
@@ -27,6 +29,21 @@ Note: Ubuntu 16.04/18.04 is atleast recommended if you want to directly start wi
 * Everything is Pre-ready 
 * Simple and user friendly Installation
 * Installs most of the things for your server within minutes
+
+### Domain
+Make sure you set your DNS like this:
+```
+* YOUR-DOMAIN
+* c.YOUR-DOMAIN
+* i.YOUR-DOMAIN
+* a.YOUR-DOMAIN
+* s.YOUR-DOMAIN
+* old.YOUR-DOMAIN
+```
+
+<p align="center">
+  <img src="https://i.imgur.com/0ksWZR9.png"/>
+</p>
 
 ### Running the Script (Instructions)
 ```bash
@@ -65,24 +82,11 @@ Create tmux sessions:`tmux new -s tmux_session_name` and go to:
 * /RIPPLE/hanayo and run `./hanayo`
 * /RIPPLE/rippleapi and run `./rippleapi`
 
-### Domain
-Make sure you set your DNS like this:
-```
-* YOUR-DOMAIN
-* c.YOUR-DOMAIN
-* i.YOUR-DOMAIN
-* a.YOUR-DOMAIN
-* s.YOUR-DOMAIN
-* old.YOUR-DOMAIN
-```
-
-<p align="center">
-  <img src="https://i.imgur.com/0ksWZR9.png"/>
-</p>
+### Connecting TO OSU!
+* Edit Ripple's Server switcher and create a server switcher for your server:<a href=https://zxq.co/ripple/ripple-server-switcher>Ripple-Server-Switcher</a>
 
 ### OSU!API
 * You can get OSU!API Key Here:<a href=https://old.ppy.sh/p/api>OSU!API</a>
-
 
 ### Tested OS
 
@@ -91,7 +95,7 @@ Make sure you set your DNS like this:
 |1|[![](https://github.com/light-ripple/Ripple-Auto-Installer/blob/master/X/fail.svg)](https://github.com/uniminin)| Bedrock
 |2|[![](https://github.com/light-ripple/Ripple-Auto-Installer/blob/master/X/pass.svg)](https://github.com/uniminin)| Ubuntu 19.10
 |3|[![](https://github.com/light-ripple/Ripple-Auto-Installer/blob/master/X/pass.svg)](https://github.com/uniminin)| Debian
-|4|[![](https://github.com/light-ripple/Ripple-Auto-Installer/blob/master/X/pass.svg)](https://github.com/uniminin)| Centos
+|4|[![](https://github.com/light-ripple/Ripple-Auto-Installer/blob/master/X/fail.svg)](https://github.com/uniminin)| Centos
 
 ### Contact
 You can ~~add me on Discord or~~ join my discord server and ask for help but don't expect us to create a server for youself.
@@ -101,5 +105,5 @@ You can ~~add me on Discord or~~ join my discord server and ask for help but don
 ### Credits
 Thanks to <a href=https://github.com/semyon422>semyon422</a> for your <a href=https://github.com/semyon422/open-ripple>open-ripple</a> guide.
 
-### License :scroll: [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+### License :scroll:
 This project is licenced under the GNU Affero General Public License V3. For more information, see the file `LICENSE` or visit https://www.gnu.org/licenses/agpl-3.0.
