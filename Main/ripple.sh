@@ -1,10 +1,21 @@
 #!/bin/sh
-# Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
+: '
+-----------------------------------------------------------------------------------
+| Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of AGPLv3 |
+|     																			  |
+|    					  Last Updated on 9th May, 2020                           |
+-----------------------------------------------------------------------------------
+'
+# Checking If Running [Script] as Root
+if ! [ "$(id -u)" = 0 ]; then
+   printf "Warning: Execute the Script as Root.\n"
+   exit 1
+fi
 
 # Install necessary dependencies required for lets, pep.py, hanayo, go, old-frontend, mysql. (Used APT)
 dependencies() {
 	if command -v apt >/dev/null; then
-   		printf "Starting To Install Required/Necessary Dependencies [<>]" ; sleep 2
+   		printf "Starting To Install Required/Necessary Dependencies...\n" ; sleep 2
 		apt install gcc g++ build-essential git tmux nginx wget mysql-server redis-server checkinstall golang-go cython \
 		libmariadbclient-dev libreadline-gplv2-dev libncursesw5-dev libssl-dev libssl1.0-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev \
 		nginx php-fpm composer php7.0-mbstring php7.0-curl php-mysql vsftpd luajit -y
@@ -12,119 +23,197 @@ dependencies() {
 		# Python 3.5 for peppy
 		cd /usr/src || exit ; wget https://www.python.org/ftp/python/3.5.9/Python-3.5.9.tar.xz
 		tar -xvf Python-3.5.9.tar.xz ; cd Python-3.5.9 || exit
-		./configure --enable-loadable-sqlite-extensions --enable-optimizations ; make ; sudo make install
+		./configure --enable-loadable-sqlite-extensions --enable-optimizations ; make ; make install
 
 		# Python 3.6 for lets
 		cd /usr/src || exit ; wget https://www.python.org/ftp/python/3.6.8/Python-3.6.8.tgz
 		tar -xvf Python-3.6.8.tgz ; cd Python-3.6.8 || exit
-		./configure --enable-optimizations ; make ; sudo make install
+		./configure --enable-optimizations ; make ; make install
 
 		apt-get update ; apt-get upgrade -y
-		printf "Done Installing all the necessary Dependencies!" ; sleep 1
+		printf "Done Installing all the necessary Dependencies!\n" ; sleep 1
 	elif ! command -v apt >/dev/null; then
-    	die "apt is not executable on this system"
+    	printf "apt is not executable on this system!\n"
 	else
-    	die 255 "Unexpected"
+    	printf "Unexpected Error!\n"
 	fi
 }
 
 main_dir() {
-	# Createing Master Folder (where all repo's will be cloned)
-    	printf "Creating Master Directory:/home/RIPPLE"
-	cd /home || exit ; sudo mkdir RIPPLE ; cd RIPPLE || exit
+	# Creating Master Directory (where all The Repositories will be cloned)
+	read -r "Enter Master Directory: " dir
+
+	while [ -z "$dir" ]; do
+  		read -r "Enter Master Directory: " dir
+	done
+
+	if [ -n "$dir" ]; then
+  		master_dir="$(pwd)/$dir"
+		read -r "Create Master Directory: $master_dir ? y/n " confirmation
+		if [ "$confirmation" = "y" ]; then
+			mkdir "$master_dir"
+			if [ -d "$master_dir" ]; then
+				chmod -R 777 "$master_dir"
+			        printf "%s has been created!\n" "$master_dir"
+			else
+				printf "Failed to create Directory: %s\n" "$master_dir"
+			fi
+		else
+			printf "Directory: %s wasn't created! Exiting...\n" "$master_dir"
+			exit 1
+		fi
+	fi
 }
 
-# peppy is the backend of osu, starting from client login, it is enough to handle all data within connected to all modules.
+# peppy is the backend of osu/bancho, starting from client login, it handles most of the stuff.
 peppy () {
-	printf "Cloning and Setting it up pep.py" ; sleep 2
-	git clone https://zxq.co/ripple/pep.py ; cd pep.py || exit
-	git submodule init ; git submodule update
-	python3.5 -m pip install -r requirements.txt
-	python3.5 setup.py build_ext --inplace
-	python3.5 pep.py ; cd /home/RIPPLE || exit
-	printf "Setting up pep.py is completed!" ; sleep 1
+	main_dir
+
+	printf "Cloning and Setting up pep.py\n" ; sleep 2
+	(	
+		if [ -n "$master_dir" ]; then
+			cd "$master_dir" || exit
+		else
+			printf "%s doesn't exist. Exiting...\n" "$master_dir"
+			exit 1
+		fi
+		git clone https://zxq.co/ripple/pep.py ; cd pep.py || exit
+		git submodule init ; git submodule update
+		python3.5 -m pip install -r requirements.txt
+		python3.5 setup.py build_ext --inplace
+		python3.5 pep.py
+
+		printf "Setting up pep.py is completed!\n" ; sleep 1
+	)
 }
 
-# LETS is the ripple's score server. It manages scores, osu!direct.
+# LETS is the Ripple's score server. It manages scores, osu!direct etc..
 lets() {
-	printf "Cloning & Setting up LETS" ; sleep 2
-	git clone https://github.com/osuthailand/lets ; cd lets || exit
-	python3.6 -m pip install -r requirements.txt
-	git submodule init ; git submodule update
-	# Patches From Aoba.
-	cd pp/oppai-ng/ ; chmod +x ./build ; ./build ; cd ..
-	cd .. ; cd objects || exit
-	sed -i 's#dataCtb["difficultyrating"]#'dataCtb["diff_aim"]'#g' beatmap.pyx
-	cd .. ; cd secret || exit
-	git submodule init ; git submodule update ; cd ..
-	python3.6 setup.py build_ext --inplace
-	cd secret || exit ; git submodule init ; git submodule update
-	python3.6 lets.py ; cd /home/RIPPLE || exit
-	printf "Setting up LETS is completed!" ; sleep 1
+	main_dir
+
+	printf "Cloning & Setting up LETS\n" ; sleep 2
+	(	
+		if [ -n "$master_dir" ]; then
+			cd "$master_dir" || exit
+		else
+			printf "%s doesn't exist. Exiting...\n" "$master_dir"
+			exit 1
+		fi
+		# Using osuthailand's Lets since it builds without any errors (hopefully)
+		git clone https://github.com/osuthailand/lets ; cd lets || exit
+		git submodule init ; git submodule update
+		cd secret || exit ; git submodule init ; git submodule update ; cd ..
+		python3.6 -m pip install -r requirements.txt
+		python3.6 setup.py build_ext --inplace
+		python3.6 lets.py
+
+		# compile oppai-ng and ainu-rx-calc to make pp calculation working
+		cd ./pp/oppai-ng/ || exit ; chmod +x ./build ; ./build ; cd ./../../
+		cd ./pp/oppai-rx/ || exit ; chmod +x ./build ; ./build ; cd ./../../
+		printf "Setting up LETS is completed!\n" ; sleep 1
+	)
 }
 
-# Database is required to manage all the users. (Required in all modules)
+# Database is required to manage all the user's data. (Required for all Ripple's Softwares i.e lets, peppy..)
 mysql_database() {
-	printf "Setting up MySQL database!" ; sleep 2
-	printf  "Enter MySQL Username: "
-	read -r mysql_user
-	printf "Enter MySQL Password: "
-	read -r mysql_password
-	mkdir mysql ; cd mysql || exit
-	wget https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Database%20files/ripple.sql
-	mysql -u "$mysql_user" -p"$mysql_password" -e 'CREATE DATABASE ripple;'
-	mysql -p -u "$mysql_user" ripple < ripple.sql ; cd /home/RIPPLE || exit
-	printf "Setting up MySQL Database is completed!" ; sleep 1
+	main_dir
+
+	printf "Setting up MySQL Database\n" ; sleep 2
+	(
+		if [ -n "$master_dir" ]; then
+			cd "$master_dir" || exit
+		else
+			printf "%s doesn't exist. Exiting...\n" "$master_dir"
+			exit 1
+		fi
+		read -r "Enter MySQL Username: " mysql_user
+		read -r "Enter MySQL Password: " mysql_password
+		read -r "Enter MySQL Database Name For Ripple: " database_name
+		mkdir mysql_db ; cd mysql_db || exit
+		wget -O ripple.sql https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Database%20files/ripple.sql
+		mysql -u "$mysql_user" -p"$mysql_password" -e "CREATE DATABASE '$database_name';"
+		mysql -p -u "$mysql_user" "$database_name" < ripple.sql
+		printf "Setting up MySQL Database is completed!\n" ; sleep 1
+	)
 }
 
-# Hanayo: The Ripple Frontend | Starting from user info to user profile everything is in hanayo.
+# Hanayo: The Ripple's Frontend.
 hanayo() {
-	printf "Cloning & Setting up Hanayo!" ; sleep 2 ; mkdir hanayo
-	go get -u zxq.co/ripple/hanayo ; sudo -i
-	cd go/src/zxq.co/ripple/hanayo || exit ; go build ; ./hanayo
-	sudo mv go/src/zxq.co/ripple/hanayo /home/RIPPLE
-	cd /home/RIPPLE || exit
-	printf "Configuring Hanayo is completed!" ; sleep 1
+	main_dir
+
+	printf "Cloning & Setting up Hanayo!\n" ; sleep 2
+	(	
+		if [ -n "$master_dir" ]; then
+			go get -u zxq.co/ripple/hanayo
+			cd /root/go/src/zxq.co/ripple/hanayo || exit ; go build ; ./hanayo
+			mv go/src/zxq.co/ripple/hanayo "$master_dir"
+			printf "Configuring Hanayo is completed!\n" ; sleep 1
+		else
+			printf "%s doesn't exist. Exiting...\n" "$master_dir"
+			exit 1
+		fi
+	)
 }
 
-# Ripple API is required to talk with the frontend (hanayo), and all other modules.
+# Ripple API is required to talk with the frontend (hanayo), and all other Ripple's Software (lets, peppy..).
 rippleapi() {
-	printf "Cloning & Setting up API" ; sleep 2 ; mkdir rippleapi
-	go get -u zxq.co/ripple/rippleapi ; sudo -i
-	cd go/src/zxq.co/ripple/rippleapi || exit ; go build ; ./rippleapi
-	mv go/src/zxq.co/ripple/rippleapi /home/RIPPLE
-	cd /home/RIPPLE || exit
-	printf "Setting up API is completed!" ; sleep 1
+	main_dir
+
+	printf "Cloning & Setting up API\n" ; sleep 2
+	(	
+		if [ -n "$master_dir" ]; then
+			go get -u zxq.co/ripple/rippleapi
+			cd go/src/zxq.co/ripple/rippleapi || exit ; go build ; ./rippleapi
+			mv go/src/zxq.co/ripple/rippleapi "$master_dir"
+			printf "Setting up API is completed!\n" ; sleep 1
+		else
+			printf "%s doesn't exist. Exiting...\n" "$master_dir"
+			exit 1
+		fi
+	)
 }
 
-# Avatar-Server part of frontend and in game, manages avatars of users.
+# Avatar-Server part of frontend and in game, it manages ingame & frontend's avatars of all users.
 avatar_server() {
-	printf "Cloning & Setting up avatar-server!" ; sleep 2
-	git clone https://github.com/Uniminin/avatar-server ; cd avatar-server || exit
-	python3.6 -m pip install -r requirements.txt ; cd /home/RIPPLE || exit
-	printf "Setting up avatar-server is completed!" ; sleep 1
+	main_dir
+
+	printf "Cloning & Setting up avatar-server!\n" ; sleep 2
+	(	
+		if [ -n "$master_dir" ]; then
+			cd "$master_dir" || exit
+		else
+			printf "%s doesn't exist. Exiting...\n" "$master_dir"
+			exit 1
+		fi
+		git clone https://github.com/Uniminin/avatar-server ; cd avatar-server || exit
+		python3.6 -m pip install -r requirements.txt
+		printf "Setting up avatar-server is completed!\n" ; sleep 1
+	)
 }
 
-# OLD-FRONTEND is required for Ripple Admin Panel. Which can be viewd at old.domain
+# OLD-FRONTEND is required for Ripple Admin Panel. Which can be accessed at old.domain
 old_frontend() {
-	printf "Cloning & Setting up old frontend!" ; sleep 2
-	git clone https://github.com/osuripple/old-frontend ; cd old-frontend || exit ; composer install
-	git clone https://github.com/osufx/secret ; cd /home/RIPPLE || exit
-	printf "Setting up old frontend is done" ; sleep 1
+	main_dir
+
+	printf "Cloning & Setting up old frontend!\n" ; sleep 2
+	(	
+		if [ -n "$master_dir" ]; then
+			cd "$master_dir" || exit
+		else
+			printf "%s doesn't exist. Exiting...\n" "$master_dir"
+			exit 1
+		fi
+		git clone https://github.com/osuripple/old-frontend ; cd old-frontend || exit ; composer install
+		git clone https://github.com/osufx/secret
+		printf "Setting up old frontend is done\n" ; sleep 1
+	)
 }
 
-# Change Main Folder [RIPPLE] permission and kill nginx to avoid nginx errors
-finishing() {
-	printf "Changing Folder and Files Permissions [RIPPLE]" ; sleep 1
-	chmod -R 777 RIPPLE ; pkill -f nginx
-	printf "Done Installing Ripple Stack! Follow Github repo for more info!" ; sleep 2
-}
 
 # script --all to start the entire process at once | script --help to Execute help
 while [ $# -ge 1 ]; do case $1 in
     --all)
         dependencies
-	main_dir
         mysql_database
         peppy
         lets
@@ -132,7 +221,7 @@ while [ $# -ge 1 ]; do case $1 in
         hanayo
         rippleapi
         old_frontend
-        finishing
+        read -r "Done Installing Ripple Stack! Follow Github repo for more info!"
         shift
     ;;
     --help)
@@ -148,11 +237,11 @@ while [ $# -ge 1 ]; do case $1 in
 		"    --lets           To Clone and Setup lets with dependencies." \
 		"    --hanayo         To Clone and Setup hanayo with dependencies." \
 		"    --rippleapi      To Clone and Setup rippleapi with dependencies." \
-	        "    --avatarserver   To Clone and Setup avatar-server with dependencies." \
+	    "    --avatarserver   To Clone and Setup avatar-server with dependencies." \
 		"    --oldfrontend    To Clone and Setup oldfrontend with dependencies." \
 		"" \
 		"Report bugs to: uniminin@zoho.com" \
-		"RAI Repository URL: <https://github.com/light-ripple/Ripple-Auto-Installer/> " \
+		"RAI Repository URL: <https://github.com/Uniminin/Ripple-Auto-Installer/> " \
 		"GNU AGPLv3 Licence: <https://www.gnu.org/licenses/agpl-3.0.en.html/>" \
 		"General help using GNU software: <https://www.gnu.org/gethelp/>"
 	shift
@@ -163,47 +252,40 @@ while [ $# -ge 1 ]; do case $1 in
     ;;
     --mysql)
     	dependencies
-	main_dir
-	mysql_database
+		mysql_database
 	shift
     ;;
     --peppy)
     	dependencies
-	main_dir
     	peppy
 	shift
     ;;
     --lets)
     	dependencies
-	main_dir
     	lets
 	shift
     ;;
     --avatarserver)
     	dependencies
-	main_dir
     	avatar_server
 	shift
     ;;
     --hanayo)
     	dependencies
-	main_dir
     	hanayo
 	shift
     ;;
     --rippleapi)
     	dependencies
-	main_dir
     	rippleapi
 	shift
     ;;
     --oldfrontend)
     	dependencies
-	main_dir
     	old_frontend
 	shift
     ;;
     *)
-     	printf '%s\n' "ERROR! unknown argument | ripple.sh --help to view help."
+     	printf '%s\n' "ERROR! unknown argument | ripple.sh --help to view help.\n"
     	shift
 esac; done
