@@ -1,10 +1,9 @@
 #!/bin/sh
 : '
------------------------------------------------------------------------------------
-| Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of AGPLv3 |
-|     																			  |
-|    					  Last Updated on 9th May, 2020                           |
------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+|  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of AGPLv3  |
+|                          Last Updated on 9th May, 2020                            |
+-------------------------------------------------------------------------------------
 '
 # Checking If Running [Script] as Root
 if ! [ "$(id -u)" = 0 ]; then
@@ -14,6 +13,7 @@ fi
 
 # Install necessary dependencies required for lets, pep.py, hanayo, go, old-frontend, mysql. (Used APT)
 dependencies() {
+  
 	if command -v apt >/dev/null; then
    		printf "Starting To Install Required/Necessary Dependencies...\n" ; sleep 2
 		apt install gcc g++ build-essential git tmux nginx wget mysql-server redis-server checkinstall golang-go cython \
@@ -32,11 +32,13 @@ dependencies() {
 
 		apt-get update ; apt-get upgrade -y
 		printf "Done Installing all the necessary Dependencies!\n" ; sleep 1
+		
 	elif ! command -v apt >/dev/null; then
     	printf "apt is not executable on this system!\n"
 	else
     	printf "Unexpected Error!\n"
 	fi
+	
 }
 
 main_dir() {
@@ -63,6 +65,7 @@ main_dir() {
 			exit 1
 		fi
 	fi
+	
 }
 
 # peppy is the backend of osu/bancho, starting from client login, it handles most of the stuff.
@@ -70,7 +73,7 @@ peppy () {
 	main_dir
 
 	printf "Cloning and Setting up pep.py\n" ; sleep 2
-	(	
+	(
 		if [ -n "$master_dir" ]; then
 			cd "$master_dir" || exit
 		else
@@ -85,6 +88,7 @@ peppy () {
 
 		printf "Setting up pep.py is completed!\n" ; sleep 1
 	)
+	  
 }
 
 # LETS is the Ripple's score server. It manages scores, osu!direct etc..
@@ -92,7 +96,7 @@ lets() {
 	main_dir
 
 	printf "Cloning & Setting up LETS\n" ; sleep 2
-	(	
+	(
 		if [ -n "$master_dir" ]; then
 			cd "$master_dir" || exit
 		else
@@ -112,6 +116,7 @@ lets() {
 		cd ./pp/oppai-rx/ || exit ; chmod +x ./build ; ./build ; cd ./../../
 		printf "Setting up LETS is completed!\n" ; sleep 1
 	)
+	  
 }
 
 # Database is required to manage all the user's data. (Required for all Ripple's Softwares i.e lets, peppy..)
@@ -135,6 +140,7 @@ mysql_database() {
 		mysql -p -u "$mysql_user" "$database_name" < ripple.sql
 		printf "Setting up MySQL Database is completed!\n" ; sleep 1
 	)
+	  
 }
 
 # Hanayo: The Ripple's Frontend.
@@ -142,7 +148,7 @@ hanayo() {
 	main_dir
 
 	printf "Cloning & Setting up Hanayo!\n" ; sleep 2
-	(	
+	(
 		if [ -n "$master_dir" ]; then
 			go get -u zxq.co/ripple/hanayo
 			cd /root/go/src/zxq.co/ripple/hanayo || exit ; go build ; ./hanayo
@@ -153,6 +159,7 @@ hanayo() {
 			exit 1
 		fi
 	)
+	  
 }
 
 # Ripple API is required to talk with the frontend (hanayo), and all other Ripple's Software (lets, peppy..).
@@ -160,7 +167,7 @@ rippleapi() {
 	main_dir
 
 	printf "Cloning & Setting up API\n" ; sleep 2
-	(	
+	(
 		if [ -n "$master_dir" ]; then
 			go get -u zxq.co/ripple/rippleapi
 			cd go/src/zxq.co/ripple/rippleapi || exit ; go build ; ./rippleapi
@@ -171,6 +178,7 @@ rippleapi() {
 			exit 1
 		fi
 	)
+	  
 }
 
 # Avatar-Server part of frontend and in game, it manages ingame & frontend's avatars of all users.
@@ -178,7 +186,7 @@ avatar_server() {
 	main_dir
 
 	printf "Cloning & Setting up avatar-server!\n" ; sleep 2
-	(	
+	(
 		if [ -n "$master_dir" ]; then
 			cd "$master_dir" || exit
 		else
@@ -189,6 +197,7 @@ avatar_server() {
 		python3.6 -m pip install -r requirements.txt
 		printf "Setting up avatar-server is completed!\n" ; sleep 1
 	)
+	  
 }
 
 # OLD-FRONTEND is required for Ripple Admin Panel. Which can be accessed at old.domain
@@ -196,7 +205,7 @@ old_frontend() {
 	main_dir
 
 	printf "Cloning & Setting up old frontend!\n" ; sleep 2
-	(	
+	(
 		if [ -n "$master_dir" ]; then
 			cd "$master_dir" || exit
 		else
@@ -207,6 +216,7 @@ old_frontend() {
 		git clone https://github.com/osufx/secret
 		printf "Setting up old frontend is done\n" ; sleep 1
 	)
+	  
 }
 
 
