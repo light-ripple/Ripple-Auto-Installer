@@ -4,7 +4,7 @@
 <h4 align="center"><a href=https://ripple.moe>Ripple</a> Stack Installation Helper</h4>
 
 <p align="center">
-  <img src="https://github.com/light-ripple/Ripple-Auto-Installer/blob/master/X/ripple.svg"/>
+  <img src="https://ripple.moe/static/logos/logo.svg"/>
 </p>
 
 ## Attention
@@ -39,7 +39,7 @@ Make sure you set your DNS like this:
 
 ### Running the Script (Instructions)
 ```bash
-$ wget https://raw.githubusercontent.com/Light-Ripple/Ripple-Auto-Installer/master/Main/ripple.sh
+$ wget https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/ripple.sh
 $ chmod +x ripple.sh 
 $ sudo ./ripple.sh --help
 ```
@@ -47,7 +47,7 @@ Note: use sudo. for example: `sudo ripple.sh --all` to install & setup full ripp
 
 ### After Installation Steps
 * Certificate  
-Edit <a href=https://github.com/light-ripple/Ripple-Auto-Installer/blob/master/Main/openssl.cnf>openssl.cnf</a> and run <a href=https://github.com/light-ripple/Ripple-Auto-Installer/blob/master/Main/gencert.sh>gencert.sh</a> to generate certificates. Use `cert.pem` and `key.pem` in your nginx configuration and `cert.pem` in your switcher.  
+Edit <a href=https://github.com/Uniminin/Ripple-Auto-Installer/blob/master/Main/openssl.cnf>openssl.cnf</a> and run <a href=https://github.com/Uniminin/Ripple-Auto-Installer/blob/master/Main/gencert.sh>gencert.sh</a> to generate certificates. Use `cert.pem` and `key.pem` in your nginx configuration and `cert.pem` in your switcher.  
 Use this on your site:
 ```
 git clone https://github.com/Neilpang/acme.sh.git
@@ -55,7 +55,7 @@ cd acme.sh
 ./acme.sh --issue --standalone -d osu.ripple.moe -d c.ripple.moe -d a.ripple.moe -d oldripple.ripple.moe
 ```  
 * Proxy  
-Edit and include <a href=https://github.com/light-ripple/Ripple-Auto-Installer/blob/master/Main/ripple.conf>ripple.conf</a> in your nginx.conf
+Edit and include <a href=https://github.com/Uniminin/Ripple-Auto-Installer/blob/master/Main/ripple.conf>ripple.conf</a> in your nginx.conf
 
 ### Edit Config
 Edit all configs.
@@ -90,7 +90,7 @@ Create tmux sessions:`tmux new -s tmux_session_name` and go to:
 |4|[![](https://github.com/light-ripple/Ripple-Auto-Installer/blob/master/X/fail.svg)](https://github.com/uniminin)| Centos
 
 ### Contact
-You can ~~add me on Discord or~~ join my discord server and ask for help but don't expect us to create a server for youself.
+You can ~~add me on Discord or~~ join this discord server and ask for help but don't expect us to create a server for youself.
  ~~My Discord:`uniminin#7522`~~ you may contact with me on the server.
 * Discord Server: <a href=https://discord.gg/b44kuYv>Developer I/O</a>
 
