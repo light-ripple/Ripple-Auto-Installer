@@ -98,4 +98,4 @@ You can ~~add me on Discord or~~ join this discord server and ask for help but d
 Thanks to <a href=https://github.com/semyon422>semyon422</a> for your <a href=https://github.com/semyon422/open-ripple>open-ripple</a> guide.
 
 ### License :scroll:
-This project is licenced under the GNU Affero General Public License V3. For more information, see the file `LICENSE` or visit https://www.gnu.org/licenses/agpl-3.0.
+This project is licenced under the GNU Affero General Public License V3. For more information, see the `LICENSE` file or visit https://www.gnu.org/licenses/agpl-3.0.
