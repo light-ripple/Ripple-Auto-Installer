@@ -80,14 +80,6 @@ Create tmux sessions:`tmux new -s tmux_session_name` and go to:
 ### OSU!API
 * You can get OSU!API Key Here:<a href=https://old.ppy.sh/p/api>OSU!API</a>
 
-### Tested OS
-
-| NO | Status| Platform|
-|----|-------|---------|
-|1|[![](https://github.com/light-ripple/Ripple-Auto-Installer/blob/master/X/fail.svg)](https://github.com/uniminin)| Bedrock
-|2|[![](https://github.com/light-ripple/Ripple-Auto-Installer/blob/master/X/pass.svg)](https://github.com/uniminin)| Ubuntu 19.10
-|3|[![](https://github.com/light-ripple/Ripple-Auto-Installer/blob/master/X/pass.svg)](https://github.com/uniminin)| Debian
-|4|[![](https://github.com/light-ripple/Ripple-Auto-Installer/blob/master/X/fail.svg)](https://github.com/uniminin)| Centos
 
 ### Contact
 You can ~~add me on Discord or~~ join this discord server and ask for help but don't expect us to create a server for youself.
