@@ -63,7 +63,8 @@ Edit all configs.
 * /RIPPLE/lets and run/edit `nano config.ini`
 * /RIPPLE/hanayo and run/edit `nano hanayo.conf`
 * /RIPPLE/rippleapi and run/edit `nano api.conf`
-* /RIPPLE/old-frontend and run/edit `nano inc/config.php`
+* /RIPPLE/old-frontend and run/edit `nano inc/config.php` \
+Where RIPPLE -> your targeted directory
 
 ### Start Server
 You might want to look at this tmux cheatsheet first: <a href=https://tmuxcheatsheet.com/v>Click ME!</a> |
@@ -72,7 +73,8 @@ Create tmux sessions:`tmux new -s tmux_session_name` and go to:
 * /RIPPLE/lets and run `python3.6 lets.py`
 * /RIPPLE/OSU-AVATAR-SERVER and run `python3.6 avatar-server.py`
 * /RIPPLE/hanayo and run `./hanayo`
-* /RIPPLE/rippleapi and run `./rippleapi`
+* /RIPPLE/rippleapi and run `./rippleapi` \
+Where RIPPLE -> your targeted directory
 
 ### Connecting TO OSU!
 * Edit Ripple's Server switcher and create a server switcher for your server:<a href=https://zxq.co/ripple/ripple-server-switcher>Ripple-Server-Switcher</a>
