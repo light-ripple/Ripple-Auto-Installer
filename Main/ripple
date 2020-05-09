@@ -7,7 +7,7 @@
 '
 # Checking If Running [Script] as Root
 if ! [ "$(id -u)" = 0 ]; then
-   printf "Warning: Execute the Script as Root.\n"
+   printf '%s\n' "Warning: Execute the Script as Root."
    exit 1
 fi
 
@@ -15,7 +15,7 @@ fi
 dependencies() {
   
 	if command -v apt >/dev/null; then
-   		printf "Starting To Install Required/Necessary Dependencies...\n" ; sleep 2
+   		printf '%s\n' "Starting To Install Required/Necessary Dependencies..." ; sleep 2
 		apt install gcc g++ build-essential git tmux nginx wget mysql-server redis-server checkinstall golang-go cython \
 		libmariadbclient-dev libreadline-gplv2-dev libncursesw5-dev libssl-dev libssl1.0-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev \
 		nginx php-fpm composer php7.0-mbstring php7.0-curl php-mysql vsftpd luajit -y
@@ -31,12 +31,12 @@ dependencies() {
 		./configure --enable-optimizations ; make ; make install
 
 		apt-get update ; apt-get upgrade -y
-		printf "Done Installing all the necessary Dependencies!\n" ; sleep 1
+		printf '%s\n' "Done Installing all the necessary Dependencies!" ; sleep 1
 		
 	elif ! command -v apt >/dev/null; then
-    	printf "apt is not executable on this system!\n"
+    	printf '%s\n' "apt is not executable on this system!"
 	else
-    	printf "Unexpected Error!\n"
+    	printf '%s\n' "Unexpected Error!"
 	fi
 	
 }
@@ -72,7 +72,7 @@ main_dir() {
 peppy () {
 	main_dir
 
-	printf "Cloning and Setting up pep.py\n" ; sleep 2
+	printf '%s\n' "Cloning and Setting up pep.py" ; sleep 2
 	(
 		if [ -n "$master_dir" ]; then
 			cd "$master_dir" || exit
@@ -86,7 +86,7 @@ peppy () {
 		python3.5 setup.py build_ext --inplace
 		python3.5 pep.py
 
-		printf "Setting up pep.py is completed!\n" ; sleep 1
+		printf '%s\n' "Setting up pep.py is completed!" ; sleep 1
 	)
 	  
 }
@@ -95,7 +95,7 @@ peppy () {
 lets() {
 	main_dir
 
-	printf "Cloning & Setting up LETS\n" ; sleep 2
+	printf '%s\n' "Cloning & Setting up LETS" ; sleep 2
 	(
 		if [ -n "$master_dir" ]; then
 			cd "$master_dir" || exit
@@ -114,7 +114,7 @@ lets() {
 		# compile oppai-ng and ainu-rx-calc to make pp calculation working
 		cd ./pp/oppai-ng/ || exit ; chmod +x ./build ; ./build ; cd ./../../
 		cd ./pp/oppai-rx/ || exit ; chmod +x ./build ; ./build ; cd ./../../
-		printf "Setting up LETS is completed!\n" ; sleep 1
+		printf '%s\n' "Setting up LETS is completed!" ; sleep 1
 	)
 	  
 }
@@ -123,7 +123,7 @@ lets() {
 mysql_database() {
 	main_dir
 
-	printf "Setting up MySQL Database\n" ; sleep 2
+	printf '%s\n' "Setting up MySQL Database" ; sleep 2
 	(
 		if [ -n "$master_dir" ]; then
 			cd "$master_dir" || exit
@@ -138,7 +138,7 @@ mysql_database() {
 		wget -O ripple.sql https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Database%20files/ripple.sql
 		mysql -u "$mysql_user" -p"$mysql_password" -e "CREATE DATABASE '$database_name';"
 		mysql -p -u "$mysql_user" "$database_name" < ripple.sql
-		printf "Setting up MySQL Database is completed!\n" ; sleep 1
+		printf '%s\n' "Setting up MySQL Database is completed!" ; sleep 1
 	)
 	  
 }
@@ -147,7 +147,7 @@ mysql_database() {
 hanayo() {
 	main_dir
 
-	printf "Cloning & Setting up Hanayo!\n" ; sleep 2
+	printf '%s\n' "Cloning & Setting up Hanayo!" ; sleep 2
 	(
 		if [ -n "$master_dir" ]; then
 			go get -u zxq.co/ripple/hanayo
@@ -166,7 +166,7 @@ hanayo() {
 rippleapi() {
 	main_dir
 
-	printf "Cloning & Setting up API\n" ; sleep 2
+	printf '%s\n' "Cloning & Setting up API" ; sleep 2
 	(
 		if [ -n "$master_dir" ]; then
 			go get -u zxq.co/ripple/rippleapi
@@ -174,7 +174,7 @@ rippleapi() {
 			mv go/src/zxq.co/ripple/rippleapi "$master_dir"
 			printf "Setting up API is completed!\n" ; sleep 1
 		else
-			printf "%s doesn't exist. Exiting...\n" "$master_dir"
+			printf "%s doesn't exist. Exiting..." "$master_dir"
 			exit 1
 		fi
 	)
@@ -185,7 +185,7 @@ rippleapi() {
 avatar_server() {
 	main_dir
 
-	printf "Cloning & Setting up avatar-server!\n" ; sleep 2
+	printf '%s\n' "Cloning & Setting up avatar-server!" ; sleep 2
 	(
 		if [ -n "$master_dir" ]; then
 			cd "$master_dir" || exit
@@ -195,7 +195,7 @@ avatar_server() {
 		fi
 		git clone https://github.com/Uniminin/avatar-server ; cd avatar-server || exit
 		python3.6 -m pip install -r requirements.txt
-		printf "Setting up avatar-server is completed!\n" ; sleep 1
+		printf '%s\n' "Setting up avatar-server is completed!" ; sleep 1
 	)
 	  
 }
@@ -204,7 +204,7 @@ avatar_server() {
 old_frontend() {
 	main_dir
 
-	printf "Cloning & Setting up old frontend!\n" ; sleep 2
+	printf '%s\n' "Cloning & Setting up old frontend!" ; sleep 2
 	(
 		if [ -n "$master_dir" ]; then
 			cd "$master_dir" || exit
@@ -214,7 +214,7 @@ old_frontend() {
 		fi
 		git clone https://github.com/osuripple/old-frontend ; cd old-frontend || exit ; composer install
 		git clone https://github.com/osufx/secret
-		printf "Setting up old frontend is done\n" ; sleep 1
+		printf '%s\n' "Setting up old frontend is done" ; sleep 1
 	)
 	  
 }
