@@ -2,7 +2,7 @@
 : '
 -------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of AGPLv3  |
-|                          Last Updated on 10th May, 2020                            |
+|                          Last Updated on 10th May, 2020                           |
 -------------------------------------------------------------------------------------
 '
 # Checking If Running [Script] as Root
