@@ -221,7 +221,7 @@ old_frontend() {
 
 
 # script --all to start the entire process at once | script --help to Execute help
-while [ $# -ge 1 ]; do case $1 in
+while [[ "$#" -ge 0 ]]; do case "$1" in
     --all)
         dependencies
         mysql_database
@@ -232,14 +232,13 @@ while [ $# -ge 1 ]; do case $1 in
         rippleapi
         old_frontend
         read -r "Done Installing Ripple Stack! Follow Github repo for more info!"
-        shift
-    ;;
+        shift 1 ;;
     --help)
         printf '%s\n' \
-		"Note:sudo script --[argument]" \
+		"Note:sudo ripple --[argument]" \
 		"" \
 		"Usage:" \
-		"    --help           Shows the list of all arguments" \
+		"    --help           Shows the list of all arguments including information." \
 		"    --all            To Setup Entire Ripple Stack!" \
 		"    --dependencies   To Install all the necessary dependencies required for Ripple Stack." \
 		"    --mysql          To Manually Setup MySQL DB with dependencies." \
@@ -254,48 +253,42 @@ while [ $# -ge 1 ]; do case $1 in
 		"RAI Repository URL: <https://github.com/Uniminin/Ripple-Auto-Installer/> " \
 		"GNU AGPLv3 Licence: <https://www.gnu.org/licenses/agpl-3.0.en.html/>" \
 		"General help using GNU software: <https://www.gnu.org/gethelp/>"
-	shift
-    ;;
+		shift 1 ;;
     --dependencies)
     	dependencies
-	shift
-    ;;
+		shift 1 ;;
     --mysql)
     	dependencies
-	mysql_database
-	shift
-    ;;
+	    mysql_database
+		shift 1 ;;
     --peppy)
     	dependencies
     	peppy
-	shift
-    ;;
+		shift 1 ;;
     --lets)
     	dependencies
     	lets
-	shift
-    ;;
+		shift  1 ;;
     --avatarserver)
     	dependencies
     	avatar_server
-	shift
-    ;;
+		shift 1 ;;
     --hanayo)
     	dependencies
     	hanayo
-	shift
-    ;;
+		shift 1 ;;
     --rippleapi)
     	dependencies
     	rippleapi
-	shift
-    ;;
+		shift 1 ;;
     --oldfrontend)
     	dependencies
     	old_frontend
-	shift
-    ;;
+		shift 1 ;;
+	"")
+		printf '%s\n' "ERROR! no argument were provided | Try: ripple --help"
+		exit 1 ;;
     *)
-     	printf '%s\n' "ERROR! unknown argument | ripple.sh --help to view help.\n"
-    	shift
+     	printf '%s\n' "ERROR! unknown argument | Try: ripple --help\n"
+    	shift 1
 esac; done
