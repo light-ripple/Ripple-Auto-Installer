@@ -262,7 +262,7 @@ while [ $# -ge 1 ]; do case $1 in
     ;;
     --mysql)
     	dependencies
-		mysql_database
+	mysql_database
 	shift
     ;;
     --peppy)
