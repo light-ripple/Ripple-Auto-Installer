@@ -7,11 +7,11 @@
 '
 # Checking If Running [Script] as Root
 if ! [ "$(id -u)" = 0 ]; then
-   printf '%s\n' "Warning: Execute the Script as Root."
+   printf '%s\n' "Notice: Execute the Script as Root."
    exit 1
 fi
 
-# FIXME: Proper/Better Way to do it.
+# FIXME: Proper/Better Way to do this.
 # Python 3.5 for peppy
 
 python3() {
@@ -60,11 +60,11 @@ dependencies() {
 		)
 
 		python3
-		
+
 		printf '%s\n' "Done Installing all the necessary Dependencies with [$package_manager]" ; sleep 1
-		
+
 	elif ! command -v apt >/dev/null; then
-    	printf '%s\n' "apt is not executable on this system!"
+    		printf '%s\n' "apt is not executable on this system!"
 
 	elif command -v pacman >/dev/null; then
 		package_manager="pacman"
@@ -79,24 +79,24 @@ dependencies() {
 	else
     	printf '%s\n' "Unexpected Error!"
 	fi
-	
-}
 
+}
+# FIXME: Add proper cloning with checks & sanitization
 main_dir() {
 	# Creating Master Directory (where all The Repositories will be cloned)
 	while [ -z "$targetDir" ]; do
-  		read -r "Enter Master Directory: " targetDir
+		read -r "Enter Master Directory: " targetDir
 	done
 
 	if [ -n "$targetDir" ]; then
-  		master_dir="$(pwd)/$targetDir"
+		master_dir="$(pwd)/$targetDir"
 		read -r "Create Master Directory: $master_dir ? y/n " confirmation
 		if [ "$confirmation" = "y" ]; then
 			mkdir "$master_dir"
 			if [ -d "$master_dir" ]; then
 				chmod -R 777 "$master_dir"
 				export directory="$master_dir"
-			    printf "%s has been created!\n" "$master_dir"
+			    	printf "%s has been created!\n" "$master_dir"
 			else
 				printf '%s\n' "Failed to create Directory: $master_dir"
 			fi
@@ -105,94 +105,90 @@ main_dir() {
 			exit 1
 		fi
 	fi
-	
+
 }
 
 # peppy is the backend of osu/bancho, starting from client login, it handles most of the stuff.
 peppy () {
 
 	task="pep.py"
-
+	# FIXME: Add proper cloning with checks & sanitization
 	printf '%s\n' "Cloning and Setting up pep.py $task" ; sleep 2
 	(
 		if [ -n "$directory" ]; then
 			cd "$directory" || exit
+			git clone https://zxq.co/ripple/pep.py ; cd pep.py || exit
+		    	git submodule init ; git submodule update
+		    	python3.5 -m pip install -r requirements.txt
+		    	python3.5 setup.py build_ext --inplace
+		    	python3.5 pep.py
+		    	printf '%s\n' "Done Setting Up $task" ; sleep 1
 		else
 			printf '%s\n' "$directory doesn't exist. Exiting..."
 			exit 1
 		fi
-		git clone https://zxq.co/ripple/pep.py ; cd pep.py || exit
-		git submodule init ; git submodule update
-		python3.5 -m pip install -r requirements.txt
-		python3.5 setup.py build_ext --inplace
-		python3.5 pep.py
-
-		printf '%s\n' "Done Setting Up $task" ; sleep 1
 	)
-	  
+
 }
 
 # LETS is the Ripple's score server. It manages scores, osu!direct etc.
 lets() {
 
 	task="lets"
-
+	# FIXME: Add proper cloning with checks & sanitization
 	printf '%s\n' "Cloning & Setting Up $task" ; sleep 2
 	(
 		if [ -n "$directory" ]; then
 			cd "$directory" || exit
+			# Using osuthailand's Lets since it builds without any errors (hopefully)
+			it clone https://github.com/osuthailand/lets ; cd lets || exit
+			git submodule init ; git submodule update
+			cd secret || exit ; git submodule init ; git submodule update ; cd ..
+			python3.6 -m pip install -r requirements.txt
+			python3.6 setup.py build_ext --inplace
+		    	python3.6 lets.py
+			# compile oppai-ng and ainu-rx-calc to make pp calculation working
+			cd ./pp/oppai-ng/ || exit ; chmod +x ./build ; ./build ; cd ./../../
+			cd ./pp/oppai-rx/ || exit ; chmod +x ./build ; ./build ; cd ./../../
+			printf '%s\n' "Done Setting Up $task" ; sleep 1
 		else
 			printf '%s\n' "$directory doesn't exist. Exiting..."
 			exit 1
 		fi
-		# Using osuthailand's Lets since it builds without any errors (hopefully)
-		git clone https://github.com/osuthailand/lets ; cd lets || exit
-		git submodule init ; git submodule update
-		cd secret || exit ; git submodule init ; git submodule update ; cd ..
-		python3.6 -m pip install -r requirements.txt
-		python3.6 setup.py build_ext --inplace
-		python3.6 lets.py
-
-		# compile oppai-ng and ainu-rx-calc to make pp calculation working
-		cd ./pp/oppai-ng/ || exit ; chmod +x ./build ; ./build ; cd ./../../
-		cd ./pp/oppai-rx/ || exit ; chmod +x ./build ; ./build ; cd ./../../
-
-		printf '%s\n' "Done Setting Up $task" ; sleep 1
 	)
-	  
+
 }
 
 # Database is required to access, read, write & manage all the user's data. (Required for all Ripple's Softwares i.e lets, peppy..)
 mysql_database() {
 
 	task="MySQL Database"
-
+	# FIXME: Add proper cloning with checks & sanitization
 	printf '%s\n' "Setting up $task" ; sleep 2
 	(
 		if [ -n "$directory" ]; then
 			cd "$directory" || exit
+			read -r "Enter MySQL Username: " mysql_user
+            		read -r "Enter MySQL Password: " mysql_password
+            		read -r "Enter MySQL Database Name For Ripple: " database_name
+            		mkdir mysql_db ; cd mysql_db || exit
+            		wget -O ripple.sql https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Database%20files/ripple.sql
+            		mysql -u "$mysql_user" -p"$mysql_password" -e "CREATE DATABASE '$database_name';"
+            		mysql -p -u "$mysql_user" "$database_name" < ripple.sql
+            		printf '%s\n' "Done Setting Up $task" ; sleep 1
 		else
 			printf '%s\n' "$directory doesn't exist. Exiting..."
 			exit 1
 		fi
-		read -r "Enter MySQL Username: " mysql_user
-		read -r "Enter MySQL Password: " mysql_password
-		read -r "Enter MySQL Database Name For Ripple: " database_name
-		mkdir mysql_db ; cd mysql_db || exit
-		wget -O ripple.sql https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Database%20files/ripple.sql
-		mysql -u "$mysql_user" -p"$mysql_password" -e "CREATE DATABASE '$database_name';"
-		mysql -p -u "$mysql_user" "$database_name" < ripple.sql
-
-		printf '%s\n' "Done Setting Up $task" ; sleep 1
 	)
-	  
+
 }
 
 # Hanayo: The Ripple's Frontend.
 hanayo() {
 
 	task="Hanayo"
-
+	# FIXME: Add proper cloning with checks & sanitization
 	printf '%s\n' "Cloning & Setting up $task." ; sleep 2
 	(
 		if [ -n "$directory" ]; then
@@ -205,14 +201,14 @@ hanayo() {
 			exit 1
 		fi
 	)
-	  
+
 }
 
 # Ripple API is required to talk with the frontend (hanayo), and all other Ripple's Software (lets, peppy..)
 rippleapi() {
 
 	task="Ripple-API"
-
+	# FIXME: Add proper cloning with checks & sanitization
 	printf '%s\n' "Cloning & Setting up $task." ; sleep 2
 	(
 		if [ -n "$directory" ]; then
@@ -225,56 +221,56 @@ rippleapi() {
 			exit 1
 		fi
 	)
-	  
+
 }
 
 # Avatar-Server handles/manages ingame & frontend's avatars of all users.
 avatar_server() {
 
 	task="Avatar-Server"
-
+	# FIXME: Add proper cloning with checks & sanitization
 	printf '%s\n' "Cloning & Setting up $task!" ; sleep 2
 	(
 		if [ -n "$directory" ]; then
 			cd "$directory" || exit
+			git clone https://github.com/Uniminin/avatar-server ; cd avatar-server || exit
+		    	python3.6 -m pip install -r requirements.txt
+		    	printf '%s\n' "Done setting up $task!" ; sleep 1
 		else
 			printf '%s\n' "$directory doesn't exist. Exiting..."
 			exit 1
 		fi
-		git clone https://github.com/Uniminin/avatar-server ; cd avatar-server || exit
-		python3.6 -m pip install -r requirements.txt
-		printf '%s\n' "Done setting up $task!" ; sleep 1
 	)
-	  
+
 }
 
 # OLD-FRONTEND is the Ripple's Admin Panel. Which can be accessed at old.domain
 old_frontend() {
 
 	task="OLD-FRONTEND"
-
+	# FIXME: Add proper cloning with checks & sanitization
 	printf '%s\n' "Cloning & Setting up $task." ; sleep 2
 	(
 		if [ -n "$directory" ]; then
 			cd "$directory" || exit
+			git clone https://github.com/osuripple/old-frontend ; cd old-frontend || exit ; composer install
+            		git clone https://github.com/osufx/secret
+            		printf '%s\n' "Done setting up $task!" ; sleep 1
 		else
 			printf '%s\n' "$directory doesn't exist. Exiting..."
 			exit 1
 		fi
-		git clone https://github.com/osuripple/old-frontend ; cd old-frontend || exit ; composer install
-		git clone https://github.com/osufx/secret
-		printf '%s\n' "Done setting up $task!" ; sleep 1
 	)
-	  
+
 }
 
 # FIXME: add proper dependencies for each repos
 # script --all to start the entire process at once | script --help to Execute help
 while [ "$#" -ge 0 ]; do case "$1" in
     --all)
-		main_dir
+	main_dir
         dependencies
-		mysql_database
+	mysql_database
         peppy
         lets
         avatar_server
@@ -304,59 +300,59 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		"RAI Repository URL: <https://github.com/Uniminin/Ripple-Auto-Installer/> " \
 		"GNU AGPLv3 Licence: <https://www.gnu.org/licenses/agpl-3.0.en.html/>" \
 		"General help using GNU software: <https://www.gnu.org/gethelp/>"
-		shift 1 ;;
+        shift 1 ;;
 
     --dependencies)
-    	dependencies
-		shift 1 ;;
+        dependencies
+	shift 1 ;;
 
     --mysql)
-		main_dir
-    	dependencies
-	    mysql_database
-		shift 1 ;;
+	main_dir
+        dependencies
+	mysql_database
+	shift 1 ;;
 
     --peppy)
-		main_dir
-    	dependencies
-    	peppy
-		shift 1 ;;
+        main_dir
+        dependencies
+        peppy
+        shift 1 ;;
 
     --lets)
-		main_dir
-    	dependencies
-    	lets
-		shift  1 ;;
+        main_dir
+        dependencies
+        lets
+        shift  1 ;;
 
     --avatarserver)
-		main_dir
-    	dependencies
-    	avatar_server
-		shift 1 ;;
+        main_dir
+        dependencies
+        avatar_server
+        shift 1 ;;
 
     --hanayo)
-		main_dir
-    	dependencies
-    	hanayo
-		shift 1 ;;
+        main_dir
+        dependencies
+        hanayo
+        shift 1 ;;
 
     --rippleapi)
-		main_dir
-    	dependencies
-    	rippleapi
-		shift 1 ;;
+        main_dir
+        dependencies
+        rippleapi
+        shift 1 ;;
 
     --oldfrontend)
-		main_dir
-    	dependencies
-    	old_frontend
-		shift 1 ;;
+        main_dir
+        dependencies
+        old_frontend
+        shift 1 ;;
 
 	"")
-		printf '%s\n' "ERROR! no argument were provided | Try: ripple --help"
-		exit 1 ;;
+        printf '%s\n' "ERROR! no argument were provided | Try: ripple --help"
+        exit 1 ;;
 
     *)
-     	printf '%s\n' "ERROR! unknown argument | Try: ripple --help\n"
-    	shift 1
+        printf '%s\n' "ERROR! unknown argument | Try: ripple --help\n"
+        shift 1
 esac; done
