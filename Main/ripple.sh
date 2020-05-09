@@ -247,7 +247,7 @@ while [ $# -ge 1 ]; do case $1 in
 		"    --lets           To Clone and Setup lets with dependencies." \
 		"    --hanayo         To Clone and Setup hanayo with dependencies." \
 		"    --rippleapi      To Clone and Setup rippleapi with dependencies." \
-	    "    --avatarserver   To Clone and Setup avatar-server with dependencies." \
+	        "--avatarserver   To Clone and Setup avatar-server with dependencies." \
 		"    --oldfrontend    To Clone and Setup oldfrontend with dependencies." \
 		"" \
 		"Report bugs to: uniminin@zoho.com" \
