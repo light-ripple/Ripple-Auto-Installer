@@ -58,8 +58,8 @@ dependencies() {
 			export GOROOT=/root/go
 			export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
 		)
-
-		python3
+		# FIXME: it's ugly way to do. Provide me better way of this implementation
+		python3 ; "$package_manager" install python3-dev
 
 		printf '%s\n' "Done Installing all the necessary Dependencies with [$package_manager]" ; sleep 1
 
@@ -112,7 +112,7 @@ main_dir() {
 peppy () {
 
 	task="pep.py"
-	# FIXME: Add proper cloning with checks & sanitization
+	# FIXME: Add proper cloning with checks & sanitization including automated configuration
 	printf '%s\n' "Cloning and Setting up pep.py $task" ; sleep 2
 	(
 		if [ -n "$directory" ]; then
@@ -135,7 +135,7 @@ peppy () {
 lets() {
 
 	task="lets"
-	# FIXME: Add proper cloning with checks & sanitization
+	# FIXME: Add proper cloning with checks & sanitization including automated configuration
 	printf '%s\n' "Cloning & Setting Up $task" ; sleep 2
 	(
 		if [ -n "$directory" ]; then
@@ -163,7 +163,7 @@ lets() {
 mysql_database() {
 
 	task="MySQL Database"
-	# FIXME: Add proper cloning with checks & sanitization
+	# FIXME: Add proper cloning with checks & sanitization including automated configuration
 	printf '%s\n' "Setting up $task" ; sleep 2
 	(
 		if [ -n "$directory" ]; then
@@ -188,7 +188,7 @@ mysql_database() {
 hanayo() {
 
 	task="Hanayo"
-	# FIXME: Add proper cloning with checks & sanitization
+	# FIXME: Add proper cloning with checks & sanitization including automated configuration
 	printf '%s\n' "Cloning & Setting up $task." ; sleep 2
 	(
 		if [ -n "$directory" ]; then
@@ -208,7 +208,7 @@ hanayo() {
 rippleapi() {
 
 	task="Ripple-API"
-	# FIXME: Add proper cloning with checks & sanitization
+	# FIXME: Add proper cloning with checks & sanitization including automated configuration
 	printf '%s\n' "Cloning & Setting up $task." ; sleep 2
 	(
 		if [ -n "$directory" ]; then
@@ -228,7 +228,7 @@ rippleapi() {
 avatar_server() {
 
 	task="Avatar-Server"
-	# FIXME: Add proper cloning with checks & sanitization
+	# FIXME: Add proper cloning with checks & sanitization including automated configuration
 	printf '%s\n' "Cloning & Setting up $task!" ; sleep 2
 	(
 		if [ -n "$directory" ]; then
@@ -248,7 +248,7 @@ avatar_server() {
 old_frontend() {
 
 	task="OLD-FRONTEND"
-	# FIXME: Add proper cloning with checks & sanitization
+	# FIXME: Add proper cloning with checks & sanitization including automated configuration
 	printf '%s\n' "Cloning & Setting up $task." ; sleep 2
 	(
 		if [ -n "$directory" ]; then
