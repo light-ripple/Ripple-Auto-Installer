@@ -89,7 +89,7 @@ Where RIPPLE -> your targeted directory
 
 ### Contact
 You can join this discord server and ask for help but don't expect us to create a server for youself.
-* Discord Server: <a href=https://discord.gg/bA8pDFX>Computer Science & Engineering</a>
+* Discord Server: <a href=https://discord.gg/bA8pDFX>Developer I/O</a>
 
 ### Credits
 Thanks to <a href=https://github.com/semyon422>semyon422</a> for your <a href=https://github.com/semyon422/open-ripple>open-ripple</a> guide.
