@@ -82,10 +82,10 @@ Create tmux sessions:`tmux new -s tmux_session_name` and go to:
 Where RIPPLE -> your targeted directory
 
 ### Connecting TO OSU!
-* Edit Ripple's Server switcher and create a server switcher for your server:<a href=https://zxq.co/ripple/ripple-server-switcher>Ripple-Server-Switcher</a>
+* Edit Ripple's Server switcher and create a server switcher for your server: <a href=https://zxq.co/ripple/ripple-server-switcher>Ripple-Server-Switcher</a>
 
 ### OSU!API
-* You can get OSU!API Key Here:<a href=https://old.ppy.sh/p/api>OSU!API</a>
+* You can get OSU!API Key Here: <a href=https://old.ppy.sh/p/api>OSU!API</a>
 
 ### Contact
 You can join this discord server and ask for help but don't expect us to create a server for youself.
