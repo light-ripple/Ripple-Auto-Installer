@@ -9,12 +9,12 @@
   <img src="https://img.shields.io/github/issues/Uniminin/Ripple-Auto-Installer?color=violet&style=for-the-badge">
   <img src="https://img.shields.io/github/stars/Uniminin/Ripple-Auto-Installer?style=for-the-badge">
   <img src="https://img.shields.io/github/forks/Uniminin/Ripple-Auto-Installer?color=teal&style=for-the-badge">
-  <img src="https://ripple.moe/static/logos/logo.svg"/>
+  <img src="https://ripple.moe/static/logos/logo.svg">
 </p>
 
 ## Attention
 <b>**THIS SCRIPT IS NOT FOR LOCAL PC (localhost) AND IT IS FOR ADVANCED USERS!**</b><br>
-This script gives you a base and foundation if you're willing to install your own Ripple instance.You’re to think for yourself. Ripple is not a Stack system where we document everything so you’ll need a basic understanding of how Linux systems and full stack web applications work to be able to set up Ripple properly and work out problems efficiently when necessary.
+This script gives you a base and foundation if you're willing to install your own Ripple instance.You’re to think for yourself. Ripple is not a Stack system where Ripple/I document everything so you’ll need a basic understanding of how unix or GNU/Linux systems and full stack web applications work to be able to set up Ripple properly and work out problems efficiently when necessary.
 * You Might want to look at Ripple's Wiki(old): https://github.com/osuripple/ripple/wiki/How-to-setup-ripple
 
 ### Requirements
@@ -87,11 +87,9 @@ Where RIPPLE -> your targeted directory
 ### OSU!API
 * You can get OSU!API Key Here:<a href=https://old.ppy.sh/p/api>OSU!API</a>
 
-
 ### Contact
-You can ~~add me on Discord or~~ join this discord server and ask for help but don't expect us to create a server for youself.
- ~~My Discord:`uniminin#7522`~~ you may contact with me on the server.
-* Discord Server: <a href=https://discord.gg/b44kuYv>Developer I/O</a>
+You can join this discord server and ask for help but don't expect us to create a server for youself.
+* Discord Server: <a href=https://discord.gg/bA8pDFX>Computer Science & Engineering</a>
 
 ### Credits
 Thanks to <a href=https://github.com/semyon422>semyon422</a> for your <a href=https://github.com/semyon422/open-ripple>open-ripple</a> guide.
