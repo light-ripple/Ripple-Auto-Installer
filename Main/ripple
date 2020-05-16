@@ -41,9 +41,9 @@ DetectPackageManager() {
 		export package_manager="$pm"
 
 	elif ! command -v apt >/dev/null; then
-    	die 1 "apt is not executable on this system! Currently this script is programmed to install packages with apt only."
+		die 1 "apt is not executable on this system! Currently this script is programmed to install packages with apt only."
 	else
-    	die 1 "Unexpected Error!"
+		die 1 "Unexpected Error!"
 	fi
 }
 
