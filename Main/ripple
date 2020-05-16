@@ -477,7 +477,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		shift 1 ;;
 
 	--help)
-	printf "%s\n" \
+		printf "%s\n" \
 		"Note:sudo ripple --[argument]" \
 		"" \
 		"Usage:" \
