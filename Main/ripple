@@ -2,86 +2,202 @@
 : '
 -------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of AGPLv3  |
-|                          Last Updated on 10th May, 2020                           |
+|                          Last Updated on 16th May, 2020                           |
 -------------------------------------------------------------------------------------
 '
-# Checking If Running [Script] as Root
-if ! [ "$(id -u)" = 0 ]; then
-   printf '%s\n' "Notice: Execute the Script as Root."
-   exit 1
-fi
 
-# FIXME: Proper/Better Way to do this.
-# Python 3.5 for peppy
+# Simplified assertion by Jacob Hrbek. [kreyren@member.fsf.org]
+die() {
+    case "$1" in
+    *) printf 'FATAL: %s\n'  "$2"
+    esac
 
-python3() {
-
-	python3_5() {
-		(
-			cd /usr/src || exit ; wget https://www.python.org/ftp/python/3.5.9/Python-3.5.9.tar.xz
-			tar -xvf Python-3.5.9.tar.xz ; cd Python-3.5.9 || exit
-			./configure --enable-loadable-sqlite-extensions --enable-optimizations ; make ; make install
-		)
-	}
-
-	# Python 3.6 for lets
-	python3_6() {
-		(
-			cd /usr/src || exit ; wget https://www.python.org/ftp/python/3.6.8/Python-3.6.8.tgz
-			tar -xvf Python-3.6.8.tgz ; cd Python-3.6.8 || exit
-			./configure --enable-optimizations ; make ; make install
-		)
-	}
-
-	python3_5
-	python3_6
+    exit "$1"
 }
 
-# FIXME: check all dependencies, add/remove if needed for all supported systems.
-# Install necessary dependencies required for lets, pep.py, hanayo, go, old-frontend, mysql. (Used APT)
-dependencies() {
-	printf '%s\n' "Starting To Install Required/Necessary Dependencies..." ; sleep 2
+# Checking If Running [Script] as Root
+checkRoot() {
+	if ! [ "$(id -u)" = 0 ]; then
+	die 1 "The Script needs to be executed as Root."
+	fi
+}
 
+# Check number of cpu threads for faster compilation/builds
+nproc_detector() {
+	case "$(nproc)" in
+		[1-9] | [1-9][0-9] | [1-9][0-9][0-9] | [1-9][0-9][0-9][0-9]) export procNum="$(nproc)" ;;
+		*)
+			case "$LANG" in
+				en-*|*) eerror "Command 'nproc' does not return an expected value on this system, setting the processor count on '1' which will negatively affect performance on systems with more then one thread"
+			esac
+			export procNum="1"
+	esac
+}
+
+DetectPackageManager() {
 	if command -v apt >/dev/null; then
-		package_manager="apt"
-		printf '%s\n' "Using Package Manager: $package_manager"
-		"$package_manager" update ; "$package_manager" upgrade -y
-		"$package_manager" install build-essential gcc g++ \
-		git tmux nginx wget gnupg mysql-server redis-server nginx checkinstall cython \
-		php-fpm composer php7.0-mbstring php7.0-curl php-mysql -y
-
-		# Golang1.13+ for Hanayo & rippleapi
-		(
-			mkdir builds ; cd builds || exit
-			wget https://dl.google.com/go/go1.13.3.linux-amd64.tar.gz
-			tar -xvf go1.13.3.linux-amd64.tar.gz ; mv go /usr/local
-			export GOROOT=/root/go
-			export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
-		)
-		# FIXME: it's ugly way to do. Provide me better way of this implementation
-		python3 ; "$package_manager" install python3-dev
-
-		printf '%s\n' "Done Installing all the necessary Dependencies with [$package_manager]" ; sleep 1
+		pm="apt"
+		printf "%s\n" "Found Package Manager: $pm"
+		export package_manager="$pm"
 
 	elif ! command -v apt >/dev/null; then
-    		printf '%s\n' "apt is not executable on this system!"
-
-	elif command -v pacman >/dev/null; then
-		package_manager="pacman"
-		printf '%s\n' "Using Package Manager: $package_manager"
-		"$package_manager" -Syyu --noconfirm
-		"$package_manager" -S --noconfirm tmux git wget gnupg mysql redis nginx cython php composer go
-		python3
-
-	elif ! command -v pacman >/dev/null; then
-		printf '%s\n' "pacman is not executable on this system!"
-
+    	die 1 "apt is not executable on this system! Currently this script is programmed to install packages with apt only."
 	else
-    	printf '%s\n' "Unexpected Error!"
+    	die 1 "Unexpected Error!"
+	fi
+}
+
+
+# Python 3.5 for pep.py
+python3_5() {
+	if command -v ping 1>/dev/null; then
+		ping -i 0.5 -c 5 python.org || die 1 "Domain: python.org is not reachable from this environment."
+	fi
+
+	printf "%s\n" "Using Package Manager: $package_manager"
+	"$package_manager" update ; "$package_manager" upgrade -y
+	"$package_manager" install build-essential libssl-dev zlib1g-dev libbz2-dev libsqlite3-dev \
+	wget git python-dev default-libmysqlclient-dev cython -y
+
+	if command -v gcc >/dev/null; then
+		printf "%s\n" "Done Installing all the necessary Dependencies required for peppy!" ; sleep 1
+	else
+		die 1 "Failed to Install Extra Dependencies required for peppy."
+	fi
+
+	(	
+		if ! command -v wget >/dev/null; then
+			die 1 "wget program is not installed on this system."
+		fi
+
+		if [ ! -f "/usr/src/Python-3.5.9.tar.xz" ]; then
+			wget https://www.python.org/ftp/python/3.5.9/Python-3.5.9.tar.xz -O "/usr/src/Python-3.5.9.tar.xz" || die 1 "Could not download file: Python-3.5.9.tar.xz"
+		fi
+
+		if [ -d "Python-3.5.9.tar.xz" ]; then
+			tar -xvf Python-3.5.9.tar.xz
+			if [ -d "Python-3.5.9" ]; then
+				cd Python-3.6.8 || die 1 "Could not cd into Python-3.5.9"
+			else
+				die "Failed to extract: Python-3.5.9.tar.xz"
+			fi
+			./configure --enable-optimizations --with-ensurepip=install ; make --jobs "$procNum" ; make install
+			python3.5 -m pip install --upgrade pip
+		
+		if command -v python3.5 >/dev/null; then
+			printf "%s\n" "Python3.5 has been installed on this system."
+		else
+			die 1 "Failed to install python3.5"
+		fi
+
+		else
+			die 1 "Python3.5.9 couldn't be installed because file Python-3.5.9.tar.xz was not found!"
+		fi
+	)
+}
+
+# Python 3.6 for lets
+python3_6() {
+	if command -v ping 1>/dev/null; then
+		ping -i 0.5 -c 5 python.org || die 1 "Domain: python.org is not reachable from this environment."
+	fi
+
+	printf "%s\n" "Using Package Manager: $package_manager"
+	"$package_manager" update ; "$package_manager" upgrade -y
+	"$package_manager" install build-essential libssl-dev zlib1g-dev libbz2-dev libsqlite3-dev \
+	wget git python-dev default-libmysqlclient-dev cython -y
+
+	if command -v gcc >/dev/null; then
+		printf "%s\n" "Done Installing all the necessary Dependencies required for lets!" ; sleep 1
+	else
+		die 1 "Failed to Install Extra Dependencies required for lets."
+	fi
+
+	(	
+		if ! command -v wget >/dev/null; then
+			die 1 "wget program is not installed on this system."
+		fi
+		
+		if [ ! -f "/usr/src/Python-3.6.8.tar.xz" ]; then
+			wget https://www.python.org/ftp/python/3.6.8/Python-3.6.8.tar.xz -O "/usr/src/Python-3.6.8.tar.xz" || die 1 "Could not download file: Python-3.6.8.tar.xz"
+		fi
+
+		if [ -d "Python-3.6.8.tar.xz" ]; then
+			tar -xvf Python-3.6.8.tar.xz
+			if [ -d "Python-3.6.8" ]; then
+				cd Python-3.6.8 || die 1 "Could not cd into Python-3.6.8"
+			else
+				die "Failed to extract: Python-3.6.8.tar.xz"
+			fi
+			./configure --enable-optimizations --with-ensurepip=install ; make --jobs "$procNum" ; make install
+			python3.6 -m pip install --upgrade pip
+
+		if command -v python3.6 >/dev/null; then
+			printf "%s\n" "Python3.6 has been installed on this system."
+		else
+			die 1 "Failed to install python3.6"
+		fi
+
+		else
+			die 1 "Python3.6.8 couldn't be installed because file Python-3.6.8.tar.xz was not found!"
+		fi
+	)
+}
+
+
+# Golang1.13+ for Hanayo & rippleapi
+golang() {
+	if command -v ping 1>/dev/null; then
+		ping -i 0.5 -c 5 dl.google.com || die 1 "Domain: dl.google.com is not reachable from this environment."
+	fi
+
+	(	
+		if [ ! -f "/usr/src/go1.13.3.linux-amd64.tar.gz" ]; then
+			cd /usr/src || die 1 "Failed to cd into '/usr/src'"
+			wget https://dl.google.com/go/go1.13.11.linux-amd64.tar.gz
+			tar -C /usr/local -xzf go1.13.11.linux-amd64.tar.gz
+			export PATH=$PATH:/usr/local/go/bin
+			source $HOME/.profile
+			export GOPATH=/root/go
+		fi
+	)
+}
+
+
+# mysql dependencies
+mysql_dependencies() {
+	"$package_manager" install mysql-server mysql-client -y ; service mysql start
+}
+
+# php for old-frontend
+php() {
+	printf "%s\n" "Using Package Manager: $package_manager"
+	"$package_manager" update ; "$package_manager" upgrade -y
+	"$package_manager" install build-essential \
+	git php-fpm php7.0-mbstring php7.0-curl php-mysql composer -y
+
+	if command -v gcc >/dev/null; then
+		printf "%s\n" "Done Installing all the necessary Dependencies required for old-frontend!" ; sleep 1
+	else
+		die 1 "Failed to Install Dependencies required for old-frontend."
+	fi
+}
+
+# Extra Dependencies required to run stack softwares and get the server online.
+extra_dependencies() {
+	printf "%s\n" "Starting To Install Extra Dependencies..." ; sleep 2
+	printf "%s\n" "Using Package Manager: $package_manager"
+	"$package_manager" update ; "$package_manager" upgrade -y
+	"$package_manager" install tmux nginx redis-server -y
+
+	if command -v nginx >/dev/null; then
+		printf "%s\n" "Done Installing Extra Dependencies with [$package_manager]" ; sleep 1
+	else
+		die 1 "Failed to Install Extra Dependencies."
 	fi
 
 }
-# FIXME: Add proper cloning with checks & sanitization
+
 main_dir() {
 	# Creating Master Directory (where all The Repositories will be cloned)
 	while [ -z "$targetDir" ]; do
@@ -94,15 +210,14 @@ main_dir() {
 		if [ "$confirmation" = "y" ]; then
 			mkdir "$master_dir"
 			if [ -d "$master_dir" ]; then
-				chmod -R 777 "$master_dir"
+				chmod R 777 "$master_dir"
 				export directory="$master_dir"
-			    	printf "%s has been created!\n" "$master_dir"
+			    printf "%s has been created!\n" "$master_dir"
 			else
-				printf '%s\n' "Failed to create Directory: $master_dir"
+				die 1 "Failed to create Directory: $master_dir"
 			fi
 		else
-			printf '%s\n' "Directory: $master_dir wasn't created! Exiting...\n"
-			exit 1
+			die 1 "Directory: $master_dir wasn't created!\n"
 		fi
 	fi
 
@@ -111,21 +226,30 @@ main_dir() {
 # peppy is the backend of osu/bancho, starting from client login, it handles most of the stuff.
 peppy () {
 
+	if command -v ping 1>/dev/null; then
+		ping -i 0.5 -c 5 zxq.co || die 1 "Domain: zxq.co is not reachable from this environment."
+	fi
+
 	task="pep.py"
-	# FIXME: Add proper cloning with checks & sanitization including automated configuration
-	printf '%s\n' "Cloning and Setting up pep.py $task" ; sleep 2
+
+	# FIXME: Automate configuration
+	printf "%s\n" "Cloning and Setting up pep.py $task" ; sleep 2
 	(
-		if [ -n "$directory" ]; then
-			cd "$directory" || exit
-			git clone https://zxq.co/ripple/pep.py ; cd pep.py || exit
-		    	git submodule init ; git submodule update
-		    	python3.5 -m pip install -r requirements.txt
-		    	python3.5 setup.py build_ext --inplace
-		    	python3.5 pep.py
-		    	printf '%s\n' "Done Setting Up $task" ; sleep 1
+		if [ -d "$directory" ]; then
+			cd "$directory" || die 1 "Failed to cd into $directory"
+			git clone https://zxq.co/ripple/pep.py ; cd pep.py || die 1 "Failed to cd into '$task'"
+			git submodule init ; git submodule 
+			
+			if command -v python3.5 >/dev/null; then
+				python3.5 -m pip install -r requirements.txt
+				python3.5 setup.py build_ext --inplace
+				python3.5 pep.py
+				printf "%s\n" "Done Setting Up $task" ; sleep 1
+			else
+				die 1 "Could not install pep.py because python3.5 wasn't found on this system."
+			fi
 		else
-			printf '%s\n' "$directory doesn't exist. Exiting..."
-			exit 1
+			die 1 "$directory doesn't exist."
 		fi
 	)
 
@@ -134,26 +258,47 @@ peppy () {
 # LETS is the Ripple's score server. It manages scores, osu!direct etc.
 lets() {
 
+	if command -v ping 1>/dev/null; then
+		ping -i 0.5 -c 5 github.com || die 1 "Domain: github.com is not reachable from this environment."
+	fi
+
 	task="lets"
-	# FIXME: Add proper cloning with checks & sanitization including automated configuration
-	printf '%s\n' "Cloning & Setting Up $task" ; sleep 2
+
+	# FIXME: Automate configuration
+	printf "%s\n" "Cloning & Setting Up $task" ; sleep 2
 	(
-		if [ -n "$directory" ]; then
-			cd "$directory" || exit
-			# Using osuthailand's Lets since it builds without any errors (hopefully)
-			it clone https://github.com/osuthailand/lets ; cd lets || exit
-			git submodule init ; git submodule update
-			cd secret || exit ; git submodule init ; git submodule update ; cd ..
-			python3.6 -m pip install -r requirements.txt
-			python3.6 setup.py build_ext --inplace
-		    	python3.6 lets.py
-			# compile oppai-ng and ainu-rx-calc to make pp calculation working
-			cd ./pp/oppai-ng/ || exit ; chmod +x ./build ; ./build ; cd ./../../
-			cd ./pp/oppai-rx/ || exit ; chmod +x ./build ; ./build ; cd ./../../
-			printf '%s\n' "Done Setting Up $task" ; sleep 1
+		if [ -d "$directory" ]; then
+			cd "$directory" || die 1 "Failed to cd into $directory"
+
+			# Using osufx's Lets since it builds without any errors (hopefully)
+			git clone https://github.com/osufx/lets ; cd lets || die 1 "Failed to cd into '$task'"
+			if [ -d "secret" ]; then
+				rm -rf secret
+				git clone https://github.com/osufx/secret
+				(
+					cd secret || die 1 "Failed to cd into 'secret'"
+					git submodule init ; git submodule update
+				)
+			fi
+			
+			if command -v python3.6 >/dev/null; then
+				python3.6 -m pip install -r requirements.txt
+				python3.6 setup.py build_ext --inplace
+				python3.6 pep.py
+				printf "%s\n" "Done Setting Up $task" ; sleep 1
+			else
+				die 1 "Could not install pep.py because python3.6 wasn't found on this system."
+			fi
+			# compile oppai-ng to make pp calculation working
+			if [ -d "pp/oppai-ng" ]; then
+				(
+				cd pp/oppai-ng/ || die 1 "Failed to cd into 'pp/oppai-ng'"
+				chmod +x build ; ./build
+				)
+			fi
+			printf "%s\n" "Done Setting Up $task" ; sleep 1
 		else
-			printf '%s\n' "$directory doesn't exist. Exiting..."
-			exit 1
+			die 1 "$directory doesn't exist."
 		fi
 	)
 
@@ -163,22 +308,26 @@ lets() {
 mysql_database() {
 
 	task="MySQL Database"
-	# FIXME: Add proper cloning with checks & sanitization including automated configuration
-	printf '%s\n' "Setting up $task" ; sleep 2
+	# FIXME: Re-Check!!!
+	printf "%s\n" "Setting up $task" ; sleep 2
 	(
-		if [ -n "$directory" ]; then
-			cd "$directory" || exit
+		if [ -d "$directory" ]; then
+			cd "$directory" || die 1 "Failed to cd into $directory"
+			mysql_dir="mysql_db"
 			read -r "Enter MySQL Username: " mysql_user
-            		read -r "Enter MySQL Password: " mysql_password
-            		read -r "Enter MySQL Database Name For Ripple: " database_name
-            		mkdir mysql_db ; cd mysql_db || exit
-            		wget -O ripple.sql https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Database%20files/ripple.sql
-            		mysql -u "$mysql_user" -p"$mysql_password" -e "CREATE DATABASE '$database_name';"
-            		mysql -p -u "$mysql_user" "$database_name" < ripple.sql
-            		printf '%s\n' "Done Setting Up $task" ; sleep 1
+			read -r "Enter MySQL Password: " mysql_password
+			read -r "Enter MySQL Database Name For Ripple: " database_name
+			mkdir $mysql_dir ; cd $mysql_dir || die 1 "Failed to cd into $mysql_dir"
+			wget -O ripple.sql https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Database%20files/ripple.sql
+			if [ -f "ripple.sql" ]; then
+				mysql -u "$mysql_user" -p"$mysql_password" -e "CREATE DATABASE '$database_name';"
+				mysql -p -u "$mysql_user" "$database_name" < ripple.sql
+				printf "%s\n" "Done Setting Up $task" ; sleep 1
+			else
+				die 1 "Failed Setting Up $task"
+			fi
 		else
-			printf '%s\n' "$directory doesn't exist. Exiting..."
-			exit 1
+			die 1 "$directory doesn't exist."
 		fi
 	)
 
@@ -187,18 +336,31 @@ mysql_database() {
 # Hanayo: The Ripple's Frontend.
 hanayo() {
 
-	task="Hanayo"
-	# FIXME: Add proper cloning with checks & sanitization including automated configuration
-	printf '%s\n' "Cloning & Setting up $task." ; sleep 2
+	if command -v ping 1>/dev/null; then
+		ping -i 0.5 -c 5 zxq.co || die 1 "Domain: zxq.co is not reachable from this environment."
+	fi
+
+	task="hanayo"
+
+	# FIXME: Automate configuration
+	printf "%s\n" "Cloning & Setting up $task." ; sleep 2
 	(
-		if [ -n "$directory" ]; then
-			go get -u zxq.co/ripple/hanayo
-			cd /root/go/src/zxq.co/ripple/hanayo || exit ; go build ; ./hanayo
-			mv go/src/zxq.co/ripple/hanayo "$directory"
-			printf '%s\n' "Done Setting Up $task!" ; sleep 1
+		if [ -d "$directory" ]; then
+			go get zxq.co/ripple/hanayo
+			if [ -d "/root/go/src/zxq.co/ripple/hanayo" ]; then
+				cd /root/go/src/zxq.co/ripple/hanayo || die 1 "Failed to cd into '$task'" ; go build ; ./hanayo
+				if [ ! -d "$directory/hanayo" ]; then
+					mv go/src/zxq.co/ripple/hanayo "$directory"
+					printf "%s\n" "Done Setting Up $task!" ; sleep 1
+				# FIXME: provide better Error notice
+				else
+					die 1 "Unexpected Error!"
+				fi
+			else
+				die 1 "Failed Setting Up $task"
+			fi
 		else
-			printf '%s\n' "$directory doesn't exist. Exiting..."
-			exit 1
+			die 1 "$directory doesn't exist."
 		fi
 	)
 
@@ -207,18 +369,26 @@ hanayo() {
 # Ripple API is required to talk with the frontend (hanayo), and all other Ripple's Software (lets, peppy..)
 rippleapi() {
 
-	task="Ripple-API"
-	# FIXME: Add proper cloning with checks & sanitization including automated configuration
-	printf '%s\n' "Cloning & Setting up $task." ; sleep 2
+	if command -v ping 1>/dev/null; then
+		ping -i 0.5 -c 5 zxq.co || die 1 "Domain: zxq.co is not reachable from this environment."
+	fi
+
+	task="rippleapi"
+	# FIXME: Automate configuration
+	printf "%s\n" "Cloning & Setting up $task." ; sleep 2
 	(
-		if [ -n "$directory" ]; then
+		if [ -d "$directory" ]; then
 			go get -u zxq.co/ripple/rippleapi
-			cd go/src/zxq.co/ripple/rippleapi || exit ; go build ; ./rippleapi
-			mv go/src/zxq.co/ripple/rippleapi "$directory"
-			printf '%s/n' "Done setting up $task!" ; sleep 1
+			cd go/src/zxq.co/ripple/rippleapi || die 1 "Failed to cd into '$task'" ; go build ; ./rippleapi
+			if [ ! -d "$directory/rippleapi" ]; then
+				mv go/src/zxq.co/ripple/rippleapi "$directory"
+				printf '%s/n' "Done setting up $task!" ; sleep 1
+			# FIXME: provide better Error notice
+			else
+				die 1 "Unexpected Error!"
+			fi
 		else
-			printf '%s\n' "$directory doesn't exist. Exiting..."
-			exit 1
+			die 1 "$directory doesn't exist."
 		fi
 	)
 
@@ -227,18 +397,27 @@ rippleapi() {
 # Avatar-Server handles/manages ingame & frontend's avatars of all users.
 avatar_server() {
 
-	task="Avatar-Server"
-	# FIXME: Add proper cloning with checks & sanitization including automated configuration
-	printf '%s\n' "Cloning & Setting up $task!" ; sleep 2
+	if command -v ping 1>/dev/null; then
+		ping -i 0.5 -c 5 github.com || die 1 "Domain: github.com is not reachable from this environment."
+	fi
+
+	task="avatar-server"
+	# FIXME: Automate configuration
+	printf "%s\n" "Cloning & Setting up $task!" ; sleep 2
 	(
-		if [ -n "$directory" ]; then
-			cd "$directory" || exit
-			git clone https://github.com/Uniminin/avatar-server ; cd avatar-server || exit
-		    	python3.6 -m pip install -r requirements.txt
-		    	printf '%s\n' "Done setting up $task!" ; sleep 1
+		if [ -d "$directory" ]; then
+			cd "$directory" || die 1 "Failed to cd into $directory"
+			git clone https://github.com/Uniminin/avatar-server
+			if [ -d "avatar-server" ]; then
+				cd avatar-server || die 1 "Failed to cd into '$task'"
+				python3.6 -m pip install -r requirements.txt
+				printf "%s\n" "Done setting up $task!" ; sleep 1
+			else
+				die 1 "Failed Setting Up $task"
+			fi
+			fi
 		else
-			printf '%s\n' "$directory doesn't exist. Exiting..."
-			exit 1
+			die 1 "$directory doesn't exist."
 		fi
 	)
 
@@ -247,41 +426,58 @@ avatar_server() {
 # OLD-FRONTEND is the Ripple's Admin Panel. Which can be accessed at old.domain
 old_frontend() {
 
-	task="OLD-FRONTEND"
-	# FIXME: Add proper cloning with checks & sanitization including automated configuration
-	printf '%s\n' "Cloning & Setting up $task." ; sleep 2
+	if command -v ping 1>/dev/null; then
+		ping -i 0.5 -c 5 github.com || die 1 "Domain: github.com is not reachable from this environment."
+	fi
+
+	task="old-frontend"
+
+	printf "%s\n" "Cloning & Setting up $task." ; sleep 2
 	(
-		if [ -n "$directory" ]; then
-			cd "$directory" || exit
-			git clone https://github.com/osuripple/old-frontend ; cd old-frontend || exit ; composer install
-            		git clone https://github.com/osufx/secret
-            		printf '%s\n' "Done setting up $task!" ; sleep 1
+		if [ -d "$directory" ]; then
+			cd "$directory" || die 1 "Failed to cd into $directory"
+			git clone https://github.com/osuripple/old-frontend
+			if [ -d "old-frontend" ]; then
+			 	cd old-frontend || die 1 "Failed to cd into '$task'"
+				cd inc || die 1 "Failed to cd into 'inc'"
+				# FIXME: Automate configuration
+				cp config.sample.php config.php
+				composer install
+				printf "%s\n" "Done setting up $task!" ; sleep 1
+			fi
 		else
-			printf '%s\n' "$directory doesn't exist. Exiting..."
-			exit 1
+			die 1 "$directory doesn't exist."
 		fi
 	)
 
 }
 
-# FIXME: add proper dependencies for each repos
+# FIXME: Re-Check Dependencies?
 # script --all to start the entire process at once | script --help to Execute help
 while [ "$#" -ge 0 ]; do case "$1" in
     --all)
-	main_dir
-        dependencies
-	mysql_database
+		checkRoot
+		checkServer
+		DetectPackageManager
+	    main_dir
+		mysql_dependencies
+	    mysql_database
+		python3_5
         peppy
+		python3_6
         lets
         avatar_server
+		golang
         hanayo
         rippleapi
+		php
         old_frontend
+		extra_dependencies
         read -r "Installation of Ripple Stack has been completed!!! Follow Github Repository for more information!"
         shift 1 ;;
 
     --help)
-        printf '%s\n' \
+        printf "%s\n" \
 		"Note:sudo ripple --[argument]" \
 		"" \
 		"Usage:" \
@@ -303,56 +499,77 @@ while [ "$#" -ge 0 ]; do case "$1" in
         shift 1 ;;
 
     --dependencies)
-        dependencies
+		checkRoot
+		DetectPackageManager
+		mysql_dependencies
+		python3_5
+		python3_6
+		golang
+		php
+		extra_dependencies
 	shift 1 ;;
 
     --mysql)
-	main_dir
-        dependencies
-	mysql_database
+		checkRoot
+		DetectPackageManager
+		mysql_dependencies
+	    main_dir
+	    mysql_database
 	shift 1 ;;
 
     --peppy)
+		checkRoot
+		DetectPackageManager
         main_dir
-        dependencies
+		python3_5
         peppy
         shift 1 ;;
 
     --lets)
+		checkRoot
+		DetectPackageManager
         main_dir
-        dependencies
+		python3_6
         lets
         shift  1 ;;
 
     --avatarserver)
+		checkRoot
+		DetectPackageManager
         main_dir
-        dependencies
+		python3_6
         avatar_server
         shift 1 ;;
 
     --hanayo)
+		checkRoot
+		DetectPackageManager
         main_dir
-        dependencies
+		golang
         hanayo
         shift 1 ;;
 
     --rippleapi)
+		checkRoot
+		DetectPackageManager
         main_dir
-        dependencies
+		golang
         rippleapi
         shift 1 ;;
 
     --oldfrontend)
+		checkRoot
+		DetectPackageManager
         main_dir
-        dependencies
+		php
         old_frontend
         shift 1 ;;
 
 	"")
-        printf '%s\n' "ERROR! no argument were provided | Try: ripple --help"
-        exit 1 ;;
+        die 1 "ERROR! no argument were provided | Try: ripple --help"
+		;;
 
     *)
-        printf '%s\n' "ERROR! unknown argument | Try: ripple --help\n"
+        printf "%s\n" "ERROR! unknown argument | Try: ripple --help\n"
         shift 1
 esac; done
