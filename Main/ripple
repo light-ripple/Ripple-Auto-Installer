@@ -17,9 +17,9 @@ die() {
 
 # Checking If Running [Script] as Root
 checkRoot() {
-    if ! [ "$(id -u)" = 0 ]; then
-        die 1 "The Script needs to be executed as Root."
-    fi
+	if ! [ "$(id -u)" = 0 ]; then
+		die 1 "The Script needs to be executed as Root."
+	fi
 }
 
 # Check number of cpu threads for faster compilation/builds
@@ -456,118 +456,118 @@ old_frontend() {
 # script --all to start the entire process at once | script --help to Execute help
 while [ "$#" -ge 0 ]; do case "$1" in
     --all)
-	checkRoot
-	checkServer
-	DetectPackageManager
-	main_dir
-	mysql_dependencies
-	mysql_database
-	python3_5
+		checkRoot
+		checkServer
+		DetectPackageManager
+	    main_dir
+		mysql_dependencies
+	    mysql_database
+		python3_5
         peppy
-	python3_6
+		python3_6
         lets
         avatar_server
-	golang
+		golang
         hanayo
         rippleapi
-	php
+		php
         old_frontend
-	extra_dependencies
+		extra_dependencies
         read -r "Installation of Ripple Stack has been completed!!! Follow Github Repository for more information!"
         shift 1 ;;
 
     --help)
         printf "%s\n" \
-	"Note:sudo ripple --[argument]" \
-	"" \
-	"Usage:" \
-	"    --help           Shows the list of all arguments including information." \
-	"    --all            To Setup Entire Ripple Stack!" \
-	"    --dependencies   To Install all the necessary dependencies required for Ripple Stack." \
-	"    --mysql          To Manually Setup MySQL DB with dependencies." \
-	"    --peppy          To Clone and Setup peppy with dependencies." \
-	"    --lets           To Clone and Setup lets with dependencies." \
-	"    --hanayo         To Clone and Setup hanayo with dependencies." \
-	"    --rippleapi      To Clone and Setup rippleapi with dependencies." \
-	"    --avatarserver   To Clone and Setup avatar-server with dependencies." \
-	"    --oldfrontend    To Clone and Setup oldfrontend with dependencies." \
-	"" \
-	"Report bugs to: uniminin@zoho.com" \
-	"RAI Repository URL: <https://github.com/Uniminin/Ripple-Auto-Installer/> " \
-	"GNU AGPLv3 Licence: <https://www.gnu.org/licenses/agpl-3.0.en.html/>" \
-	"General help using GNU software: <https://www.gnu.org/gethelp/>"
+		"Note:sudo ripple --[argument]" \
+		"" \
+		"Usage:" \
+		"    --help           Shows the list of all arguments including information." \
+		"    --all            To Setup Entire Ripple Stack!" \
+		"    --dependencies   To Install all the necessary dependencies required for Ripple Stack." \
+		"    --mysql          To Manually Setup MySQL DB with dependencies." \
+		"    --peppy          To Clone and Setup peppy with dependencies." \
+		"    --lets           To Clone and Setup lets with dependencies." \
+		"    --hanayo         To Clone and Setup hanayo with dependencies." \
+		"    --rippleapi      To Clone and Setup rippleapi with dependencies." \
+	        "--avatarserver   To Clone and Setup avatar-server with dependencies." \
+		"    --oldfrontend    To Clone and Setup oldfrontend with dependencies." \
+		"" \
+		"Report bugs to: uniminin@zoho.com" \
+		"RAI Repository URL: <https://github.com/Uniminin/Ripple-Auto-Installer/> " \
+		"GNU AGPLv3 Licence: <https://www.gnu.org/licenses/agpl-3.0.en.html/>" \
+		"General help using GNU software: <https://www.gnu.org/gethelp/>"
         shift 1 ;;
 
     --dependencies)
-	checkRoot
-	DetectPackageManager
-	mysql_dependencies
-	python3_5
-	python3_6
-	golang
-	php
-	extra_dependencies
+		checkRoot
+		DetectPackageManager
+		mysql_dependencies
+		python3_5
+		python3_6
+		golang
+		php
+		extra_dependencies
 	shift 1 ;;
 
     --mysql)
-	checkRoot
-	DetectPackageManager
-	mysql_dependencies
-	main_dir
-	mysql_database
+		checkRoot
+		DetectPackageManager
+		mysql_dependencies
+	    main_dir
+	    mysql_database
 	shift 1 ;;
 
     --peppy)
-	checkRoot
-	DetectPackageManager
+		checkRoot
+		DetectPackageManager
         main_dir
-	python3_5
+		python3_5
         peppy
         shift 1 ;;
 
     --lets)
-	checkRoot
-	DetectPackageManager
+		checkRoot
+		DetectPackageManager
         main_dir
-	python3_6
+		python3_6
         lets
-        shift 1 ;;
+        shift  1 ;;
 
     --avatarserver)
-	checkRoot
-	DetectPackageManager
+		checkRoot
+		DetectPackageManager
         main_dir
-	python3_6
+		python3_6
         avatar_server
         shift 1 ;;
 
     --hanayo)
-	checkRoot
-	DetectPackageManager
+		checkRoot
+		DetectPackageManager
         main_dir
-	golang
+		golang
         hanayo
         shift 1 ;;
 
     --rippleapi)
-	checkRoot
-	DetectPackageManager
+		checkRoot
+		DetectPackageManager
         main_dir
-	golang
+		golang
         rippleapi
         shift 1 ;;
 
     --oldfrontend)
-	checkRoot
-	DetectPackageManager
+		checkRoot
+		DetectPackageManager
         main_dir
-	php
+		php
         old_frontend
         shift 1 ;;
 
 	"")
         die 1 "ERROR! no argument were provided | Try: ripple --help"
-	;;
+		;;
 
     *)
         printf "%s\n" "ERROR! unknown argument | Try: ripple --help\n"
