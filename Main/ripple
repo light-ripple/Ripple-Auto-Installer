@@ -17,9 +17,9 @@ die() {
 
 # Checking If Running [Script] as Root
 checkRoot() {
-	if ! [ "$(id -u)" = 0 ]; then
-	die 1 "The Script needs to be executed as Root."
-	fi
+    if ! [ "$(id -u)" = 0 ]; then
+        die 1 "The Script needs to be executed as Root."
+    fi
 }
 
 # Check number of cpu threads for faster compilation/builds
