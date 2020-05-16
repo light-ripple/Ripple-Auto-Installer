@@ -212,7 +212,7 @@ main_dir() {
 			if [ -d "$master_dir" ]; then
 				chmod R 777 "$master_dir"
 				export directory="$master_dir"
-			    printf "%s has been created!\n" "$master_dir"
+				printf "%s has been created!\n" "$master_dir"
 			else
 				die 1 "Failed to create Directory: $master_dir"
 			fi
@@ -455,29 +455,29 @@ old_frontend() {
 # FIXME: Re-Check Dependencies?
 # script --all to start the entire process at once | script --help to Execute help
 while [ "$#" -ge 0 ]; do case "$1" in
-    --all)
+	--all)
 		checkRoot
 		checkServer
 		DetectPackageManager
-	    main_dir
+		main_dir
 		mysql_dependencies
-	    mysql_database
+		mysql_database
 		python3_5
-        peppy
+		peppy
 		python3_6
-        lets
-        avatar_server
+		lets
+		avatar_server
 		golang
-        hanayo
-        rippleapi
+		hanayo
+		rippleapi
 		php
-        old_frontend
+		old_frontend
 		extra_dependencies
-        read -r "Installation of Ripple Stack has been completed!!! Follow Github Repository for more information!"
-        shift 1 ;;
+		read -r "Installation of Ripple Stack has been completed!!! Follow Github Repository for more information!"
+		shift 1 ;;
 
-    --help)
-        printf "%s\n" \
+	--help)
+	printf "%s\n" \
 		"Note:sudo ripple --[argument]" \
 		"" \
 		"Usage:" \
@@ -489,16 +489,16 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		"    --lets           To Clone and Setup lets with dependencies." \
 		"    --hanayo         To Clone and Setup hanayo with dependencies." \
 		"    --rippleapi      To Clone and Setup rippleapi with dependencies." \
-	        "--avatarserver   To Clone and Setup avatar-server with dependencies." \
+		"    --avatarserver   To Clone and Setup avatar-server with dependencies." \
 		"    --oldfrontend    To Clone and Setup oldfrontend with dependencies." \
 		"" \
 		"Report bugs to: uniminin@zoho.com" \
 		"RAI Repository URL: <https://github.com/Uniminin/Ripple-Auto-Installer/> " \
 		"GNU AGPLv3 Licence: <https://www.gnu.org/licenses/agpl-3.0.en.html/>" \
 		"General help using GNU software: <https://www.gnu.org/gethelp/>"
-        shift 1 ;;
+		shift 1 ;;
 
-    --dependencies)
+	--dependencies)
 		checkRoot
 		DetectPackageManager
 		mysql_dependencies
@@ -507,69 +507,69 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		golang
 		php
 		extra_dependencies
-	shift 1 ;;
+		shift 1 ;;
 
-    --mysql)
+	--mysql)
 		checkRoot
 		DetectPackageManager
 		mysql_dependencies
-	    main_dir
-	    mysql_database
-	shift 1 ;;
+		main_dir
+		mysql_database
+		shift 1 ;;
 
-    --peppy)
+	--peppy)
 		checkRoot
 		DetectPackageManager
-        main_dir
+		main_dir
 		python3_5
-        peppy
-        shift 1 ;;
+		peppy
+		shift 1 ;;
 
-    --lets)
+	--lets)
 		checkRoot
 		DetectPackageManager
-        main_dir
+		main_dir
 		python3_6
-        lets
-        shift  1 ;;
+		lets
+		shift  1 ;;
 
-    --avatarserver)
+	--avatarserver)
 		checkRoot
 		DetectPackageManager
-        main_dir
+		main_dir
 		python3_6
-        avatar_server
-        shift 1 ;;
+		avatar_server
+		shift 1 ;;
 
-    --hanayo)
+	--hanayo)
 		checkRoot
 		DetectPackageManager
-        main_dir
+		main_dir
 		golang
-        hanayo
-        shift 1 ;;
+		hanayo
+		shift 1 ;;
 
-    --rippleapi)
+	--rippleapi)
 		checkRoot
 		DetectPackageManager
-        main_dir
+		main_dir
 		golang
-        rippleapi
-        shift 1 ;;
+		rippleapi
+		shift 1 ;;
 
-    --oldfrontend)
+	--oldfrontend)
 		checkRoot
 		DetectPackageManager
-        main_dir
+		main_dir
 		php
-        old_frontend
-        shift 1 ;;
+		old_frontend
+		shift 1 ;;
 
 	"")
-        die 1 "ERROR! no argument were provided | Try: ripple --help"
+		die 1 "ERROR! no argument were provided | Try: ripple --help"
 		;;
 
-    *)
-        printf "%s\n" "ERROR! unknown argument | Try: ripple --help\n"
-        shift 1
+	*)
+		printf "%s\n" "ERROR! unknown argument | Try: ripple --help\n"
+		shift 1
 esac; done
