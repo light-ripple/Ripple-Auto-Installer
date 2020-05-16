@@ -438,7 +438,7 @@ old_frontend() {
 			cd "$directory" || die 1 "Failed to cd into $directory"
 			git clone https://github.com/osuripple/old-frontend
 			if [ -d "old-frontend" ]; then
-			 	cd old-frontend || die 1 "Failed to cd into '$task'"
+				cd old-frontend || die 1 "Failed to cd into '$task'"
 				cd inc || die 1 "Failed to cd into 'inc'"
 				# FIXME: Automate configuration
 				cp config.sample.php config.php
