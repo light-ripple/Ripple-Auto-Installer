@@ -457,7 +457,6 @@ old_frontend() {
 while [ "$#" -ge 0 ]; do case "$1" in
 	--all)
 		checkRoot
-		checkServer
 		DetectPackageManager
 		main_dir
 		mysql_dependencies
