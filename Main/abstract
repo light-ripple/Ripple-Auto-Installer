@@ -48,4 +48,4 @@
 
 ###! Requirements
 ###!  - Ripple can be setup in any unix OS/Desktop Environment. You will need to install Linux Subsystem if you're on windows.
-###!  - A Linux VPS with Debian Based Distros are recommended.
+###!  - A Unix or GNU/Linux VPS.
