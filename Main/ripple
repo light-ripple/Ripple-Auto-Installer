@@ -2,7 +2,7 @@
 : '
 -------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of AGPLv3  |
-|                          Last Updated on 16th May, 2020                           |
+|                          Last Updated on 19th May, 2020                           |
 -------------------------------------------------------------------------------------
 '
 
@@ -34,6 +34,7 @@ nproc_detector() {
 	esac
 }
 
+# FIXME: Add more support for other distros and package managers.
 DetectPackageManager() {
 	if command -v apt >/dev/null; then
 		pm="apt"
