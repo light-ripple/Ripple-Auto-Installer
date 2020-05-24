@@ -566,7 +566,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		shift 1 ;;
 
 	"")
-		die 1 "ERROR! no argument were provided | Try: ripple --help"
+		die 1 "No argument were provided | Try: ripple --help"
 		;;
 
 	*)
