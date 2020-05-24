@@ -570,6 +570,5 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		;;
 
 	*)
-		printf "%s\n" "ERROR! unknown argument | Try: ripple --help\n"
-		shift 1
+		die 1 "Unknown argument | Try: ripple --help\n"
 esac; done
