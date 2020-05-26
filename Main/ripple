@@ -15,7 +15,7 @@ die() {
 	exit "$1"
 }
 
-done() {
+notice() {
 	case "$1" in
 		*)  printf 'Installation of %s has been completed! Follow Github Repository for more information.\n'  "$2"
 	esac
@@ -483,7 +483,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		php
 		old_frontend
 		extra_dependencies
-		done 1 "Ripple Stack"
+		notice 1 "Ripple Stack"
 		exit ;;
 
 	--help)
@@ -518,7 +518,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		golang
 		php
 		extra_dependencies
-		done 1 "Dependencies"
+		notice 1 "Dependencies"
 		exit ;;
 
 	--mysql)
@@ -527,7 +527,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		mysql_dependencies
 		main_dir
 		mysql_database
-		done 1 "MySQL"
+		notice 1 "MySQL"
 		exit ;;
 
 	--peppy)
@@ -537,7 +537,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		nproc_detector
 		python3_5
 		peppy
-		done 1 "pep.py"
+		notice 1 "pep.py"
 		exit ;;
 
 	--lets)
@@ -547,7 +547,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		nproc_detector
 		python3_6
 		lets
-		done 1 "Lets"
+		notice 1 "Lets"
 		exit ;;
 
 	--avatarserver)
@@ -556,7 +556,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		main_dir
 		python3_6
 		avatar_server
-		done 1 "Avatar Server"
+		notice 1 "Avatar Server"
 		exit ;;
 
 	--hanayo)
@@ -565,7 +565,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		main_dir
 		golang
 		hanayo
-		done 1 "Hanayo"
+		notice 1 "Hanayo"
 		exit ;;
 
 	--rippleapi)
@@ -574,7 +574,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		main_dir
 		golang
 		rippleapi
-		done 1 "Ripple API"
+		notice 1 "Ripple API"
 		exit ;;
 
 	--oldfrontend)
@@ -583,7 +583,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		main_dir
 		php
 		old_frontend
-		done 1 "Old Frontend"
+		notice 1 "Old Frontend"
 		exit ;;
 
 	"")
