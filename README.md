@@ -49,12 +49,12 @@ $ wget https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/M
 $ chmod +x ripple
 $ sudo ./ripple --help
 ```
-Note: use sudo. for example: `sudo ripple.sh --all` to install & setup full ripple stack with dependencies.
+Note: use sudo. for example: `sudo ripple --all` to install & setup full ripple stack with dependencies.
 
 ### After Installation Steps
 * Certificate  
 Edit <a href=https://github.com/Uniminin/Ripple-Auto-Installer/blob/master/Main/openssl.cnf>openssl.cnf</a> and run <a href=https://github.com/Uniminin/Ripple-Auto-Installer/blob/master/Main/gencert.sh>gencert.sh</a> to generate certificates. Use `cert.pem` and `key.pem` in your nginx configuration and `cert.pem` in your switcher.  
-Use this on your site:
+Use this on your site: (don't forget to replace ripple domain to your own ones)
 ```
 git clone https://github.com/Neilpang/acme.sh.git
 cd acme.sh
@@ -64,13 +64,12 @@ cd acme.sh
 Edit and include <a href=https://github.com/Uniminin/Ripple-Auto-Installer/blob/master/Main/ripple.conf>ripple.conf</a> in your nginx.conf
 
 ### Edit Config
-Edit all configs.
+Edit all configs. (Where RIPPLE is your targeted directory)
 * /RIPPLE/pep.py and run/edit `nano config.ini`
 * /RIPPLE/lets and run/edit `nano config.ini`
 * /RIPPLE/hanayo and run/edit `nano hanayo.conf`
 * /RIPPLE/rippleapi and run/edit `nano api.conf`
 * /RIPPLE/old-frontend and run/edit `nano inc/config.php` \
-Where RIPPLE is your targeted directory
 
 ### Start Server
 You might want to look at this tmux cheatsheet first: <a href=https://tmuxcheatsheet.com/v>Click ME!</a> |
@@ -80,7 +79,6 @@ Create tmux sessions:`tmux new -s tmux_session_name` and go to:
 * /RIPPLE/OSU-AVATAR-SERVER and run `python3.6 avatar-server.py`
 * /RIPPLE/hanayo and run `./hanayo`
 * /RIPPLE/rippleapi and run `./rippleapi` \
-Where RIPPLE is your targeted directory
 
 ### Connecting TO OSU!
 * Edit Ripple's Server switcher and create a server switcher for your server: <a href=https://zxq.co/ripple/ripple-server-switcher>Ripple-Server-Switcher</a>
