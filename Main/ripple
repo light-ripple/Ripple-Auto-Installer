@@ -1,4 +1,5 @@
 #!/bin/sh
+# shellcheck source=/dev/null
 : '
 -------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of AGPLv3  |
@@ -78,15 +79,12 @@ python3_5() {
 	fi
 
 	(	
-		if ! command -v wget >/dev/null; then
-			die 1 "wget program is not installed on this system."
-		fi
-
 		if [ ! -f "/usr/src/Python-3.5.9.tar.xz" ]; then
-			wget https://www.python.org/ftp/python/3.5.9/Python-3.5.9.tar.xz -O "/usr/src/Python-3.5.9.tar.xz" || die 1 "Could not download file: Python-3.5.9.tar.xz"
+			cd /usr/src/ || die 1 "Failed to cd into '/usr/src'"
+			wget https://www.python.org/ftp/python/3.5.9/Python-3.5.9.tar.xz -O "Python-3.5.9.tar.xz" || die 1 "Could not download file: Python-3.5.9.tar.xz"
 		fi
 
-		if [ -d "Python-3.5.9.tar.xz" ]; then
+		if [ -f "Python-3.5.9.tar.xz" ]; then
 			tar -xvf Python-3.5.9.tar.xz
 			if [ -d "Python-3.5.9" ]; then
 				cd Python-3.6.8 || die 1 "Could not cd into Python-3.5.9"
@@ -125,16 +123,13 @@ python3_6() {
 		die 1 "Failed to Install Extra Dependencies required for lets."
 	fi
 
-	(	
-		if ! command -v wget >/dev/null; then
-			die 1 "wget program is not installed on this system."
-		fi
-		
-		if [ ! -f "/usr/src/Python-3.6.8.tar.xz" ]; then
-			wget https://www.python.org/ftp/python/3.6.8/Python-3.6.8.tar.xz -O "/usr/src/Python-3.6.8.tar.xz" || die 1 "Could not download file: Python-3.6.8.tar.xz"
+	(
+		if [ ! -f "Python-3.6.8.tar.xz" ]; then
+			cd /usr/src/ || die 1 "Failed to cd into '/usr/src'"
+			wget https://www.python.org/ftp/python/3.6.8/Python-3.6.8.tar.xz -O "Python-3.6.8.tar.xz" || die 1 "Could not download file: Python-3.6.8.tar.xz"
 		fi
 
-		if [ -d "Python-3.6.8.tar.xz" ]; then
+		if [ -f "Python-3.6.8.tar.xz" ]; then
 			tar -xvf Python-3.6.8.tar.xz
 			if [ -d "Python-3.6.8" ]; then
 				cd Python-3.6.8 || die 1 "Could not cd into Python-3.6.8"
@@ -169,7 +164,7 @@ golang() {
 			wget https://dl.google.com/go/go1.13.11.linux-amd64.tar.gz
 			tar -C /usr/local -xzf go1.13.11.linux-amd64.tar.gz
 			export PATH=$PATH:/usr/local/go/bin
-			source $HOME/.profile
+			source "$HOME"/.profile
 			export GOPATH=/root/go
 		fi
 	)
@@ -464,6 +459,7 @@ old_frontend() {
 }
 
 # FIXME: Re-Check Dependencies?
+# FIXME: change logic/implementation of logic function
 # script --all to start the entire process at once | script --help to Execute help
 while [ "$#" -ge 0 ]; do case "$1" in
 	--all)
@@ -518,7 +514,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		golang
 		php
 		extra_dependencies
-		notice 1 "Dependencies"
+		notice 1 "All The Dependencies"
 		exit ;;
 
 	--mysql)
@@ -527,7 +523,6 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		mysql_dependencies
 		main_dir
 		mysql_database
-		notice 1 "MySQL"
 		exit ;;
 
 	--peppy)
@@ -537,7 +532,6 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		nproc_detector
 		python3_5
 		peppy
-		notice 1 "pep.py"
 		exit ;;
 
 	--lets)
@@ -547,7 +541,6 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		nproc_detector
 		python3_6
 		lets
-		notice 1 "Lets"
 		exit ;;
 
 	--avatarserver)
@@ -556,7 +549,6 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		main_dir
 		python3_6
 		avatar_server
-		notice 1 "Avatar Server"
 		exit ;;
 
 	--hanayo)
@@ -565,7 +557,6 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		main_dir
 		golang
 		hanayo
-		notice 1 "Hanayo"
 		exit ;;
 
 	--rippleapi)
@@ -574,7 +565,6 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		main_dir
 		golang
 		rippleapi
-		notice 1 "Ripple API"
 		exit ;;
 
 	--oldfrontend)
@@ -583,7 +573,6 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		main_dir
 		php
 		old_frontend
-		notice 1 "Old Frontend"
 		exit ;;
 
 	"")
