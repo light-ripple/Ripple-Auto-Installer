@@ -73,7 +73,7 @@ python3_5() {
 	wget git python-dev default-libmysqlclient-dev cython -y
 
 	if command -v gcc >/dev/null; then
-		printf "%s\n" "Done Installing all the necessary Dependencies required for peppy!" ; sleep 1
+		printf "%s\n" "Done Installing all the necessary Dependencies required for peppy!" 
 	else
 		die 1 "Failed to Install Extra Dependencies required for peppy."
 	fi
@@ -118,7 +118,7 @@ python3_6() {
 	wget git python-dev default-libmysqlclient-dev cython -y
 
 	if command -v gcc >/dev/null; then
-		printf "%s\n" "Done Installing all the necessary Dependencies required for lets!" ; sleep 1
+		printf "%s\n" "Done Installing all the necessary Dependencies required for lets!" 
 	else
 		die 1 "Failed to Install Extra Dependencies required for lets."
 	fi
@@ -184,7 +184,7 @@ php() {
 	git php-fpm php7.0-mbstring php7.0-curl php-mysql composer -y
 
 	if command -v gcc >/dev/null; then
-		printf "%s\n" "Done Installing all the necessary Dependencies required for old-frontend!" ; sleep 1
+		printf "%s\n" "Done Installing all the necessary Dependencies required for old-frontend!" 
 	else
 		die 1 "Failed to Install Dependencies required for old-frontend."
 	fi
@@ -192,13 +192,13 @@ php() {
 
 # Extra Dependencies required to run stack softwares and get the server online.
 extra_dependencies() {
-	printf "%s\n" "Starting To Install Extra Dependencies..." ; sleep 2
+	printf "%s\n" "Starting To Install Extra Dependencies..." 
 	printf "%s\n" "Using Package Manager: $package_manager"
 	"$package_manager" update ; "$package_manager" upgrade -y
 	"$package_manager" install tmux nginx redis-server -y
 
 	if command -v nginx >/dev/null; then
-		printf "%s\n" "Done Installing Extra Dependencies with [$package_manager]" ; sleep 1
+		printf "%s\n" "Done Installing Extra Dependencies with [$package_manager]" 
 	else
 		die 1 "Failed to Install Extra Dependencies."
 	fi
@@ -230,6 +230,40 @@ main_dir() {
 
 }
 
+# Database is required to access, read, write & manage all the user's data. (Required for all Ripple's Softwares i.e lets, peppy..)
+mysql_database() {
+
+	task="MySQL Database"
+	# FIXME: Re-Check!!!
+	printf "%s\n" "Setting up $task" 
+	(
+		if [ -d "$directory" ]; then
+			cd "$directory" || die 1 "Failed to cd into $directory"
+			mysql_dir="mysql_db"
+			read -p "Enter MySQL Username: " mysql_user
+			read -p "Enter MySQL Password: " mysql_password
+			read -p "Enter MySQL Database Name For Ripple: " database_name
+			mkdir $mysql_dir ; cd $mysql_dir || die 1 "Failed to cd into $mysql_dir"
+			wget -O ripple.sql https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Database%20files/ripple.sql
+			if [ -f "ripple.sql" ]; then
+				mysql -u "$mysql_user" -p"$mysql_password" -e "CREATE DATABASE '$database_name';"
+				mysql -p -u "$mysql_user" "$database_name" < ripple.sql
+
+				# Exports
+				export mysql_user
+				export mysql_password
+				export database_name
+				printf "%s\n" "Done Setting Up $task" 
+			else
+				die 1 "Failed Setting Up $task"
+			fi
+		else
+			die 1 "$directory doesn't exist."
+		fi
+	)
+
+}
+
 # peppy is the backend of osu/bancho, starting from client login, it handles most of the stuff.
 peppy () {
 
@@ -240,7 +274,7 @@ peppy () {
 	task="pep.py"
 
 	# FIXME: Automate configuration
-	printf "%s\n" "Cloning and Setting up pep.py $task" ; sleep 2
+	printf "%s\n" "Cloning and Setting up pep.py $task" 
 	(
 		if [ -d "$directory" ]; then
 			cd "$directory" || die 1 "Failed to cd into $directory"
@@ -251,7 +285,7 @@ peppy () {
 				python3.5 -m pip install -r requirements.txt
 				python3.5 setup.py build_ext --inplace
 				python3.5 pep.py
-				printf "%s\n" "Done Setting Up $task" ; sleep 1
+				printf "%s\n" "Done Setting Up $task" 
 			else
 				die 1 "Could not install pep.py because python3.5 wasn't found on this system."
 			fi
@@ -283,7 +317,7 @@ lets() {
 	task="lets"
 
 	# FIXME: Automate configuration
-	printf "%s\n" "Cloning & Setting Up $task" ; sleep 2
+	printf "%s\n" "Cloning & Setting Up $task" 
 	(
 		if [ -d "$directory" ]; then
 			cd "$directory" || die 1 "Failed to cd into $directory"
@@ -294,7 +328,7 @@ lets() {
 				python3.6 -m pip install -r requirements.txt
 				python3.6 setup.py build_ext --inplace
 				python3.6 pep.py
-				printf "%s\n" "Done Setting Up $task" ; sleep 1
+				printf "%s\n" "Done Setting Up $task" 
 			else
 				die 1 "Could not install pep.py because python3.6 wasn't found on this system."
 			fi
@@ -305,36 +339,7 @@ lets() {
 				chmod +x build ; ./build
 				)
 			fi
-			printf "%s\n" "Done Setting Up $task" ; sleep 1
-		else
-			die 1 "$directory doesn't exist."
-		fi
-	)
-
-}
-
-# Database is required to access, read, write & manage all the user's data. (Required for all Ripple's Softwares i.e lets, peppy..)
-mysql_database() {
-
-	task="MySQL Database"
-	# FIXME: Re-Check!!!
-	printf "%s\n" "Setting up $task" ; sleep 2
-	(
-		if [ -d "$directory" ]; then
-			cd "$directory" || die 1 "Failed to cd into $directory"
-			mysql_dir="mysql_db"
-			read -p "Enter MySQL Username: " mysql_user
-			read -p "Enter MySQL Password: " mysql_password
-			read -p "Enter MySQL Database Name For Ripple: " database_name
-			mkdir $mysql_dir ; cd $mysql_dir || die 1 "Failed to cd into $mysql_dir"
-			wget -O ripple.sql https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Database%20files/ripple.sql
-			if [ -f "ripple.sql" ]; then
-				mysql -u "$mysql_user" -p"$mysql_password" -e "CREATE DATABASE '$database_name';"
-				mysql -p -u "$mysql_user" "$database_name" < ripple.sql
-				printf "%s\n" "Done Setting Up $task" ; sleep 1
-			else
-				die 1 "Failed Setting Up $task"
-			fi
+			printf "%s\n" "Done Setting Up $task" 
 		else
 			die 1 "$directory doesn't exist."
 		fi
@@ -352,7 +357,7 @@ hanayo() {
 	task="hanayo"
 
 	# FIXME: Automate configuration
-	printf "%s\n" "Cloning & Setting up $task." ; sleep 2
+	printf "%s\n" "Cloning & Setting up $task." 
 	(
 		if [ -d "$directory" ]; then
 			go get zxq.co/ripple/hanayo
@@ -360,7 +365,7 @@ hanayo() {
 				cd /root/go/src/zxq.co/ripple/hanayo || die 1 "Failed to cd into '$task'" ; go build ; ./hanayo
 				if [ ! -d "$directory/hanayo" ]; then
 					mv go/src/zxq.co/ripple/hanayo "$directory"
-					printf "%s\n" "Done Setting Up $task!" ; sleep 1
+					printf "%s\n" "Done Setting Up $task!" 
 				# FIXME: provide better Error notice
 				else
 					die 1 "Unexpected Error!"
@@ -384,14 +389,14 @@ rippleapi() {
 
 	task="rippleapi"
 	# FIXME: Automate configuration
-	printf "%s\n" "Cloning & Setting up $task." ; sleep 2
+	printf "%s\n" "Cloning & Setting up $task." 
 	(
 		if [ -d "$directory" ]; then
 			go get -u zxq.co/ripple/rippleapi
 			cd go/src/zxq.co/ripple/rippleapi || die 1 "Failed to cd into '$task'" ; go build ; ./rippleapi
 			if [ ! -d "$directory/rippleapi" ]; then
 				mv go/src/zxq.co/ripple/rippleapi "$directory"
-				printf '%s/n' "Done setting up $task!" ; sleep 1
+				printf '%s/n' "Done setting up $task!" 
 			# FIXME: provide better Error notice
 			else
 				die 1 "Unexpected Error!"
@@ -412,7 +417,7 @@ avatar_server() {
 
 	task="avatar-server"
 	# FIXME: Automate configuration
-	printf "%s\n" "Cloning & Setting up $task!" ; sleep 2
+	printf "%s\n" "Cloning & Setting up $task!" 
 	(
 		if [ -d "$directory" ]; then
 			cd "$directory" || die 1 "Failed to cd into $directory"
@@ -420,7 +425,7 @@ avatar_server() {
 			if [ -d "avatar-server" ]; then
 				cd avatar-server || die 1 "Failed to cd into '$task'"
 				python3.6 -m pip install -r requirements.txt
-				printf "%s\n" "Done setting up $task!" ; sleep 1
+				printf "%s\n" "Done setting up $task!" 
 			else
 				die 1 "Failed Setting Up $task"
 			fi
@@ -440,7 +445,7 @@ old_frontend() {
 
 	task="old-frontend"
 
-	printf "%s\n" "Cloning & Setting up $task." ; sleep 2
+	printf "%s\n" "Cloning & Setting up $task." 
 	(
 		if [ ! -d "/var/www/" ]; then
 			mkdir /var/www/ ; cd /var/www/ || die 1 "Could not cd into '/var/www/'"
@@ -456,7 +461,7 @@ old_frontend() {
 				composer install
 				secret
 
-				printf "%s\n" "Done setting up $task!" ; sleep 1
+				printf "%s\n" "Done setting up $task!" 
 			fi
 		else
 			die 1 "Unknown Error!"
