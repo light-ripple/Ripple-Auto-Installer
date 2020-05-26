@@ -18,7 +18,7 @@ This script gives you a base and foundation if you're willing to install your ow
 * You Might want to look at Ripple's Wiki(old): https://github.com/osuripple/ripple/wiki/How-to-setup-ripple
 
 ### Requirements
-* Knowledge on Computers, Softwares, Unix or GNU/Linux, Computer Networks, Virtual Private Server, Web hosting, Programming & Full stack web development!
+* Knowledge on Computers, Softwares, Unix or GNU/Linux, Servers, Game Hosting, Database, Computer Networks, Computer Security & Encyption, SQL Injection, Virtual Private Server, Web hosting, Programming & Full stack web development!
 * A Unix or GNU/Linux <a href=https://en.wikipedia.org/wiki/Virtual_private_server>Virtual Private Server</a>. A Debian Based Distro or Distro with apt package manager is recommended.<br>
 Note: Ubuntu 16.04/18.04 is atleast recommended if you want to directly start without any additional tweaking!<br>
 
