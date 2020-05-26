@@ -17,7 +17,7 @@ die() {
 
 notice() {
 	case "$1" in
-		*)  printf 'Installation of %s has been completed! Follow Github Repository for more information.\n'  "$2"
+		*) printf 'Installation of %s has been completed! Follow Github Repository for more information.\n'  "$2"
 	esac
 	
 	exit "$1"
