@@ -44,9 +44,9 @@ Make sure you set your DNS like this:
 
 ### Running the Script (Instructions)
 ```bash
-$ wget https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/ripple.sh
-$ chmod +x ripple.sh 
-$ sudo ./ripple.sh --help
+$ wget https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/ripple
+$ chmod +x ripple
+$ sudo ./ripple --help
 ```
 Note: use sudo. for example: `sudo ripple.sh --all` to install & setup full ripple stack with dependencies.
 
@@ -69,7 +69,7 @@ Edit all configs.
 * /RIPPLE/hanayo and run/edit `nano hanayo.conf`
 * /RIPPLE/rippleapi and run/edit `nano api.conf`
 * /RIPPLE/old-frontend and run/edit `nano inc/config.php` \
-Where RIPPLE -> your targeted directory
+Where RIPPLE is your targeted directory
 
 ### Start Server
 You might want to look at this tmux cheatsheet first: <a href=https://tmuxcheatsheet.com/v>Click ME!</a> |
@@ -79,7 +79,7 @@ Create tmux sessions:`tmux new -s tmux_session_name` and go to:
 * /RIPPLE/OSU-AVATAR-SERVER and run `python3.6 avatar-server.py`
 * /RIPPLE/hanayo and run `./hanayo`
 * /RIPPLE/rippleapi and run `./rippleapi` \
-Where RIPPLE -> your targeted directory
+Where RIPPLE is your targeted directory
 
 ### Connecting TO OSU!
 * Edit Ripple's Server switcher and create a server switcher for your server: <a href=https://zxq.co/ripple/ripple-server-switcher>Ripple-Server-Switcher</a>
