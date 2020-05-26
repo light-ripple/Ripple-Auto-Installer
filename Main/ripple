@@ -205,6 +205,18 @@ extra_dependencies() {
 
 }
 
+def_domain() {
+	while [ -z "$domain" ]; do
+		read -p "Domain: (example: ripple.moe) " domain
+	done
+	read -p "Are you sure you want to use '$domain' ? y/n " confirmation
+		if [ "$confirmation" = "y" ]; then
+			export $domain
+		else
+			die 1 "Domain Not specified!"
+		fi
+}
+
 main_dir() {
 	# Creating Master Directory (where all The Repositories will be cloned)
 	while [ -z "$targetDir" ]; do
@@ -262,6 +274,10 @@ mysql_database() {
 		fi
 	)
 
+}
+
+nginx() {
+	
 }
 
 # peppy is the backend of osu/bancho, starting from client login, it handles most of the stuff.
