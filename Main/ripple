@@ -12,7 +12,7 @@ die() {
 	*) printf 'FATAL: %s\n'  "$2"
 	esac
 	
-	exit "$1"
+	"$1"
 }
 
 # Checking If Running [Script] as Root
@@ -57,7 +57,7 @@ python3_5() {
 
 	printf "%s\n" "Using Package Manager: $package_manager"
 	"$package_manager" update ; "$package_manager" upgrade -y
-	"$package_manager" install build-essential libssl-dev zlib1g-dev libbz2-dev libsqlite3-dev \
+	"$package_manager" install build-essential libssl-dev zlib1g-dev openssl libbz2-dev libsqlite3-dev \
 	wget git python-dev default-libmysqlclient-dev cython -y
 
 	if command -v gcc >/dev/null; then
@@ -105,7 +105,7 @@ python3_6() {
 
 	printf "%s\n" "Using Package Manager: $package_manager"
 	"$package_manager" update ; "$package_manager" upgrade -y
-	"$package_manager" install build-essential libssl-dev zlib1g-dev libbz2-dev libsqlite3-dev \
+	"$package_manager" install build-essential libssl-dev zlib1g-dev openssl libbz2-dev libsqlite3-dev \
 	wget git python-dev default-libmysqlclient-dev cython -y
 
 	if command -v gcc >/dev/null; then
@@ -202,12 +202,12 @@ extra_dependencies() {
 main_dir() {
 	# Creating Master Directory (where all The Repositories will be cloned)
 	while [ -z "$targetDir" ]; do
-		read -r "Enter Master Directory: " targetDir
+		read -p "Enter Master Directory: " targetDir
 	done
 
 	if [ -n "$targetDir" ]; then
 		master_dir="$(pwd)/$targetDir"
-		read -r "Create Master Directory: $master_dir ? y/n " confirmation
+		read -p "Create Master Directory: $master_dir ? y/n " confirmation
 		if [ "$confirmation" = "y" ]; then
 			mkdir "$master_dir"
 			if [ -d "$master_dir" ]; then
@@ -315,9 +315,9 @@ mysql_database() {
 		if [ -d "$directory" ]; then
 			cd "$directory" || die 1 "Failed to cd into $directory"
 			mysql_dir="mysql_db"
-			read -r "Enter MySQL Username: " mysql_user
-			read -r "Enter MySQL Password: " mysql_password
-			read -r "Enter MySQL Database Name For Ripple: " database_name
+			read -p "Enter MySQL Username: " mysql_user
+			read -p "Enter MySQL Password: " mysql_password
+			read -p "Enter MySQL Database Name For Ripple: " database_name
 			mkdir $mysql_dir ; cd $mysql_dir || die 1 "Failed to cd into $mysql_dir"
 			wget -O ripple.sql https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Database%20files/ripple.sql
 			if [ -f "ripple.sql" ]; then
@@ -416,7 +416,6 @@ avatar_server() {
 			else
 				die 1 "Failed Setting Up $task"
 			fi
-			fi
 		else
 			die 1 "$directory doesn't exist."
 		fi
@@ -473,8 +472,8 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		php
 		old_frontend
 		extra_dependencies
-		read -r "Installation of Ripple Stack has been completed!!! Follow Github Repository for more information!"
-		shift 1 ;;
+		read -p "Installation of Ripple Stack has been completed!!! Follow Github Repository for more information!"
+		;;
 
 	--help)
 		printf "%s\n" \
@@ -496,7 +495,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		"RAI Repository URL: <https://github.com/Uniminin/Ripple-Auto-Installer/> " \
 		"GNU AGPLv3 Licence: <https://www.gnu.org/licenses/agpl-3.0.en.html/>" \
 		"General help using GNU software: <https://www.gnu.org/gethelp/>"
-		shift 1 ;;
+		;;
 
 	--dependencies)
 		checkRoot
@@ -507,7 +506,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		golang
 		php
 		extra_dependencies
-		shift 1 ;;
+		;;
 
 	--mysql)
 		checkRoot
@@ -515,7 +514,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		mysql_dependencies
 		main_dir
 		mysql_database
-		shift 1 ;;
+		;;
 
 	--peppy)
 		checkRoot
@@ -523,7 +522,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		main_dir
 		python3_5
 		peppy
-		shift 1 ;;
+		;;
 
 	--lets)
 		checkRoot
@@ -531,7 +530,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		main_dir
 		python3_6
 		lets
-		shift  1 ;;
+		;;
 
 	--avatarserver)
 		checkRoot
@@ -539,7 +538,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		main_dir
 		python3_6
 		avatar_server
-		shift 1 ;;
+		;;
 
 	--hanayo)
 		checkRoot
@@ -547,7 +546,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		main_dir
 		golang
 		hanayo
-		shift 1 ;;
+		;;
 
 	--rippleapi)
 		checkRoot
@@ -555,7 +554,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		main_dir
 		golang
 		rippleapi
-		shift 1 ;;
+		;;
 
 	--oldfrontend)
 		checkRoot
@@ -563,12 +562,12 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		main_dir
 		php
 		old_frontend
-		shift 1 ;;
+		;;
 
 	"")
 		die 1 "No argument were provided | Try: ripple --help"
 		;;
 
 	*)
-		die 1 "Unknown argument | Try: ripple --help\n"
+		die 1 "Unknown argument | Try: ripple --help"
 esac; done
