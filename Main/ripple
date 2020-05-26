@@ -457,7 +457,7 @@ old_frontend() {
 # FIXME: Re-Check Dependencies?
 # script --all to start the entire process at once | script --help to Execute help
 while [ "$#" -ge 0 ]; do case "$1" in
-	all)
+	--all)
 		checkRoot
 		DetectPackageManager
 		main_dir
@@ -477,7 +477,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		read -p "Installation of Ripple Stack has been completed!!! Follow Github Repository for more information!"
 		exit ;;
 
-	help)
+	--help)
 		printf "%s\n" \
 		"Note:sudo ripple --[argument]" \
 		"" \
@@ -499,7 +499,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		"General help using GNU software: <https://www.gnu.org/gethelp/>"
 		exit ;;
 
-	dependencies)
+	--dependencies)
 		checkRoot
 		DetectPackageManager
 		mysql_dependencies
@@ -510,7 +510,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		extra_dependencies
 		exit ;;
 
-	mysql)
+	--mysql)
 		checkRoot
 		DetectPackageManager
 		mysql_dependencies
@@ -518,7 +518,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		mysql_database
 		exit ;;
 
-	peppy)
+	--peppy)
 		checkRoot
 		DetectPackageManager
 		main_dir
@@ -526,7 +526,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		peppy
 		exit ;;
 
-	lets)
+	--lets)
 		checkRoot
 		DetectPackageManager
 		main_dir
@@ -534,7 +534,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		lets
 		exit ;;
 
-	avatarserver)
+	--avatarserver)
 		checkRoot
 		DetectPackageManager
 		main_dir
@@ -542,7 +542,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		avatar_server
 		exit ;;
 
-	hanayo)
+	--hanayo)
 		checkRoot
 		DetectPackageManager
 		main_dir
@@ -550,7 +550,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		hanayo
 		exit ;;
 
-	rippleapi)
+	--rippleapi)
 		checkRoot
 		DetectPackageManager
 		main_dir
@@ -558,7 +558,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		rippleapi
 		exit ;;
 
-	oldfrontend)
+	--oldfrontend)
 		checkRoot
 		DetectPackageManager
 		main_dir
