@@ -16,6 +16,9 @@ die() {
 	exit "$1"
 }
 
+## WARNING ##
+die 1 "Script Under Development! Execution of arguments are disabled in development mode."
+
 notice() {
 	case "$1" in
 		*) printf 'Installation of %s has been completed! Follow Github Repository for more information.\n'  "$2"
