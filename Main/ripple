@@ -25,7 +25,7 @@ checkRoot() {
 # Check number of cpu threads for faster compilation/builds
 nproc_detector() {
 	case "$(nproc)" in
-		[1-9] | [1-9][0-9] | [1-9][0-9][0-9] | [1-9][0-9][0-9][0-9]) export procNum="$(nproc)" exit ;;
+		[1-9] | [1-9][0-9] | [1-9][0-9][0-9] | [1-9][0-9][0-9][0-9]) export procNum="$(nproc)" shift 1 ;;
 		*)
 			case "$LANG" in
 				en-*|*) eerror "Command 'nproc' does not return an expected value on this system, setting the processor count on '1' which will negatively affect performance on systems with more then one thread"
@@ -473,7 +473,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		old_frontend
 		extra_dependencies
 		read -p "Installation of Ripple Stack has been completed!!! Follow Github Repository for more information!"
-		exit ;;
+		shift 1 ;;
 
 	--help)
 		printf "%s\n" \
@@ -495,7 +495,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		"RAI Repository URL: <https://github.com/Uniminin/Ripple-Auto-Installer/> " \
 		"GNU AGPLv3 Licence: <https://www.gnu.org/licenses/agpl-3.0.en.html/>" \
 		"General help using GNU software: <https://www.gnu.org/gethelp/>"
-		exit ;;
+		shift 1 ;;
 
 	--dependencies)
 		checkRoot
@@ -506,7 +506,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		golang
 		php
 		extra_dependencies
-		exit ;;
+		shift 1 ;;
 
 	--mysql)
 		checkRoot
@@ -514,7 +514,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		mysql_dependencies
 		main_dir
 		mysql_database
-		exit ;;
+		shift 1 ;;
 
 	--peppy)
 		checkRoot
@@ -522,7 +522,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		main_dir
 		python3_5
 		peppy
-		exit ;;
+		shift 1 ;;
 
 	--lets)
 		checkRoot
@@ -530,7 +530,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		main_dir
 		python3_6
 		lets
-		exit ;;
+		shift 1 ;;
 
 	--avatarserver)
 		checkRoot
@@ -538,7 +538,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		main_dir
 		python3_6
 		avatar_server
-		exit ;;
+		shift 1 ;;
 
 	--hanayo)
 		checkRoot
@@ -546,7 +546,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		main_dir
 		golang
 		hanayo
-		exit ;;
+		shift 1 ;;
 
 	--rippleapi)
 		checkRoot
@@ -554,7 +554,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		main_dir
 		golang
 		rippleapi
-		exit ;;
+		shift 1 ;;
 
 	--oldfrontend)
 		checkRoot
@@ -562,13 +562,13 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		main_dir
 		php
 		old_frontend
-		exit ;;
+		shift 1 ;;
 
 	"")
 		die 1 "No argument were provided | Try: ripple --help"
-		exit ;;
+		shift 1 ;;
 
 	*)
 		die 1 "Unknown argument | Try: ripple --help"
-		exit ;;
+		shift 1 ;;
 esac; done
