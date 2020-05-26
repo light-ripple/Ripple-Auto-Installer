@@ -19,13 +19,15 @@ die() {
 checkRoot() {
 	if ! [ "$(id -u)" = 0 ]; then
 		die 1 "The Script needs to be executed as Root."
+	else
+		printf "%s\n" "Superuser Permission: Granted!"
 	fi
 }
 
 # Check number of cpu threads for faster compilation/builds
 nproc_detector() {
 	case "$(nproc)" in
-		[1-9] | [1-9][0-9] | [1-9][0-9][0-9] | [1-9][0-9][0-9][0-9]) export procNum="$(nproc)" shift 1 ;;
+		[1-9] | [1-9][0-9] | [1-9][0-9][0-9] | [1-9][0-9][0-9][0-9]) export procNum="$(nproc)" exit ;;
 		*)
 			case "$LANG" in
 				en-*|*) eerror "Command 'nproc' does not return an expected value on this system, setting the processor count on '1' which will negatively affect performance on systems with more then one thread"
@@ -455,7 +457,7 @@ old_frontend() {
 # FIXME: Re-Check Dependencies?
 # script --all to start the entire process at once | script --help to Execute help
 while [ "$#" -ge 0 ]; do case "$1" in
-	--all)
+	all)
 		checkRoot
 		DetectPackageManager
 		main_dir
@@ -473,9 +475,9 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		old_frontend
 		extra_dependencies
 		read -p "Installation of Ripple Stack has been completed!!! Follow Github Repository for more information!"
-		shift 1 ;;
+		exit ;;
 
-	--help)
+	help)
 		printf "%s\n" \
 		"Note:sudo ripple --[argument]" \
 		"" \
@@ -495,9 +497,9 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		"RAI Repository URL: <https://github.com/Uniminin/Ripple-Auto-Installer/> " \
 		"GNU AGPLv3 Licence: <https://www.gnu.org/licenses/agpl-3.0.en.html/>" \
 		"General help using GNU software: <https://www.gnu.org/gethelp/>"
-		shift 1 ;;
+		exit ;;
 
-	--dependencies)
+	dependencies)
 		checkRoot
 		DetectPackageManager
 		mysql_dependencies
@@ -506,69 +508,69 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		golang
 		php
 		extra_dependencies
-		shift 1 ;;
+		exit ;;
 
-	--mysql)
+	mysql)
 		checkRoot
 		DetectPackageManager
 		mysql_dependencies
 		main_dir
 		mysql_database
-		shift 1 ;;
+		exit ;;
 
-	--peppy)
+	peppy)
 		checkRoot
 		DetectPackageManager
 		main_dir
 		python3_5
 		peppy
-		shift 1 ;;
+		exit ;;
 
-	--lets)
+	lets)
 		checkRoot
 		DetectPackageManager
 		main_dir
 		python3_6
 		lets
-		shift 1 ;;
+		exit ;;
 
-	--avatarserver)
+	avatarserver)
 		checkRoot
 		DetectPackageManager
 		main_dir
 		python3_6
 		avatar_server
-		shift 1 ;;
+		exit ;;
 
-	--hanayo)
+	hanayo)
 		checkRoot
 		DetectPackageManager
 		main_dir
 		golang
 		hanayo
-		shift 1 ;;
+		exit ;;
 
-	--rippleapi)
+	rippleapi)
 		checkRoot
 		DetectPackageManager
 		main_dir
 		golang
 		rippleapi
-		shift 1 ;;
+		exit ;;
 
-	--oldfrontend)
+	oldfrontend)
 		checkRoot
 		DetectPackageManager
 		main_dir
 		php
 		old_frontend
-		shift 1 ;;
+		exit ;;
 
 	"")
 		die 1 "No argument were provided | Try: ripple --help"
-		shift 1 ;;
+		;;
 
 	*)
 		die 1 "Unknown argument | Try: ripple --help"
-		shift 1 ;;
-esac; done
+		;;
+esac; shift; done
