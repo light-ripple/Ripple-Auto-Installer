@@ -8,11 +8,11 @@
 
 # Simplified assertion by Jacob Hrbek. [kreyren@member.fsf.org]
 die() {
-	case "$1" in
-	*) printf 'FATAL: %s\n'  "$2"
-	esac
-	
-	"$1"
+    case "$1" in
+        *) printf 'FATAL: %s\n'  "$2"
+    esac
+
+    exit "$1"
 }
 
 # Checking If Running [Script] as Root
