@@ -211,7 +211,7 @@ main_dir() {
 		if [ "$confirmation" = "y" ]; then
 			mkdir "$master_dir"
 			if [ -d "$master_dir" ]; then
-				chmod R 777 "$master_dir"
+				chmod -R a+rwx "$master_dir"
 				export directory="$master_dir"
 				printf "%s has been created!\n" "$master_dir"
 			else
