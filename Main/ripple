@@ -262,6 +262,17 @@ peppy () {
 
 }
 
+secret() {
+	if [ -d "secret" ]; then
+		rm -rf secret
+		git clone https://github.com/osufx/secret
+		(
+			cd secret || die 1 "Failed to cd into 'secret'"
+			git submodule init ; git submodule update
+		)
+	fi
+}
+
 # LETS is the Ripple's score server. It manages scores, osu!direct etc.
 lets() {
 
@@ -276,18 +287,9 @@ lets() {
 	(
 		if [ -d "$directory" ]; then
 			cd "$directory" || die 1 "Failed to cd into $directory"
-
-			# Using osufx's Lets since it builds without any errors (hopefully)
 			git clone https://github.com/osufx/lets ; cd lets || die 1 "Failed to cd into '$task'"
-			if [ -d "secret" ]; then
-				rm -rf secret
-				git clone https://github.com/osufx/secret
-				(
-					cd secret || die 1 "Failed to cd into 'secret'"
-					git submodule init ; git submodule update
-				)
-			fi
-			
+			secret
+
 			if command -v python3.6 >/dev/null; then
 				python3.6 -m pip install -r requirements.txt
 				python3.6 setup.py build_ext --inplace
@@ -440,19 +442,24 @@ old_frontend() {
 
 	printf "%s\n" "Cloning & Setting up $task." ; sleep 2
 	(
-		if [ -d "$directory" ]; then
-			cd "$directory" || die 1 "Failed to cd into $directory"
-			git clone https://github.com/osuripple/old-frontend
-			if [ -d "old-frontend" ]; then
-				cd old-frontend || die 1 "Failed to cd into '$task'"
-				cd inc || die 1 "Failed to cd into 'inc'"
-				# FIXME: Automate configuration
-				cp config.sample.php config.php
+		if [ ! -d "/var/www/" ]; then
+			mkdir /var/www/ ; cd /var/www/ || die 1 "Could not cd into '/var/www/'"
+			git clone https://github.com/osuripple/old-frontend osu.ppy.sh
+			if [ -d "osu.ppy.sh" ]; then
+				cd osu.ppy.sh || die 1 "Failed to cd into 'osu.ppy.sh'"
+				curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+				(
+					cd inc || die 1 "Failed to cd into 'inc'"
+					# FIXME: Automate configuration
+					cp config.sample.php config.php
+				)
 				composer install
+				secret
+
 				printf "%s\n" "Done setting up $task!" ; sleep 1
 			fi
 		else
-			die 1 "$directory doesn't exist."
+			die 1 "Unknown Error!"
 		fi
 	)
 
