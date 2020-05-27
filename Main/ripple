@@ -3,7 +3,7 @@
 : '
 -------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of AGPLv3  |
-|                          Last Updated on 26th May, 2020                           |
+|                          Last Updated on 27th May, 2020                           |
 -------------------------------------------------------------------------------------
 '
 
@@ -198,7 +198,7 @@ extra_dependencies() {
 	printf "%s\n" "Starting To Install Extra Dependencies..." 
 	printf "%s\n" "Using Package Manager: $package_manager"
 	"$package_manager" update ; "$package_manager" upgrade -y
-	"$package_manager" install tmux nginx redis-server -y
+	"$package_manager" install tmux nginx redis-server socat -y
 
 	if command -v nginx >/dev/null; then
 		printf "%s\n" "Done Installing Extra Dependencies with [$package_manager]" 
@@ -249,7 +249,7 @@ main_dir() {
 mysql_database() {
 
 	task="MySQL Database"
-	# FIXME: Re-Check!!!
+
 	printf "%s\n" "Setting up $task" 
 	(
 		if [ -d "$directory" ]; then
@@ -280,7 +280,36 @@ mysql_database() {
 }
 
 nginx() {
-	
+	# FIXME-Config
+}
+
+SSL() {
+	if command -v ping 1>/dev/null; then
+		ping -i 0.5 -c 5 github.com || die 1 "Domain: github.com is not reachable from this environment."
+	fi
+
+	task="acme.sh"
+
+	printf "%s\n" "Cloning and Setting up $task"
+	if [ -d "$directory" ]; then
+		cd "$directory" || die 1 "Failed to cd into $directory"
+		git clone https://github.com/Neilpang/acme.sh
+		if [ -d "acme.sh" ]; then
+			cd acme.sh || die 1 "Failed to cd into acme.sh"
+			if [ ! -f "acme.sh" ]; then
+				./acme.sh --install
+				./acme.sh --issue --standalone -d $domain -d c.$domain -d i.$domain -d a.$domain -d s.$domain -d old.$domain
+
+				printf "%s\n" "Done setting up $task!" 
+			else
+				die 1 "$task not found."
+			fi
+		else
+			die 1 "Failed to clone $task"
+		fi
+	else
+			die 1 "$directory doesn't exist."
+	fi
 }
 
 # peppy is the backend of osu/bancho, starting from client login, it handles most of the stuff.
@@ -293,7 +322,7 @@ peppy () {
 	task="pep.py"
 
 	# FIXME: Automate configuration
-	printf "%s\n" "Cloning and Setting up pep.py $task" 
+	printf "%s\n" "Cloning and Setting up $task" 
 	(
 		if [ -d "$directory" ]; then
 			cd "$directory" || die 1 "Failed to cd into $directory"
@@ -303,7 +332,12 @@ peppy () {
 			if command -v python3.5 >/dev/null; then
 				python3.5 -m pip install -r requirements.txt
 				python3.5 setup.py build_ext --inplace
-				python3.5 pep.py
+				if [ ! -f "pep.py" ]; then
+					python3.5 pep.py
+					if [ ! -f "config.ini" ]; then
+						# FIXME-Config
+					fi
+				fi
 				printf "%s\n" "Done Setting Up $task" 
 			else
 				die 1 "Could not install pep.py because python3.5 wasn't found on this system."
@@ -346,7 +380,12 @@ lets() {
 			if command -v python3.6 >/dev/null; then
 				python3.6 -m pip install -r requirements.txt
 				python3.6 setup.py build_ext --inplace
-				python3.6 pep.py
+				if [ ! -f "lets.py" ]; then
+					python3.6 lets.py
+					if [ ! -f "config.ini" ]; then
+						# FIXME-Config
+					fi
+				fi
 				printf "%s\n" "Done Setting Up $task" 
 			else
 				die 1 "Could not install pep.py because python3.6 wasn't found on this system."
@@ -382,6 +421,9 @@ hanayo() {
 			go get zxq.co/ripple/hanayo
 			if [ -d "/root/go/src/zxq.co/ripple/hanayo" ]; then
 				cd /root/go/src/zxq.co/ripple/hanayo || die 1 "Failed to cd into '$task'" ; go build ; ./hanayo
+				if [ ! -f "hanayo.conf" ]; then
+					# FIXME-Config
+				fi
 				if [ ! -d "$directory/hanayo" ]; then
 					mv go/src/zxq.co/ripple/hanayo "$directory"
 					printf "%s\n" "Done Setting Up $task!" 
@@ -413,6 +455,9 @@ rippleapi() {
 		if [ -d "$directory" ]; then
 			go get -u zxq.co/ripple/rippleapi
 			cd go/src/zxq.co/ripple/rippleapi || die 1 "Failed to cd into '$task'" ; go build ; ./rippleapi
+			if [ ! -f "api.conf" ]; then
+				# FIXME-Config
+			fi
 			if [ ! -d "$directory/rippleapi" ]; then
 				mv go/src/zxq.co/ripple/rippleapi "$directory"
 				printf '%s/n' "Done setting up $task!" 
@@ -455,6 +500,21 @@ avatar_server() {
 
 }
 
+phpmyadmin(){
+
+	task="phpmyadmin"
+
+	printf "%s\n" "Setting up $task."
+
+	if [ -d "/var/www/osu.ppy.sh" ]; then
+		(
+			cd /var/www/osu.ppy.sh
+			ln -s /usr/share/phpmyadmin phpmyadmin
+		)
+		printf "%s\n" "Done setting up $task!" 
+	fi
+}
+
 # OLD-FRONTEND is the Ripple's Admin Panel. Which can be accessed at old.domain
 old_frontend() {
 
@@ -476,6 +536,10 @@ old_frontend() {
 					cd inc || die 1 "Failed to cd into 'inc'"
 					# FIXME: Automate configuration
 					cp config.sample.php config.php
+
+					if [ ! -f "config.php" ]; then
+						# FIXME-Config
+					fi
 				)
 				composer install
 				secret
