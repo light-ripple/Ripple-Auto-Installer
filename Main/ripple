@@ -199,6 +199,7 @@ php() {
 	fi
 }
 
+# For Interacting with Database online.
 phpmyadmin(){
 
 	task="phpmyadmin"
@@ -229,7 +230,10 @@ extra_dependencies() {
 
 }
 
-main_dir() {
+necessary_inputs() {
+
+	# INPUTS #
+
 	# Creating Master Directory (where all The Repositories will be cloned)
 	while [ -z "$targetDir" ]; do
 		read -p "Enter Master Directory: " targetDir
@@ -251,12 +255,6 @@ main_dir() {
 			die 1 "Directory: $master_dir wasn't created!\n"
 		fi
 	fi
-
-}
-
-necessary_inputs() {
-
-	# INPUTS
 
 	# Domain
 	while [ -z "$domain" ]; do
@@ -366,6 +364,7 @@ mysql_database() {
 
 }
 
+# Nginx to balance loads & for proxies
 nginx() {
 
 	task="nginx"
@@ -455,7 +454,11 @@ peppy () {
 				if [ -f "pep.py" ]; then
 					python3.5 pep.py
 					if [ -f "config.ini" ]; then
-						# FIXME-Config
+						sed -Ei "s:^username =.*$:username = $mysql_username:g" config.ini || die 1 "Failed to Setup Config file."
+						sed -Ei "s:^password =.*$:password = $mysql_password:g" config.ini || die 1 "Failed to Setup Config file."
+						sed -Ei "s:^database =.*$:database = $database_name:g" config.ini || die 1 "Failed to Setup Config file."
+						sed -Ei "s:^cikey =.*$:cikey = $cikey:g" config.ini || die 1 "Failed to Setup Config file."
+						sed -Ei "s:^apikey =.*$:apikey = $api:g" config.ini || die 1 "Failed to Setup Config file."
 					fi
 				fi
 				printf "%s\n" "Done Setting Up $task" 
@@ -500,15 +503,19 @@ lets() {
 		if [ -d "$directory" ]; then
 			cd "$directory" || die 1 "Failed to cd into $directory"
 			git clone https://github.com/osufx/lets ; cd lets || die 1 "Failed to cd into '$task'"
-			secret
 
 			if command -v python3.6 >/dev/null; then
 				python3.6 -m pip install -r requirements.txt
 				python3.6 setup.py build_ext --inplace
+				secret
 				if [ ! -f "lets.py" ]; then
 					python3.6 lets.py
 					if [ ! -f "config.ini" ]; then
-						# FIXME-Config
+						sed -Ei "s:^username =.*$:username = $mysql_username:g" config.ini || die 1 "Failed to Setup Config file."
+						sed -Ei "s:^password =.*$:password = $mysql_password:g" config.ini || die 1 "Failed to Setup Config file."
+						sed -Ei "s:^database =.*$:database = $database_name:g" config.ini || die 1 "Failed to Setup Config file."
+						sed -Ei "s/changeme/$cikey/g" config.ini || die 1 "Failed to Setup Config file."
+						sed -Ei "s:^apikey =.*$:apikey = $api:g" config.ini || die 1 "Failed to Setup Config file."
 					fi
 				fi
 				printf "%s\n" "Done Setting Up $task" 
@@ -693,9 +700,10 @@ while [ "$#" -ge 0 ]; do case "$1" in
 	--all)
 		checkRoot
 		DetectPackageManager
-		main_dir
+		necessary_inputs
 		mysql_dependencies
 		mysql_database
+		nproc_detector
 		python3_5
 		peppy
 		python3_6
@@ -704,9 +712,11 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		golang
 		hanayo
 		rippleapi
+		extra_dependencies
 		php
 		old_frontend
-		extra_dependencies
+		phpmyadmin
+		nginx
 		notice 1 "Ripple Stack"
 		exit ;;
 
@@ -741,6 +751,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		python3_6
 		golang
 		php
+		phpmyadmin
 		extra_dependencies
 		notice 1 "All The Dependencies"
 		exit ;;
@@ -749,14 +760,14 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		checkRoot
 		DetectPackageManager
 		mysql_dependencies
-		main_dir
+		necessary_inputs
 		mysql_database
 		exit ;;
 
 	--peppy)
 		checkRoot
 		DetectPackageManager
-		main_dir
+		necessary_inputs
 		nproc_detector
 		python3_5
 		peppy
@@ -765,7 +776,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 	--lets)
 		checkRoot
 		DetectPackageManager
-		main_dir
+		necessary_inputs
 		nproc_detector
 		python3_6
 		lets
@@ -774,7 +785,8 @@ while [ "$#" -ge 0 ]; do case "$1" in
 	--avatarserver)
 		checkRoot
 		DetectPackageManager
-		main_dir
+		necessary_inputs
+		nproc_detector
 		python3_6
 		avatar_server
 		exit ;;
@@ -782,7 +794,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 	--hanayo)
 		checkRoot
 		DetectPackageManager
-		main_dir
+		necessary_inputs
 		golang
 		hanayo
 		exit ;;
@@ -790,7 +802,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 	--rippleapi)
 		checkRoot
 		DetectPackageManager
-		main_dir
+		necessary_inputs
 		golang
 		rippleapi
 		exit ;;
@@ -798,7 +810,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 	--oldfrontend)
 		checkRoot
 		DetectPackageManager
-		main_dir
+		necessary_inputs
 		php
 		old_frontend
 		exit ;;
