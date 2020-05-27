@@ -193,6 +193,21 @@ php() {
 	fi
 }
 
+phpmyadmin(){
+
+	task="phpmyadmin"
+
+	printf "%s\n" "Setting up $task."
+
+	if [ -d "/var/www/osu.ppy.sh" ]; then
+		(
+			cd /var/www/osu.ppy.sh
+			ln -s /usr/share/phpmyadmin phpmyadmin
+		)
+		printf "%s\n" "Done setting up $task!" 
+	fi
+}
+
 # Extra Dependencies required to run stack softwares and get the server online.
 extra_dependencies() {
 	printf "%s\n" "Starting To Install Extra Dependencies..." 
@@ -206,18 +221,6 @@ extra_dependencies() {
 		die 1 "Failed to Install Extra Dependencies."
 	fi
 
-}
-
-def_domain() {
-	while [ -z "$domain" ]; do
-		read -p "Domain: (example: ripple.moe) " domain
-	done
-	read -p "Are you sure you want to use '$domain' ? y/n " confirmation
-		if [ "$confirmation" = "y" ]; then
-			export $domain
-		else
-			die 1 "Domain Not specified!"
-		fi
 }
 
 main_dir() {
@@ -245,6 +248,88 @@ main_dir() {
 
 }
 
+necessary_inputs() {
+
+	# INPUTS
+
+	# Domain
+	while [ -z "$domain" ]; do
+		read -p "Domain: (example: ripple.moe) " domain
+	done
+	read -p "Are you sure you want to use '$domain' ? y/n " confirmation
+	if [ "$confirmation" = "y" ]; then
+		export $domain
+	else
+		die 1 "Domain Not specified!"
+	fi
+
+	# Cikey
+	while [ -z "$cikey" ]; do
+		read -p "cikey [changeme]: " cikey
+	done
+	read -p "Are you sure you want to use '$cikey' ? y/n " confirmation
+	if [ "$confirmation" = "y" ]; then
+		export $cikey
+	else
+		die 1 "cikey Not specified!"
+	fi
+
+	# OSU!API
+	while [ -z "$api" ]; do
+		read -p "OSU!API key: " api
+	done
+	read -p "Are you sure you want to use '$api' ? y/n " confirmation
+	if [ "$confirmation" = "y" ]; then
+		export $api
+	else
+		die 1 "OSU!API Key Not specified!"
+	fi
+
+	# API-Secret
+	while [ -z "$api_secret" ]; do
+		read -p "API Secret: " api_secret
+	done
+	read -p "Are you sure you want to use '$api_secret' ? y/n " confirmation
+	if [ "$confirmation" = "y" ]; then
+		export $api_secret
+	else
+		die 1 "API Secret Not specified!"
+	fi
+
+	# MySQL USERNAME
+	while [ -z "$mysql_user" ]; do
+		read -p "Enter MySQL Username: " mysql_user
+	done
+	read -p "Are you sure you want to use '$mysql_user' ? y/n " confirmation
+	if [ "$confirmation" = "y" ]; then
+		export $mysql_user
+	else
+		die 1 "MYSQL Username Not specified!"
+	fi
+
+	# MySQL PASSWOD
+	while [ -z "$mysql_password" ]; do
+		read -p "Enter MySQL Password: " mysql_password
+	done
+	read -p "Are you sure you want to use '$mysql_password' ? y/n " confirmation
+	if [ "$confirmation" = "y" ]; then
+		export $mysql_password
+	else
+		die 1 "MYSQL Password Not specified!"
+	fi
+
+	# MySQL DATABASE NAME
+	while [ -z "$database_name" ]; do
+		read -p "Enter MySQL Database Name For Ripple: " database_name
+	done
+	read -p "Are you sure you want to use '$database_name' ? y/n " confirmation
+	if [ "$confirmation" = "y" ]; then
+		export $database_name
+	else
+		die 1 "MYSQL Database Name Not specified!"
+	fi
+}
+
 # Database is required to access, read, write & manage all the user's data. (Required for all Ripple's Softwares i.e lets, peppy..)
 mysql_database() {
 
@@ -255,19 +340,11 @@ mysql_database() {
 		if [ -d "$directory" ]; then
 			cd "$directory" || die 1 "Failed to cd into $directory"
 			mysql_dir="mysql_db"
-			read -p "Enter MySQL Username: " mysql_user
-			read -p "Enter MySQL Password: " mysql_password
-			read -p "Enter MySQL Database Name For Ripple: " database_name
 			mkdir $mysql_dir ; cd $mysql_dir || die 1 "Failed to cd into $mysql_dir"
 			wget -O ripple.sql https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Database%20files/ripple.sql
 			if [ -f "ripple.sql" ]; then
 				mysql -u "$mysql_user" -p"$mysql_password" -e "CREATE DATABASE '$database_name';"
 				mysql -p -u "$mysql_user" "$database_name" < ripple.sql
-
-				# Exports
-				export mysql_user
-				export mysql_password
-				export database_name
 				printf "%s\n" "Done Setting Up $task" 
 			else
 				die 1 "Failed Setting Up $task"
@@ -498,21 +575,6 @@ avatar_server() {
 		fi
 	)
 
-}
-
-phpmyadmin(){
-
-	task="phpmyadmin"
-
-	printf "%s\n" "Setting up $task."
-
-	if [ -d "/var/www/osu.ppy.sh" ]; then
-		(
-			cd /var/www/osu.ppy.sh
-			ln -s /usr/share/phpmyadmin phpmyadmin
-		)
-		printf "%s\n" "Done setting up $task!" 
-	fi
 }
 
 # OLD-FRONTEND is the Ripple's Admin Panel. Which can be accessed at old.domain
