@@ -39,53 +39,43 @@ Make sure you set your DNS like this:
 * old.YOUR-DOMAIN
 ```
 
+### VPS
+Make sure you configure your inbound-rules properly.
 <p align="center">
-  <img src="https://i.imgur.com/0ksWZR9.png"/>
+  <img src="https://github.com/Uniminin/Ripple-Auto-Installer/Miscellaneous/inbound-rules.png"/>
+</p>
+
+### Cloudflare
+Make sure you configure cloudflare properly.
+<p align="center">
+  <img src="https://github.com/Uniminin/Ripple-Auto-Installer/Miscellaneous/cloudflare.png"/>
 </p>
 
 ### Running the Script (Instructions)
 ```bash
-$ wget https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/ripple
+$ wget -O "ripple" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/ripple
 $ chmod +x ripple
 $ sudo ./ripple --help
 ```
 Note: use sudo. for example: `sudo ripple --all` to install & setup full ripple stack with dependencies.
 
-### After Installation Steps
-* Certificate  
-Edit <a href=https://github.com/Uniminin/Ripple-Auto-Installer/blob/master/Main/openssl.cnf>openssl.cnf</a> and run <a href=https://github.com/Uniminin/Ripple-Auto-Installer/blob/master/Main/gencert.sh>gencert.sh</a> to generate certificates. Use `cert.pem` and `key.pem` in your nginx configuration and `cert.pem` in your switcher.  
-Use this on your site: (don't forget to replace ripple domain to your own ones)
-```
-git clone https://github.com/Neilpang/acme.sh.git
-cd acme.sh
-./acme.sh --issue --standalone -d osu.ripple.moe -d c.ripple.moe -d a.ripple.moe -d oldripple.ripple.moe
-```  
-* Proxy  
-Edit and include <a href=https://github.com/Uniminin/Ripple-Auto-Installer/blob/master/Main/ripple.conf>ripple.conf</a> in your nginx.conf
-
-### Start Server
-You might want to look at this tmux cheatsheet first: <a href=https://tmuxcheatsheet.com/v>Click ME!</a> |
-Create tmux sessions:`tmux new -s tmux_session_name` and go to: (Where RIPPLE is your targeted directory)
-* /RIPPLE/pep.py and run `python3.5 pep.py`
-* /RIPPLE/lets and run `python3.6 lets.py`
-* /RIPPLE/OSU-AVATAR-SERVER and run `python3.6 avatar-server.py`
-* /RIPPLE/hanayo and run `./hanayo`
-* /RIPPLE/rippleapi and run `./rippleapi`
-
-### Connecting TO OSU!
-* Edit Ripple's Server switcher and create a server switcher for your server: <a href=https://zxq.co/ripple/ripple-server-switcher>Ripple-Server-Switcher</a>
-
 ### OSU!API
 * You can get OSU!API Key Here: <a href=https://old.ppy.sh/p/api>OSU!API</a>
+
+### Configure/Start The Server
+* For manual configuration see all markdowns in <a href=https://github.com/Uniminin/Ripple-Auto-Installer/Miscellaneous>Miscellaneous</a>.
+* To Start the server follow this guide: <a href=https://github.com/Uniminin/Ripple-Auto-Installer/Miscellaneous/start.md>start.md</a>.
 
 ### Contact
 You can join this discord server and ask for help but don't expect us to create a server for youself.
 * Discord Server: <a href=https://discord.gg/bA8pDFX>Developer I/O</a>
 
 ### Credits
+* Thanks to <a href=https://github.com/Kreyren>Kreyren</a> for helping me learn and code proper bash script.
 * Thanks to <a href=https://github.com/Hazuki-san>Aoba-Suzukaze</a> and <a href=https://github.com/osuthailand>osuthailand</a> for their help, stack softwares, certificate & Database schema.
 * Thanks to <a href=https://github.com/semyon422>semyon422</a> for their <a href=https://github.com/semyon422/open-ripple>open-ripple</a>.
 * Thanks to <a href=https://github.com/EmilySunpy>EmilySunpy</a> for their <a href=https://github.com/osufx/lets>lets</a> & <a href=https://github.com/osufx/secret>secret</a>.
+* And others who supported the project.
 
 ### License :scroll:
 This project is licenced under the GNU Affero General Public License V3. For more information, see the `LICENSE` file or visit https://www.gnu.org/licenses/agpl-3.0.
