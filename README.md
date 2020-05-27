@@ -63,14 +63,6 @@ cd acme.sh
 * Proxy  
 Edit and include <a href=https://github.com/Uniminin/Ripple-Auto-Installer/blob/master/Main/ripple.conf>ripple.conf</a> in your nginx.conf
 
-### Edit Config
-Edit all configs. (Where RIPPLE is your targeted directory)
-* /RIPPLE/pep.py and run/edit `nano config.ini`
-* /RIPPLE/lets and run/edit `nano config.ini`
-* /RIPPLE/hanayo and run/edit `nano hanayo.conf`
-* /RIPPLE/rippleapi and run/edit `nano api.conf`
-* /RIPPLE/old-frontend and run/edit `nano inc/config.php` \
-
 ### Start Server
 You might want to look at this tmux cheatsheet first: <a href=https://tmuxcheatsheet.com/v>Click ME!</a> |
 Create tmux sessions:`tmux new -s tmux_session_name` and go to: (Where RIPPLE is your targeted directory)
@@ -78,7 +70,7 @@ Create tmux sessions:`tmux new -s tmux_session_name` and go to: (Where RIPPLE is
 * /RIPPLE/lets and run `python3.6 lets.py`
 * /RIPPLE/OSU-AVATAR-SERVER and run `python3.6 avatar-server.py`
 * /RIPPLE/hanayo and run `./hanayo`
-* /RIPPLE/rippleapi and run `./rippleapi` \
+* /RIPPLE/rippleapi and run `./rippleapi`
 
 ### Connecting TO OSU!
 * Edit Ripple's Server switcher and create a server switcher for your server: <a href=https://zxq.co/ripple/ripple-server-switcher>Ripple-Server-Switcher</a>
@@ -91,7 +83,9 @@ You can join this discord server and ask for help but don't expect us to create 
 * Discord Server: <a href=https://discord.gg/bA8pDFX>Developer I/O</a>
 
 ### Credits
-Thanks to <a href=https://github.com/semyon422>semyon422</a> for your <a href=https://github.com/semyon422/open-ripple>open-ripple</a> guide.
+* Thanks to <a href=https://github.com/Hazuki-san>Aoba-Suzukaze</a> and <a href=https://github.com/osuthailand>osuthailand</a> for their help, stack softwares, certificate & Database schema.
+* Thanks to <a href=https://github.com/semyon422>semyon422</a> for their <a href=https://github.com/semyon422/open-ripple>open-ripple</a>.
+* Thanks to <a href=https://github.com/EmilySunpy>EmilySunpy</a> for their <a href=https://github.com/osufx/lets>lets</a> & <a href=https://github.com/osufx/secret>secret</a>.
 
 ### License :scroll:
 This project is licenced under the GNU Affero General Public License V3. For more information, see the `LICENSE` file or visit https://www.gnu.org/licenses/agpl-3.0.
