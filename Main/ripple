@@ -70,6 +70,8 @@ DetectPackageManager() {
 python3_5() {
 	if command -v ping 1>/dev/null; then
 		ping -i 0.5 -c 5 python.org || die 1 "Domain: python.org is not reachable from this environment."
+	else
+		die 1 "Unknown Error!"
 	fi
 
 	printf "%s\n" "Using Package Manager: $package_manager"
@@ -115,6 +117,8 @@ python3_5() {
 python3_6() {
 	if command -v ping 1>/dev/null; then
 		ping -i 0.5 -c 5 python.org || die 1 "Domain: python.org is not reachable from this environment."
+	else
+		die 1 "Unknown Error!"
 	fi
 
 	printf "%s\n" "Using Package Manager: $package_manager"
@@ -161,6 +165,8 @@ python3_6() {
 golang() {
 	if command -v ping 1>/dev/null; then
 		ping -i 0.5 -c 5 dl.google.com || die 1 "Domain: dl.google.com is not reachable from this environment."
+	else
+		die 1 "Unknown Error!"
 	fi
 
 	(	
@@ -212,6 +218,8 @@ phpmyadmin(){
 			ln -s /usr/share/phpmyadmin phpmyadmin
 		)
 		printf "%s\n" "Done setting up $task!" 
+	else
+		die 1 "Directory: /var/www/osu.ppy.sh does not exist."
 	fi
 }
 
@@ -223,7 +231,7 @@ extra_dependencies() {
 	"$package_manager" install tmux nginx redis-server socat -y
 
 	if command -v nginx >/dev/null; then
-		printf "%s\n" "Done Installing Extra Dependencies with [$package_manager]" 
+		printf "%s\n" "Done Installing Extra Dependencies with [$package_manager]"
 	else
 		die 1 "Failed to Install Extra Dependencies."
 	fi
@@ -339,6 +347,8 @@ mysql_database() {
 
 	if command -v ping 1>/dev/null; then
 		ping -i 0.5 -c 5 raw.githubusercontent.com || die 1 "Domain: raw.githubusercontent.com is not reachable from this environment."
+	else
+		die 1 "Unknown Error!"
 	fi
 
 	task="MySQL Database"
@@ -353,7 +363,7 @@ mysql_database() {
 			if [ -f "ripple.sql" ]; then
 				mysql -u "$mysql_user" -p"$mysql_password" -e "CREATE DATABASE '$database_name';"
 				mysql -p -u "$mysql_user" "$database_name" < ripple.sql
-				printf "%s\n" "Done Setting Up $task" 
+				printf "%s\n" "Done Setting Up $task"
 			else
 				die 1 "Failed Setting Up $task"
 			fi
@@ -366,6 +376,12 @@ mysql_database() {
 
 # Nginx to balance loads & for proxies
 nginx() {
+	
+	if command -v ping 1>/dev/null; then
+		ping -i 0.5 -c 5 raw.githubusercontent.com || die 1 "Domain: raw.githubusercontent.com is not reachable from this environment."
+	else
+		die 1 "Unknown Error!"
+	fi
 
 	task="nginx"
 	pkill -f nginx
@@ -378,7 +394,10 @@ nginx() {
 		rm -rf nginx.conf
 		wget -O nginx.conf https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Nginx/N1.conf
 		sed -i 's#include /root/ripple/nginx/*.conf\*#include '$directory'/nginx/*.conf#' /etc/nginx/nginx.conf || die 1 "Failed to Setup Config file."
+	else
+		die 1 "Directory: /etc/nginx does not exist!"
 	fi
+
 	if [ -d "$directory" ]; then
 		cd "$directory" || die 1 "Failed to cd into $directory"
 		mkdir nginx ; cd nginx
@@ -403,8 +422,11 @@ nginx() {
 }
 
 SSL() {
+
 	if command -v ping 1>/dev/null; then
 		ping -i 0.5 -c 5 github.com || die 1 "Domain: github.com is not reachable from this environment."
+	else
+		die 1 "Unknown Error!"
 	fi
 
 	task="acme.sh"
@@ -436,11 +458,12 @@ peppy () {
 
 	if command -v ping 1>/dev/null; then
 		ping -i 0.5 -c 5 zxq.co || die 1 "Domain: zxq.co is not reachable from this environment."
+	else
+		die 1 "Unknown Error!"
 	fi
 
 	task="pep.py"
 
-	# FIXME: Automate configuration
 	printf "%s\n" "Cloning and Setting up $task" 
 	(
 		if [ -d "$directory" ]; then
@@ -476,6 +499,15 @@ secret() {
 
 	if command -v ping 1>/dev/null; then
 		ping -i 0.5 -c 5 github.com || die 1 "Domain: github.com is not reachable from this environment."
+	else
+		die 1 "Unknown Error!"
+	fi
+
+	task="secret"
+
+	printf "%s\n" "Cloning and Setting up $task" 
+	if command -v ping 1>/dev/null; then
+		ping -i 0.5 -c 5 github.com || die 1 "Domain: github.com is not reachable from this environment."
 	fi
 
 	if [ -d "secret" ]; then
@@ -486,6 +518,7 @@ secret() {
 			git submodule init ; git submodule update
 		)
 	fi
+	printf "%s\n" "Done Setting Up $task" 
 }
 
 # LETS is the Ripple's score server. It manages scores, osu!direct etc.
@@ -493,6 +526,8 @@ lets() {
 
 	if command -v ping 1>/dev/null; then
 		ping -i 0.5 -c 5 github.com || die 1 "Domain: github.com is not reachable from this environment."
+	else
+		die 1 "Unknown Error!"
 	fi
 
 	task="lets"
@@ -544,6 +579,8 @@ hanayo() {
 
 	if command -v ping 1>/dev/null; then
 		ping -i 0.5 -c 5 zxq.co || die 1 "Domain: zxq.co is not reachable from this environment."
+	else
+		die 1 "Unknown Error!"
 	fi
 
 	task="hanayo"
@@ -595,10 +632,12 @@ rippleapi() {
 
 	if command -v ping 1>/dev/null; then
 		ping -i 0.5 -c 5 zxq.co || die 1 "Domain: zxq.co is not reachable from this environment."
+	else
+		die 1 "Unknown Error!"
 	fi
 
 	task="rippleapi"
-	# FIXME: Automate configuration
+
 	printf "%s\n" "Cloning & Setting up $task." 
 	(
 		if [ -d "$directory" ]; then
@@ -630,10 +669,12 @@ avatar_server() {
 
 	if command -v ping 1>/dev/null; then
 		ping -i 0.5 -c 5 github.com || die 1 "Domain: github.com is not reachable from this environment."
+	else
+		die 1 "Unknown Error!"
 	fi
 
 	task="avatar-server"
-	# FIXME: Automate configuration
+
 	printf "%s\n" "Cloning & Setting up $task!" 
 	(
 		if [ -d "$directory" ]; then
@@ -659,6 +700,8 @@ old_frontend() {
 	if command -v ping 1>/dev/null; then
 		ping -i 0.5 -c 5 zxq.co || die 1 "Domain: zxq.co is not reachable from this environment."
 		ping -i 0.5 -c 5 getcomposer.org || die 1 "Domain: getcomposer.org is not reachable from this environment."
+	else
+		die 1 "Unknown Error!"
 	fi
 
 	task="old-frontend"
@@ -683,7 +726,12 @@ old_frontend() {
 					fi
 				)
 
-				composer install
+				if command -v composer 1>/dev/null; then
+					composer install
+				else
+					die 1 "composer not found."
+				fi
+				
 				secret
 
 				printf "%s\n" "Done setting up $task!" 
