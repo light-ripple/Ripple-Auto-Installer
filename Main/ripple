@@ -41,7 +41,7 @@ checkRoot() {
 # Check number of cpu threads for faster compilation/builds
 nproc_detector() {
 	case "$(nproc)" in
-		[1-9] | [1-9][0-9] | [1-9][0-9][0-9] | [1-9][0-9][0-9][0-9]) export procNum="$(nproc)" exit ;;
+		[1-9] | [1-9][0-9] | [1-9][0-9][0-9] | [1-9][0-9][0-9][0-9]) procNum="$(nproc)" export procNum exit ;;
 		*)
 			case "$LANG" in
 				en-*|*) eerror "Command 'nproc' does not return an expected value on this system, setting the processor count on '1' which will negatively affect performance on systems with more then one thread"
@@ -214,7 +214,7 @@ phpmyadmin(){
 
 	if [ -d "/var/www/osu.ppy.sh" ]; then
 		(
-			cd /var/www/osu.ppy.sh
+			cd /var/www/osu.ppy.sh || exit
 			ln -s /usr/share/phpmyadmin phpmyadmin
 		)
 		printf "%s\n" "Done setting up $task!" 
@@ -270,7 +270,7 @@ necessary_inputs() {
 	done
 	read -p "Are you sure you want to use '$domain' ? y/n " confirmation
 	if [ "$confirmation" = "y" ]; then
-		export $domain
+		export "domain"
 	else
 		die 1 "Domain Not specified!"
 	fi
@@ -281,7 +281,7 @@ necessary_inputs() {
 	done
 	read -p "Are you sure you want to use '$cikey' ? y/n " confirmation
 	if [ "$confirmation" = "y" ]; then
-		export $cikey
+		export "cikey"
 	else
 		die 1 "cikey Not specified!"
 	fi
@@ -292,7 +292,7 @@ necessary_inputs() {
 	done
 	read -p "Are you sure you want to use '$api' ? y/n " confirmation
 	if [ "$confirmation" = "y" ]; then
-		export $api
+		export "api"
 	else
 		die 1 "OSU!API Key Not specified!"
 	fi
@@ -303,7 +303,7 @@ necessary_inputs() {
 	done
 	read -p "Are you sure you want to use '$api_secret' ? y/n " confirmation
 	if [ "$confirmation" = "y" ]; then
-		export $api_secret
+		export "api_secret"
 	else
 		die 1 "API Secret Not specified!"
 	fi
@@ -314,7 +314,7 @@ necessary_inputs() {
 	done
 	read -p "Are you sure you want to use '$mysql_user' ? y/n " confirmation
 	if [ "$confirmation" = "y" ]; then
-		export $mysql_user
+		export "mysql_user"
 	else
 		die 1 "MYSQL Username Not specified!"
 	fi
@@ -325,7 +325,7 @@ necessary_inputs() {
 	done
 	read -p "Are you sure you want to use '$mysql_password' ? y/n " confirmation
 	if [ "$confirmation" = "y" ]; then
-		export $mysql_password
+		export "mysql_password"
 	else
 		die 1 "MYSQL Password Not specified!"
 	fi
@@ -336,7 +336,7 @@ necessary_inputs() {
 	done
 	read -p "Are you sure you want to use '$database_name' ? y/n " confirmation
 	if [ "$confirmation" = "y" ]; then
-		export $database_name
+		export "database_name"
 	else
 		die 1 "MYSQL Database Name Not specified!"
 	fi
@@ -390,26 +390,26 @@ nginx() {
 	printf "%s\n" "Setting up $task"
 
 	if [ -d "/etc/nginx" ]; then
-		cd /etc/nginx/
+		cd /etc/nginx/ || exit
 		rm -rf nginx.conf
 		wget -O nginx.conf https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Nginx/N1.conf
-		sed -i 's#include /root/ripple/nginx/*.conf\*#include '$directory'/nginx/*.conf#' /etc/nginx/nginx.conf || die 1 "Failed to Setup Config file."
+		sed -i 's#include /root/ripple/nginx/*.conf\*#include '"$directory"'/nginx/*.conf#' /etc/nginx/nginx.conf || die 1 "Failed to Setup Config file."
 	else
 		die 1 "Directory: /etc/nginx does not exist!"
 	fi
 
 	if [ -d "$directory" ]; then
 		cd "$directory" || die 1 "Failed to cd into $directory"
-		mkdir nginx ; cd nginx
+		mkdir nginx ; cd nginx || exit
 
 		wget -O nginx.conf https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Nginx/N2.conf
 		if [ -f "nginx.conf" ]; then
-			sed -Ei 's#DOMAIN#'$domain'#g; s#DIRECTORY#'$directory'#g' nginx.conf || die 1 "Failed to Setup Config file."
+			sed -Ei 's#DOMAIN#'"$domain"'#g; s#DIRECTORY#'"$directory"'#g' nginx.conf || die 1 "Failed to Setup Config file."
 		fi
 
 		wget -O old-frontend.conf https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Nginx/old-frontend.conf
 		if [ -f "old-frontend.conf" ]; then
-			sed -Ei 's#DOMAIN#'$domain'#g; s#DIRECTORY#'$directory'#g' old-frontend.conf || die 1 "Failed to Setup Config file."
+			sed -Ei 's#DOMAIN#'"$domain"'#g; s#DIRECTORY#'"$directory"'#g' old-frontend.conf || die 1 "Failed to Setup Config file."
 		fi
 
 		# Using osuthailand certificate. (since plebs)
@@ -439,7 +439,7 @@ SSL() {
 			cd acme.sh || die 1 "Failed to cd into acme.sh"
 			if [ -f "acme.sh" ]; then
 				./acme.sh --install
-				./acme.sh --issue --standalone -d $domain -d c.$domain -d i.$domain -d a.$domain -d s.$domain -d old.$domain
+				./acme.sh --issue --standalone -d "$domain" -d c."$domain" -d i."$domain" -d a."$domain" -d s."$domain" -d old."$domain"
 
 				printf "%s\n" "Done setting up $task!" 
 			else
@@ -477,7 +477,7 @@ peppy () {
 				if [ -f "pep.py" ]; then
 					python3.5 pep.py
 					if [ -f "config.ini" ]; then
-						sed -Ei "s:^username =.*$:username = $mysql_username:g" config.ini || die 1 "Failed to Setup Config file."
+						sed -Ei "s:^username =.*$:username = $mysql_user:g" config.ini || die 1 "Failed to Setup Config file."
 						sed -Ei "s:^password =.*$:password = $mysql_password:g" config.ini || die 1 "Failed to Setup Config file."
 						sed -Ei "s:^database =.*$:database = $database_name:g" config.ini || die 1 "Failed to Setup Config file."
 						sed -Ei "s:^cikey =.*$:cikey = $cikey:g" config.ini || die 1 "Failed to Setup Config file."
@@ -546,7 +546,7 @@ lets() {
 				if [ ! -f "lets.py" ]; then
 					python3.6 lets.py
 					if [ ! -f "config.ini" ]; then
-						sed -Ei "s:^username =.*$:username = $mysql_username:g" config.ini || die 1 "Failed to Setup Config file."
+						sed -Ei "s:^username =.*$:username = $mysql_user:g" config.ini || die 1 "Failed to Setup Config file."
 						sed -Ei "s:^password =.*$:password = $mysql_password:g" config.ini || die 1 "Failed to Setup Config file."
 						sed -Ei "s:^database =.*$:database = $database_name:g" config.ini || die 1 "Failed to Setup Config file."
 						sed -Ei "s/changeme/$cikey/g" config.ini || die 1 "Failed to Setup Config file."
@@ -595,7 +595,7 @@ hanayo() {
 				go build ; ./hanayo ; ./hanayo
 				if [ -f "hanayo.conf" ]; then
 					sed -Ei "s/ListenTo=:45221/ListenTo=127.0.0.1:45221/g" hanayo.conf || die 1 "Failed to Setup Config file."
-					sed -E -i -e 'H;1h;$!d;x' hanayo.conf -e 's#DSN=#DSN='$mysql_user':'$mysql_password'@/'$database_name'#' || die 1 "Failed to Setup Config file."
+					sed -E -i -e 'H;1h;$!d;x' hanayo.conf -e 's#DSN=#DSN='"$mysql_user"':'"$mysql_password"'@/'"$database_name"'#' || die 1 "Failed to Setup Config file."
 					sed -Ei "s:^RedisEnable=.*$:RedisEnable=true:g" hanayo.conf || die 1 "Failed to Setup Config file."
 					sed -Ei "s/ripple.moe/$domain/g" hanayo.conf || die 1 "Failed to Setup Config file."
 					sed -Ei "s:^APISecret=.*$:APISecret=$api_secret:g" hanayo.conf || die 1 "Failed to Setup Config file."
@@ -607,7 +607,7 @@ hanayo() {
 				fi
 
 				if [ -f "templates/navbar.html" ]; then
-					sed -Ei 's#ripple.moe#'$domain'#' templates/navbar.html
+					sed -Ei 's#ripple.moe#'"$domain"'#' templates/navbar.html
 				fi
 
 				if [ ! -d "$directory/hanayo" ]; then
@@ -645,7 +645,7 @@ rippleapi() {
 			cd go/src/zxq.co/ripple/rippleapi || die 1 "Failed to cd into '$task'"
 			go build ; ./rippleapi
 			if [ ! -f "api.conf" ]; then
-				sed -E -i -e 'H;1h;$!d;x' api.conf -e 's#DSN=#DSN='$mysql_user':'$mysql_password'@/'$database_name'#' || die 1 "Failed to Setup Config file."
+				sed -E -i -e 'H;1h;$!d;x' api.conf -e 's#DSN=#DSN='"$mysql_user"':'"$mysql_password"'@/'"$database_name"'#' || die 1 "Failed to Setup Config file."
 				sed -Ei "s:^HanayoKey=.*$:HanayoKey=$api_secret:g" api.conf || die 1 "Failed to Setup Config file."
 				sed -Ei "s:^OsuAPIKey=.*$:OsuAPIKey=$cikey:g" api.conf || die 1 "Failed to Setup Config file."
 			fi
