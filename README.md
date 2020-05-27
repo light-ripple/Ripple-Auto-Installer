@@ -9,7 +9,7 @@
   <img src="https://img.shields.io/github/issues/Uniminin/Ripple-Auto-Installer?color=violet&style=for-the-badge">
   <img src="https://img.shields.io/github/stars/Uniminin/Ripple-Auto-Installer?style=for-the-badge">
   <img src="https://img.shields.io/github/forks/Uniminin/Ripple-Auto-Installer?color=teal&style=for-the-badge">
-  <img src="https://ripple.moe/static/logos/logo.svg">
+  <img src="https://github.com/Uniminin/Ripple-Auto-Installer/blob/master/Miscellaneous/ripple.svg">
 </p>
 
 ## Attention
@@ -42,13 +42,13 @@ Make sure you set your DNS like this:
 ### VPS
 Make sure you configure your inbound-rules properly.
 <p align="center">
-  <img src="https://github.com/Uniminin/Ripple-Auto-Installer/Miscellaneous/inbound-rules.png"/>
+  <img src="https://github.com/Uniminin/Ripple-Auto-Installer/blob/master/Miscellaneous/inbound-rules.png"/>
 </p>
 
 ### Cloudflare
 Make sure you configure cloudflare properly.
 <p align="center">
-  <img src="https://github.com/Uniminin/Ripple-Auto-Installer/Miscellaneous/cloudflare.png"/>
+  <img src="https://github.com/Uniminin/Ripple-Auto-Installer/blob/master/Miscellaneous/cloudflare.png"/>
 </p>
 
 ### Running the Script (Instructions)
@@ -63,8 +63,8 @@ Note: use sudo. for example: `sudo ripple --all` to install & setup full ripple 
 * You can get OSU!API Key Here: <a href=https://old.ppy.sh/p/api>OSU!API</a>
 
 ### Configure/Start The Server
-* For manual configuration see all markdowns in <a href=https://github.com/Uniminin/Ripple-Auto-Installer/Miscellaneous>Miscellaneous</a>.
-* To Start the server follow this guide: <a href=https://github.com/Uniminin/Ripple-Auto-Installer/Miscellaneous/start.md>start.md</a>.
+* For manual configuration see all markdowns in <a href=https://github.com/Uniminin/Ripple-Auto-Installer/tree/master/Miscellaneous>Miscellaneous</a>.
+* To Start the server follow this guide: <a href=https://github.com/Uniminin/Ripple-Auto-Installer/blob/master/Miscellaneous/start.md>start.md</a>.
 
 ### Contact
 You can join this discord server and ask for help but don't expect us to create a server for youself.
