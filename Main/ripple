@@ -115,8 +115,9 @@ nproc_detector() {
 DetectPackageManager() {
 	if command -v apt >/dev/null; then
 		pm="apt"
-		printf "%s\n" "Found Package Manager: $pm"
+		printf "%s\n" "Found Package Manager: '$pm'"
 		export package_manager="$pm"
+		printf "%s\n" "Using Package Manager: '$package_manager'"
 
 	elif ! command -v apt >/dev/null; then
 		die 1 "apt is not executable on this system! Currently this script is programmed to install packages with apt only."
@@ -138,17 +139,18 @@ python3_5() {
 	else
 		die 1 "Unknown Error!"
 	fi
-
-	printf "%s\n" "Using Package Manager: $package_manager"
+	
 	"$package_manager" update ; "$package_manager" upgrade -y
 	"$package_manager" install build-essential libssl-dev zlib1g-dev openssl libbz2-dev libsqlite3-dev \
 	wget git python-dev default-libmysqlclient-dev make cython -y
 
-	if command -v gcc >/dev/null; then
-		printf "%s\n" "Done Installing necessary Dependencies required for peppy!" 
-	else
-		die 1 "Failed to Install necessary Dependencies required for peppy."
-	fi
+	for packages in gcc make git wget cython; do
+		if command -v $packages >/dev/null; then
+			printf "%s\n" "Done Installing necessary Dependencies required for '$task'" 
+		else
+			die 1 "Failed to Install necessary Dependencies required for '$task'"
+		fi
+	done
 
 	(	
 		if [ -d "/usr/src" ]; then
@@ -195,16 +197,17 @@ python3_6() {
 		die 1 "Unknown Error!"
 	fi
 
-	printf "%s\n" "Using Package Manager: $package_manager"
 	"$package_manager" update ; "$package_manager" upgrade -y
 	"$package_manager" install build-essential libssl-dev zlib1g-dev openssl libbz2-dev libsqlite3-dev \
 	wget git python-dev default-libmysqlclient-dev make cython -y
 
-	if command -v gcc >/dev/null; then
-		printf "%s\n" "Done Installing necessary Dependencies required for lets." 
-	else
-		die 1 "Failed to Install necessary Dependencies required for lets."
-	fi
+	for packages in gcc make git wget cython; do
+		if command -v $packages >/dev/null; then
+			printf "%s\n" "Done Installing necessary Dependencies required for '$task'" 
+		else
+			die 1 "Failed to Install necessary Dependencies required for '$task'"
+		fi
+	done
 
 	(
 		if [ -d "/usr/src" ]; then
@@ -306,12 +309,13 @@ extra_dependencies() {
 	"$package_manager" update ; "$package_manager" upgrade -y
 	"$package_manager" install tmux nginx redis-server socat -y
 
-	if command -v nginx >/dev/null; then
-		printf "%s\n" "Done Installing '$task'."
-	else
-		die 1 "Failed to Install '$task'."
-	fi
-
+	for packages in tmux nginx redis-cli; do
+		if command -v $packages >/dev/null; then
+			printf "%s\n" "Done Installing necessary Dependencies required for '$task'" 
+		else
+			die 1 "Failed to Install necessary Dependencies required for '$task'"
+		fi
+	done
 }
 
 inputs() {
@@ -446,6 +450,12 @@ mysql_database() {
 
 	# Mysql Dependencies
 	"$package_manager" install mysql-server mysql-client -y ; service mysql start
+	
+	if command -v mysql 1>/dev/null; then
+		printf "%s\n" "Done Installing Mysql Dependencies."
+	else
+		die 1 "Could not find mysql package on this system."
+	fi
 
 	if command -v ping 1>/dev/null; then
 		ping -i 0.5 -c 5 raw.githubusercontent.com || die 1 "Domain 'raw.githubusercontent.com' is not reachable from this environment."
@@ -470,7 +480,6 @@ mysql_database() {
 			die 1 "Directory '$directory' doesn't exist."
 		fi
 	)
-
 }
 
 # Nginx to balance loads & for proxies
@@ -857,7 +866,6 @@ old_frontend() {
 			die 1 "Unknown Error!"
 		fi
 	)
-
 }
 
 
