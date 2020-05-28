@@ -11,22 +11,22 @@
 
 # Simplified assertion by Jacob Hrbek. [kreyren@member.fsf.org]
 lineno() {
-    if command -v bash 1>/dev/null; then
-        printf '%s\n' "$LINENO"
-        return 0
-    elif ! command -v bash 1>/dev/null; then
-        return 1
-    else
-        efixme "ELSE"
-    fi
+	if command -v bash 1>/dev/null; then
+		printf '%s\n' "$LINENO"
+		return 0
+	elif ! command -v bash 1>/dev/null; then
+		return 1
+	else
+		efixme "ELSE"
+	fi
 }
 
 die() {
-    case "$1" in
-        *) printf 'FATAL: %s\n'  "$2 [ line: $(lineno || printf '%s\n' "nan") ]"
-    esac
-    
-    exit "$1"
+	case "$1" in
+		*) printf 'FATAL: %s\n'  "$2 [ line: $(lineno || printf '%s\n' "nan") ]"
+	esac
+	
+	exit "$1"
 }
 
 ## WARNING ##
