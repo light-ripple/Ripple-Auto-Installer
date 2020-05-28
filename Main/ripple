@@ -71,7 +71,7 @@ die() {
 	exit "$2"
 }
 
-# NOTICE(Krey): It ain't stupid if it works!
+# NOTICE(Krey & uniminin): It ain't stupid if it works!
 alias die="die \"[ line \$LINENO\"\ ]"
 
 
