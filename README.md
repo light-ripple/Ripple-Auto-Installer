@@ -51,7 +51,7 @@ Make sure you configure cloudflare properly.
   <img src="https://github.com/Uniminin/Ripple-Auto-Installer/blob/master/Miscellaneous/cloudflare.png"/>
 </p>
 
-### Running the Script (Instructions)
+### Running the Script [![Build Status](https://travis-ci.org/Uniminin/Ripple-Auto-Installer.svg?branch=master)](https://travis-ci.org/Uniminin/Ripple-Auto-Installer)
 ```bash
 $ wget -O "ripple" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/ripple
 $ chmod +x ripple
