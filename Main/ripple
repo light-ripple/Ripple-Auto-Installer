@@ -64,11 +64,11 @@ lineno() {
 set -e
 
 die() {
-    case "$2" in
-        *) printf 'FATAL: %s\n' "$3 $1"
-    esac
-
-    exit "$2"
+	case "$2" in
+		*) printf 'FATAL: %s\n' "$3 $1"
+	esac
+	
+	exit "$2"
 }
 
 # NOTICE(Krey): It ain't stupid if it works!
