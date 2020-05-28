@@ -60,9 +60,6 @@ $ sudo ./ripple --help
 ```
 Note: use sudo. for example: `sudo ripple --all` to install & setup full ripple stack with dependencies.
 
-### OSU!API
-* You can get OSU!API Key Here: <a href=https://old.ppy.sh/p/api>OSU!API</a>
-
 ### Configure/Start The Server
 * For manual configuration see all markdowns in <a href=https://github.com/Uniminin/Ripple-Auto-Installer/tree/master/Miscellaneous>Miscellaneous</a>.
 * To Start the server follow this guide: <a href=https://github.com/Uniminin/Ripple-Auto-Installer/blob/master/Miscellaneous/start.md>start.md</a>.
