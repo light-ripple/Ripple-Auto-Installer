@@ -5,6 +5,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/Maintained%3F-Yes-green?style=for-the-badge">
+  <img src="https://img.shields.io/travis/Uniminin/Ripple-Auto-Installer?style=for-the-badge">
   <img src="https://img.shields.io/github/license/Uniminin/Ripple-Auto-Installer?style=for-the-badge">
   <img src="https://img.shields.io/github/issues/Uniminin/Ripple-Auto-Installer?color=violet&style=for-the-badge">
   <img src="https://img.shields.io/github/stars/Uniminin/Ripple-Auto-Installer?style=for-the-badge">
@@ -51,7 +52,7 @@ Make sure you configure cloudflare properly.
   <img src="https://github.com/Uniminin/Ripple-Auto-Installer/blob/master/Miscellaneous/cloudflare.png"/>
 </p>
 
-### Running the Script [![Build Status](https://travis-ci.org/Uniminin/Ripple-Auto-Installer.svg?branch=master)](https://travis-ci.org/Uniminin/Ripple-Auto-Installer)
+### Running the Script (instructions)
 ```bash
 $ wget -O "ripple" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/ripple
 $ chmod +x ripple
