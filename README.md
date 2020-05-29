@@ -22,7 +22,7 @@ This script gives you a base and foundation if you're willing to install your ow
 * Knowledge on Computers, Softwares, Unix or GNU/Linux, Servers, Game Hosting, Database, Computer Networks, Computer Security & Encyption, SQL Injection, Virtual Private Server, Web hosting, Programming & Full stack web development!
 * A Unix or GNU/Linux <a href=https://en.wikipedia.org/wiki/Virtual_private_server>Virtual Private Server</a>.
 * A Debian/Arch Based Distro with APT or Pacman package manager.
-Note: Ubuntu 18.04 is atleast recommended if you want to directly start without any additional tweaking!<br>
+<br>Note: Ubuntu 18.04 is atleast recommended if you want to directly start without any additional tweaking!<br>
 
 ### Features
 * A configurable shell script for installing Ripple Stack
@@ -59,7 +59,7 @@ $ wget -O "ripple" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Instal
 $ chmod +x ripple
 $ sudo ./ripple --help
 ```
-Note: use sudo. for example: `sudo ripple --all` to install & setup full ripple stack with dependencies.
+Note: use sudo. for example: `sudo ./ripple --all` to install & setup full ripple stack with dependencies.
 
 ### Configure/Start The Server
 * For manual configuration see all markdowns in <a href=https://github.com/Uniminin/Ripple-Auto-Installer/tree/master/Miscellaneous>Miscellaneous</a>.
