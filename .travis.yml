@@ -9,7 +9,7 @@ on:
     types: [synchronize, opened, reopened, ready_for_review]
     paths:
     - '**.bash'
-    - "tools/dockerfreeze"
+    - "Main/ripple"
 
 jobs:
   # Linting
