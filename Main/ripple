@@ -338,7 +338,7 @@ nginx() {
 		(
 			cd /etc/nginx || die 1 "Failed to cd into '/etc/nginx'."
 			if [ -f "nginx.conf" ]; then
-				rm -rf nginx.conf
+				rm -rfv nginx.conf
 			fi
 			wget -O "nginx.conf" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Nginx/N1.conf || die 1 "Could not download file 'nginx.conf'."
 			sed -i 's#include /root/ripple/nginx/*.conf\*#include '"$directory"'/nginx/*.conf#' /etc/nginx/nginx.conf || die 1 "Failed to Setup Config file."
@@ -350,7 +350,7 @@ nginx() {
 	if [ -d "$directory" ]; then
 		(
 			cd "$directory" || die 1 "Failed to cd into '$directory'"
-			mkdir nginx ; cd nginx || die 1 "Failed to cd into 'nginx'"
+			mkdir -v nginx ; cd nginx || die 1 "Failed to cd into 'nginx'"
 
 			wget -O "nginx.conf" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Nginx/N2.conf || die 1 "Could not download file 'nginx.conf'."
 			if [ -f "nginx.conf" ]; then
@@ -461,7 +461,7 @@ inputs() {
 		printf "%s" "Create Master Directory: '$master_dir' ? y/n " 
 		read -r confirmation
 		if [ "$confirmation" = "y" ]; then
-			mkdir "$master_dir"
+			mkdir -v "$master_dir"
 			if [ -d "$master_dir" ]; then
 				chmod -R a+rwx "$master_dir" || die 1 "Unable to change permission of the file '$master_dir'"
 				export directory="$master_dir"
@@ -610,7 +610,7 @@ mysql_database() {
 		if [ -d "$directory" ]; then
 			cd "$directory" || die 1 "Failed to cd into '$directory'"
 			mysql_dir="mysql_db"
-			mkdir $mysql_dir ; cd $mysql_dir || die 1 "Failed to cd into '$mysql_dir'."
+			mkdir -v $mysql_dir ; cd $mysql_dir || die 1 "Failed to cd into '$mysql_dir'."
 			wget -O "ripple.sql" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Database%20files/ripple.sql || die 1 "Could not download file 'ripple.sql'."
 			if [ -f "ripple.sql" ]; then
 				mysql -u "$mysql_user" -p"$mysql_password" -e "CREATE DATABASE '$database_name';"
@@ -685,7 +685,7 @@ secret() {
 	fi
 
 	if [ -d "secret" ]; then
-		rm -rf secret
+		rm -rfv secret
 
 		if command -v git 1>/dev/null; then
 			git clone https://github.com/osufx/secret
@@ -925,7 +925,7 @@ old_frontend() {
 
 	(
 		if [ ! -d "/var/www/" ]; then
-			mkdir /var/www/ ; cd /var/www/ || die 1 "Could not cd into '/var/www/'"
+			mkdir -v /var/www/ ; cd /var/www/ || die 1 "Could not cd into '/var/www/'"
 
 			if command -v git 1>/dev/null; then
 				git clone https://zxq.co/ripple/old-frontend osu.ppy.sh
