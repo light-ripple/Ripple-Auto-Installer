@@ -98,7 +98,7 @@ notice() {
 	exit "$1"
 }
 
-# Check number of cpu threads for faster compilation/builds
+# Check number of cp -vu threads for faster compilation/builds
 nproc_detector() {
 	case "$(nproc)" in
 		[1-9] | [1-9][0-9] | [1-9][0-9][0-9] | [1-9][0-9][0-9][0-9]) procNum="$(nproc)" export procNum exit ;;
@@ -799,7 +799,7 @@ hanayo() {
 				fi
 
 				if [ ! -d "$directory/hanayo" ]; then
-					mv go/src/zxq.co/ripple/hanayo "$directory"
+					mv -v go/src/zxq.co/ripple/hanayo "$directory"
 					printf "%s\n" "Done Setting Up '$task'." 
 				else
 					die 1 "Unexpected Error!"
@@ -843,7 +843,7 @@ rippleapi() {
 			fi
 
 			if [ ! -d "$directory/rippleapi" ]; then
-				mv go/src/zxq.co/ripple/rippleapi "$directory"
+				mv -v go/src/zxq.co/ripple/rippleapi "$directory"
 				printf '%s/n' "Done setting up '$task'." 
 			else
 				die 1 "Unexpected Error!"
@@ -938,7 +938,7 @@ old_frontend() {
 				curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 				(
 					cd inc || die 1 "Failed to cd into 'inc'"
-					cp config.sample.php config.php
+					cp -v config.sample.php config.php
 
 					if [ -f "config.php" ]; then
 						sed -Ei "s/root/$mysql_user/g" config.php || die 1 "Failed to Setup Config file. [$task/config.php -> mysql_user]"
