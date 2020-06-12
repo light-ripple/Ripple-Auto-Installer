@@ -1,7 +1,6 @@
 #!/bin/sh
 # shellcheck disable=SC1090 # Non Acute trigger
-# shellcheck disable=SC2128 # False trigger
-# shellcheck disable=SC2178 # False trigger
+# shellcheck disable=SC2128,SC2178 # False trigger
 # USING: APT, Pacman, UNIX or GNU/Linux, Mysql/Mariadb Database.
 
 : '
@@ -11,8 +10,7 @@
 -------------------------------------------------------------------------------------
 '
 
-# Simplified assertion by Jacob Hrbek. [kreyren@member.fsf.org]
-# <kreyren@rixotstudio.cz> under the terms of GPL-3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
+# Simplified assertion by Jacob Hrbek <kreyren@rixotstudio.cz> under the terms of GPL-3
 efixme() {
 	if [ "$FUNCNAME" != "efixme" ]; then
 		FUNCNAME="efixme"
