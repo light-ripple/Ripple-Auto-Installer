@@ -66,8 +66,8 @@ Note: use sudo. for example: `sudo ./ripple --all` to install & setup full rippl
 * To Start the server follow this guide: <a href=https://github.com/Uniminin/Ripple-Auto-Installer/blob/master/Miscellaneous/start.md>start.md</a>.
 
 ### Contact
-You can join this discord server and ask for help but don't expect us to create a server for youself.
-* Discord Server: <a href=https://discord.gg/bA8pDFX>Developer I/O</a>
+Ask me anything
+* Discord: `uniminin#7522`
 
 ### Credits
 * Thanks to <a href=https://github.com/Kreyren>Kreyren</a> for helping me learn and code proper bash script.
