@@ -179,7 +179,7 @@ python3_5() {
 		if [ -f "Python-3.5.9.tar.xz" ]; then
 			tar -xvf Python-3.5.9.tar.xz
 			if [ -d "Python-3.5.9" ]; then
-				cd Python-3.6.8 || die 1 "Could not cd into 'Python-3.5.9'."
+				cd Python-3.5.9 || die 1 "Could not cd into 'Python-3.5.9'."
 			else
 				die 1 "Failed to extract 'Python-3.5.9.tar.xz'."
 			fi
