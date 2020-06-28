@@ -6,9 +6,10 @@
 : '
 -------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of AGPLv3  |
-|                          Last Updated on 29th May, 2020                           |
+|                   Last Updated on Sunday, June 28, 2020 (GMT+6)                   |
 -------------------------------------------------------------------------------------
 '
+
 
 # Simplified assertion by Jacob Hrbek <kreyren@rixotstudio.cz> under the terms of GPL-3
 efixme() {
