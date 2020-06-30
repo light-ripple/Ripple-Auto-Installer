@@ -76,4 +76,4 @@ Ask me anything
 * And others who supported the project.
 
 ### License :scroll:
-All of the Ripple code and including the project itself is licenced under the GNU Affero General Public License V3. For more information, see the `LICENSE` file or visit https://www.gnu.org/licenses/agpl-3.0.
+All of the Ripple code including the project itself is licenced under the GNU Affero General Public License V3. For more information, see the `LICENSE` file or visit https://www.gnu.org/licenses/agpl-3.0.
