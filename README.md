@@ -14,7 +14,7 @@
 
 ## Attention
 <b>**THIS SCRIPT IS NOT FOR LOCAL PC (localhost) AND IT IS FOR ADVANCED USERS!**</b><br>
-This script gives you a base and foundation if you're willing to install your own Ripple instance.You’re to think for yourself. Ripple is not a Stack system where Ripple/I document everything so you’ll need a basic understanding of how unix or GNU/Linux systems and full stack web applications work to be able to set up Ripple properly and work out problems efficiently when necessary.
+This script gives you a base and foundation if you're willing to install your own Ripple instance.You’re to think for yourself. Ripple is not a Stack system where Ripple/I document everything so you’ll need a basic understanding of how unix or GNU/Linux systems and full stack web applications work to be able to set up Ripple properly and work out with problems efficiently when necessary.
 * You Might want to look at Ripple's Wiki(old): https://github.com/osuripple/ripple/wiki/How-to-setup-ripple
 
 ### Requirements
