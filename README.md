@@ -58,7 +58,7 @@ $ wget -O "ripple" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Instal
 $ chmod +x ripple
 $ sudo ./ripple --help
 ```
-Note: use sudo. for example: `sudo ./ripple --all` to install & setup full ripple stack with dependencies.
+Note: Execute the script as superuser. For example: `sudo ./ripple --all` to install & setup full ripple stack with dependencies.
 
 ### Configure/Start The Server
 * For manual configuration see all markdowns in <a href=https://github.com/Uniminin/Ripple-Auto-Installer/tree/master/Miscellaneous>Miscellaneous</a>.
