@@ -75,7 +75,7 @@ alias die="die \"[ line \$LINENO\"\ ]"
 
 
 # WARNING 
-development="false"
+development=""
 if [ "$development" ]; then
 	die 1 "Script is on Development! Execution of any arguments are disabled during development session."
 fi
