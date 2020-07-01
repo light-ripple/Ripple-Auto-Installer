@@ -612,7 +612,7 @@ mysql_database() {
 			mkdir -v $mysql_dir ; cd $mysql_dir || die 1 "Failed to cd into '$mysql_dir'."
 			wget -O "ripple.sql" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Database%20files/ripple.sql || die 1 "Could not download file 'ripple.sql'."
 			if [ -f "ripple.sql" ]; then
-				mysql -u "$mysql_user" -p"$mysql_password" -e "CREATE DATABASE `$database_name`;"
+				mysql -u "$mysql_user" -p -e 'CREATE DATABASE $database_name';
 				mysql -p -u "$mysql_user" "$database_name" < ripple.sql
 				printf "%s\n" "Done Setting Up '$task'."
 			else
