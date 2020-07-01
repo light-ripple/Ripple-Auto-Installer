@@ -16,6 +16,7 @@ export GREEN="\033[0;32m"
 export YELLOW="\033[0;33m"
 export BLUE="\033[0;34m"
 
+# FIXME: Add Proper Credit/Copyright notice for efixme, lineno & die function.
 # Simplified assertion by Jacob Hrbek <kreyren@rixotstudio.cz> under the terms of GPL-3
 efixme() {
 	if [ "$FUNCNAME" != "efixme" ]; then
