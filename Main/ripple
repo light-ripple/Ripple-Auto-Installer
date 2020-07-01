@@ -6,7 +6,7 @@
 : '
 -------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of AGPLv3  |
-|                   Last Updated on Sunday, June 28, 2020 (GMT+6)                   |
+|                   Last Updated on Wednesday, July 1, 2020 (GMT+6)                 |
 -------------------------------------------------------------------------------------
 '
 
@@ -74,9 +74,9 @@ die() {
 alias die="die \"[ line \$LINENO\"\ ]"
 
 
-## WARNING ##
-development="False"
-if [ "$development" = "True" ]; then
+# WARNING 
+development=""
+if [ "$development" ]; then
 	die 1 "Script is on Development! Execution of any arguments are disabled during development session."
 fi
 
@@ -97,7 +97,7 @@ notice() {
 	exit "$1"
 }
 
-# Check number of cp -vu threads for faster compilation/builds
+# Detect number of cpu threads for faster compilation/builds
 nproc_detector() {
 	case "$(nproc)" in
 		[1-9] | [1-9][0-9] | [1-9][0-9][0-9] | [1-9][0-9][0-9][0-9]) procNum="$(nproc)" export procNum exit ;;
