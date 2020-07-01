@@ -1,34 +1,37 @@
--- -------------------------------------------------------- --
--- Host:                         Ripple                     --
--- Server version:               5.7.28-Bedrock-0.7.17-(BR) --
--- Server OS:                    Linux                      --
--- -------------------------------------------------------- --
+-- --------------------------------------------------------
+-- Host:                         Ripple
+-- Server version:               5.7.28-Bedrock-0.7.17 - (Ubuntu)
+-- Server OS:                    Linux
+-- --------------------------------------------------------
 
-
+-- Dumping structure for table 2fa
 CREATE TABLE IF NOT EXISTS `2fa` (
-  `userid` INT(11) NOT NULL, 
-  `ip` INT(11) NOT NULL, 
+  `userid` int(11) NOT NULL, 
+  `ip` int(11) NOT NULL, 
   PRIMARY KEY (`userid`)
-) engine = innodb DEFAULT charset = utf8;
-(
-  `id` INT(11) NOT NULL auto_increment, 
-  `userid` INT(11) NOT NULL, 
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+-- Dumping structure for table 2fa_telegram
+CREATE TABLE IF NOT EXISTS `2fa_telegram` (
+  `id` int(11) NOT NULL AUTO_INCREMENT, 
+  `userid` int(11) NOT NULL, 
   PRIMARY KEY (`id`)
-) engine = innodb DEFAULT charset = utf8;
-(
-  `enabled` TINYINT(1) NOT NULL DEFAULT '0', 
-  `userid` INT(11) NOT NULL, 
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+-- Dumping structure for table 2fa_totp
+CREATE TABLE IF NOT EXISTS `2fa_totp` (
+  `enabled` tinyint(1) NOT NULL DEFAULT '0', 
+  `userid` int(11) NOT NULL, 
   PRIMARY KEY (`userid`)
-) engine = innodb DEFAULT charset = utf8;
-(
-  `id` INT(11) NOT NULL, 
-  `name` MEDIUMTEXT NOT NULL, 
-  `description` MEDIUMTEXT NOT NULL, 
-  `icon` MEDIUMTEXT NOT NULL, 
-  `version` INT(11) NOT NULL DEFAULT '0', 
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+-- Dumping structure for table achievements
+CREATE TABLE IF NOT EXISTS `achievements` (
+  `id` int(11) NOT NULL, 
+  `name` mediumtext NOT NULL, 
+  `description` mediumtext NOT NULL, 
+  `icon` mediumtext NOT NULL, 
+  `version` int(11) NOT NULL DEFAULT '0', 
   PRIMARY KEY (`id`)
-) engine = innodb DEFAULT charset = utf8;
-INTO `achievements` (
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+INSERT IGNORE INTO `achievements` (
   `id`, `name`, `description`, `icon`, 
   `version`
 ) 
@@ -423,20 +426,22 @@ VALUES
     'The order was indeed, not a rabbit.', 
     'all-secret-bunny', 6
   );
-(
-  `id` INT(11) NOT NULL auto_increment, 
-  `anticheat_id` INT(11) NOT NULL, 
-  `score_id` INT(11) NOT NULL, 
-  `severity` INT(11) NOT NULL, 
+-- Dumping structure for table anticheat_reports
+CREATE TABLE IF NOT EXISTS `anticheat_reports` (
+  `id` int(11) NOT NULL AUTO_INCREMENT, 
+  `anticheat_id` int(11) NOT NULL, 
+  `score_id` int(11) NOT NULL, 
+  `severity` int(11) NOT NULL, 
   PRIMARY KEY (`id`)
-) engine = innodb auto_increment = 0 DEFAULT charset = utf8;
-(
-  `id` INT(11) NOT NULL auto_increment, 
-  `name` VARCHAR(21485) NOT NULL, 
-  `icon` VARCHAR(32) NOT NULL, 
+) ENGINE = InnoDB AUTO_INCREMENT = 0 DEFAULT CHARSET = utf8;
+-- Dumping structure for table badges
+CREATE TABLE IF NOT EXISTS `badges` (
+  `id` int(11) NOT NULL AUTO_INCREMENT, 
+  `name` varchar(21485) NOT NULL, 
+  `icon` varchar(32) NOT NULL, 
   PRIMARY KEY (`id`)
-) engine = innodb auto_increment = 1014 DEFAULT charset = utf8;
-INTO `badges` (`id`, `name`, `icon`) 
+) ENGINE = InnoDB AUTO_INCREMENT = 1014 DEFAULT CHARSET = utf8;
+INSERT IGNORE INTO `badges` (`id`, `name`, `icon`) 
 VALUES 
   (0, '', ''), 
   (2, 'Developers', 'teal blind'), 
@@ -454,7 +459,7 @@ VALUES
   (
     30, 'Chat Moderators', 'envelope outline'
   ), 
-  (999, 'socrates', 'fa-plane'), 
+  (999, 'FP', 'fa-plane'), 
   (
     1000, 'Thumbnail Maker', 'fa-thumbs-o-up'
   ), 
@@ -462,26 +467,55 @@ VALUES
     1001, 'Marathon Runner', 'yellow hourglass outline'
   ), 
   (1002, 'Donor', 'yellow heart'), 
-  (1003, 'ua', 'universal access'), 
+  (1003, 'UA', 'universal access'), 
   (
     1004, 'Vanilla God (Certified by Kingkong)', 
     'yellow fa-check'
   ), 
   (
     1005, 'Bot', 'blue shield alternate'
+  ), 
+  (
+    1006, '#1 Relax #Weekly (osu!)', 
+    'fa-fighter-jet'
+  ), 
+  (
+    1007, '#1 Relax #Weekly (Catch The Beat)', 
+    'fa-fighter-jet'
+  ), 
+  (
+    1009, '#1 Relax #Weekly (Taiko)', 
+    'fa-fighter-jet'
+  ), 
+  (
+    1010, '#1 Vanilla #Weekly (osu!)', 
+    'fa-fighter-jet'
+  ), 
+  (
+    1011, '#1 Vanilla #Weekly (Mania)', 
+    'fa-fighter-jet'
+  ), 
+  (
+    1012, '#1 Vanilla #Weekly (Catch The Beat)', 
+    'fa-fighter-jet'
+  ), 
+  (
+    1013, '#1 Vanilla #Weekly (Taiko)', 
+    'fa-fighter-jet'
   );
-(
-  `id` INT(11) NOT NULL auto_increment, 
-  `name` VARCHAR(32) NOT NULL, 
-  `description` VARCHAR(127) NOT NULL, 
-  `public_read` TINYINT(4) NOT NULL, 
-  `public_write` TINYINT(4) NOT NULL, 
-  `status` TINYINT(4) NOT NULL, 
-  `temp` TINYINT(1) NOT NULL DEFAULT '0', 
-  `hidden` TINYINT(1) NOT NULL DEFAULT '0', 
+-- Dumping structure for table bancho_channels
+CREATE TABLE IF NOT EXISTS `bancho_channels` (
+  `id` int(11) NOT NULL AUTO_INCREMENT, 
+  `name` varchar(32) NOT NULL, 
+  `description` varchar(127) NOT NULL, 
+  `public_read` tinyint(4) NOT NULL, 
+  `public_write` tinyint(4) NOT NULL, 
+  `status` tinyint(4) NOT NULL, 
+  `temp` tinyint(1) NOT NULL DEFAULT '0', 
+  `hidden` tinyint(1) NOT NULL DEFAULT '0', 
   PRIMARY KEY (`id`)
-) engine = innodb auto_increment = 8 DEFAULT charset = utf8;
-INTO `bancho_channels` (
+) ENGINE = InnoDB AUTO_INCREMENT = 8 DEFAULT CHARSET = utf8;
+INSERT IGNORE INTO `bancho_channels` (
   `id`, `name`, `description`, `public_read`, 
   `public_write`, `status`, `temp`, 
   `hidden`
@@ -496,7 +530,7 @@ VALUES
     1, 0, 1, 0, 0
   ), 
   (
-    3, '#ripple', 'Ripple community', 
+    3, '#Spanish', 'Spanish community', 
     1, 1, 1, 0, 0
   ), 
   (
@@ -504,43 +538,46 @@ VALUES
     1, 1, 1, 0, 0
   ), 
   (
-    5, '#admin', 'Administration', 1, 1, 
+    5, '#admin', 'Are you admin?', 1, 1, 
     1, 0, 1
   ), 
   (
-    6, '#lobby', 'General Lobby', 1, 1, 
-    1, 0, 1
+    6, '#lobby', 'This is the lobby where you find games to play with others!', 
+    1, 1, 1, 0, 1
   ), 
   (
-    7, '#ranked', 'Ranked Maps General', 
+    7, '#ranked', 'Rank requests maps will be posted here! (If it\'s ranked.)', 
     1, 0, 1, 0, 0
   );
-(
-  `id` INT(11) NOT NULL auto_increment, 
-  `msg_from_userid` INT(11) NOT NULL, 
-  `msg_from_username` VARCHAR(30) NOT NULL, 
-  `msg_to` VARCHAR(32) NOT NULL, 
-  `msg` VARCHAR(127) NOT NULL, 
-  `time` INT(11) NOT NULL, 
+-- Dumping structure for table bancho_messages
+CREATE TABLE IF NOT EXISTS `bancho_messages` (
+  `id` int(11) NOT NULL AUTO_INCREMENT, 
+  `msg_from_userid` int(11) NOT NULL, 
+  `msg_from_username` varchar(30) NOT NULL, 
+  `msg_to` varchar(32) NOT NULL, 
+  `msg` varchar(127) NOT NULL, 
+  `time` int(11) NOT NULL, 
   PRIMARY KEY (`id`)
-) engine = innodb DEFAULT charset = utf8;
-(
-  `id` INT(11) NOT NULL auto_increment, 
-  `msg_from_userid` INT(11) NOT NULL, 
-  `msg_from_username` VARCHAR(30) NOT NULL, 
-  `msg_to` VARCHAR(32) NOT NULL, 
-  `msg` VARCHAR(127) NOT NULL, 
-  `time` INT(11) NOT NULL, 
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+-- Dumping structure for table bancho_private_messages
+CREATE TABLE IF NOT EXISTS `bancho_private_messages` (
+  `id` int(11) NOT NULL AUTO_INCREMENT, 
+  `msg_from_userid` int(11) NOT NULL, 
+  `msg_from_username` varchar(30) NOT NULL, 
+  `msg_to` varchar(32) NOT NULL, 
+  `msg` varchar(127) NOT NULL, 
+  `time` int(11) NOT NULL, 
   PRIMARY KEY (`id`)
-) engine = innodb DEFAULT charset = utf8;
-(
-  `id` INT(11) NOT NULL auto_increment, 
-  `name` VARCHAR(32) NOT NULL, 
-  `value_int` INT(11) NOT NULL DEFAULT '0', 
-  `value_string` VARCHAR(512) NOT NULL, 
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+-- Dumping structure for table bancho_settings
+CREATE TABLE IF NOT EXISTS `bancho_settings` (
+  `id` int(11) NOT NULL AUTO_INCREMENT, 
+  `name` varchar(32) NOT NULL, 
+  `value_int` int(11) NOT NULL DEFAULT '0', 
+  `value_string` varchar(512) NOT NULL, 
   PRIMARY KEY (`id`)
-) engine = innodb auto_increment = 9 DEFAULT charset = utf8;
-INTO `bancho_settings` (
+) ENGINE = InnoDB AUTO_INCREMENT = 9 DEFAULT CHARSET = utf8;
+INSERT IGNORE INTO `bancho_settings` (
   `id`, `name`, `value_int`, `value_string`
 ) 
 VALUES 
@@ -554,167 +591,185 @@ VALUES
     5, 'restricted_joke', 0, 'You\'re banned from the server.'
   ), 
   (
-    6, 'login_notification', 1, 'Welcome to Ripple Clone!'
+    6, 'login_notification', 1, 'Welcome to Ripple!Clone'
   ), 
   (7, 'osu_versions', 0, ''), 
   (8, 'osu_md5s', 0, '');
-(
-  `id` INT(11) NOT NULL auto_increment, 
-  `token` VARCHAR(16) NOT NULL, 
-  `osu_id` INT(11) NOT NULL, 
-  `latest_message_id` INT(11) NOT NULL, 
-  `latest_private_message_id` INT(11) NOT NULL, 
-  `latest_packet_time` INT(11) NOT NULL, 
-  `latest_heavy_packet_time` INT(11) NOT NULL, 
-  `joined_channels` VARCHAR(512) NOT NULL, 
-  `game_mode` TINYINT(4) NOT NULL, 
-  `action` INT(11) NOT NULL, 
-  `action_text` VARCHAR(128) NOT NULL, 
-  `kicked` TINYINT(4) NOT NULL, 
+-- Dumping structure for table bancho_tokens
+CREATE TABLE IF NOT EXISTS `bancho_tokens` (
+  `id` int(11) NOT NULL AUTO_INCREMENT, 
+  `token` varchar(16) NOT NULL, 
+  `osu_id` int(11) NOT NULL, 
+  `latest_message_id` int(11) NOT NULL, 
+  `latest_private_message_id` int(11) NOT NULL, 
+  `latest_packet_time` int(11) NOT NULL, 
+  `latest_heavy_packet_time` int(11) NOT NULL, 
+  `joined_channels` varchar(512) NOT NULL, 
+  `game_mode` tinyint(4) NOT NULL, 
+  `action` int(11) NOT NULL, 
+  `action_text` varchar(128) NOT NULL, 
+  `kicked` tinyint(4) NOT NULL, 
   PRIMARY KEY (`id`)
-) engine = innodb DEFAULT charset = utf8;
-(
-  `id` INT(11) NOT NULL auto_increment, 
-  `rankedby` VARCHAR(32) NOT NULL DEFAULT 'Bancho', 
-  `beatmap_id` INT(11) NOT NULL DEFAULT '0', 
-  `beatmapset_id` INT(11) NOT NULL DEFAULT '0', 
-  `beatmap_md5` VARCHAR(32) NOT NULL DEFAULT '', 
-  `song_name` LONGTEXT NOT NULL, 
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+-- Dumping structure for table beatmaps
+CREATE TABLE IF NOT EXISTS `beatmaps` (
+  `id` int(11) NOT NULL AUTO_INCREMENT, 
+  `rankedby` varchar(32) NOT NULL DEFAULT 'Bancho', 
+  `beatmap_id` int(11) NOT NULL DEFAULT '0', 
+  `beatmapset_id` int(11) NOT NULL DEFAULT '0', 
+  `beatmap_md5` varchar(32) NOT NULL DEFAULT '', 
+  `song_name` longtext NOT NULL, 
   `file_name` text, 
-  `ar` FLOAT NOT NULL DEFAULT '0', 
-  `od` FLOAT NOT NULL DEFAULT '0', 
-  `mode` INT(11) NOT NULL DEFAULT '0', 
-  `rating` INT(11) NOT NULL DEFAULT '10', 
-  `difficulty_std` FLOAT NOT NULL DEFAULT '0', 
-  `difficulty_taiko` FLOAT NOT NULL DEFAULT '0', 
-  `difficulty_ctb` FLOAT NOT NULL DEFAULT '0', 
-  `difficulty_mania` FLOAT NOT NULL DEFAULT '0', 
-  `max_combo` INT(11) NOT NULL DEFAULT '0', 
-  `hit_length` INT(11) NOT NULL DEFAULT '0', 
-  `bpm` BIGINT(11) NOT NULL DEFAULT '0', 
-  `playcount` INT(11) NOT NULL DEFAULT '0', 
-  `passcount` INT(11) NOT NULL DEFAULT '0', 
-  `ranked` TINYINT(4) NOT NULL DEFAULT '0', 
-  `latest_update` INT(11) NOT NULL DEFAULT '0', 
-  `ranked_status_freezed` TINYINT(1) NOT NULL DEFAULT '0', 
-  `pp_100` INT(11) NOT NULL DEFAULT '0', 
-  `pp_99` INT(11) NOT NULL DEFAULT '0', 
-  `pp_98` INT(11) NOT NULL DEFAULT '0', 
-  `pp_95` INT(11) NOT NULL DEFAULT '0', 
-  `disable_pp` TINYINT(4) NOT NULL DEFAULT '0', 
+  `ar` float NOT NULL DEFAULT '0', 
+  `od` float NOT NULL DEFAULT '0', 
+  `mode` int(11) NOT NULL DEFAULT '0', 
+  `rating` int(11) NOT NULL DEFAULT '10', 
+  `difficulty_std` float NOT NULL DEFAULT '0', 
+  `difficulty_taiko` float NOT NULL DEFAULT '0', 
+  `difficulty_ctb` float NOT NULL DEFAULT '0', 
+  `difficulty_mania` float NOT NULL DEFAULT '0', 
+  `max_combo` int(11) NOT NULL DEFAULT '0', 
+  `hit_length` int(11) NOT NULL DEFAULT '0', 
+  `bpm` bigint(11) NOT NULL DEFAULT '0', 
+  `playcount` int(11) NOT NULL DEFAULT '0', 
+  `passcount` int(11) NOT NULL DEFAULT '0', 
+  `ranked` tinyint(4) NOT NULL DEFAULT '0', 
+  `latest_update` int(11) NOT NULL DEFAULT '0', 
+  `ranked_status_freezed` tinyint(1) NOT NULL DEFAULT '0', 
+  `pp_100` int(11) NOT NULL DEFAULT '0', 
+  `pp_99` int(11) NOT NULL DEFAULT '0', 
+  `pp_98` int(11) NOT NULL DEFAULT '0', 
+  `pp_95` int(11) NOT NULL DEFAULT '0', 
+  `disable_pp` tinyint(4) NOT NULL DEFAULT '0', 
   PRIMARY KEY (`id`), 
   KEY `id` (`id`), 
   KEY `id_2` (`id`)
-) engine = innodb auto_increment = 0 DEFAULT charset = utf8;
-(
-  `id` INT(11) NOT NULL auto_increment, 
-  `beatmap_md5` VARCHAR(32) NOT NULL DEFAULT '', 
-  `beatmap_name` VARCHAR(256) NOT NULL DEFAULT '', 
+) ENGINE = InnoDB AUTO_INCREMENT = 0 DEFAULT CHARSET = utf8;
+-- Dumping structure for table beatmaps_names
+CREATE TABLE IF NOT EXISTS `beatmaps_names` (
+  `id` int(11) NOT NULL AUTO_INCREMENT, 
+  `beatmap_md5` varchar(32) NOT NULL DEFAULT '', 
+  `beatmap_name` varchar(256) NOT NULL DEFAULT '', 
   PRIMARY KEY (`id`)
-) engine = innodb DEFAULT charset = utf8;
-(
-  `id` INT(11) NOT NULL auto_increment, 
-  `user_id` INT(11) NOT NULL, 
-  `beatmap_md5` VARCHAR(32) NOT NULL, 
-  `rating` INT(11) NOT NULL, 
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+-- Dumping structure for table beatmaps_rating
+CREATE TABLE IF NOT EXISTS `beatmaps_rating` (
+  `id` int(11) NOT NULL AUTO_INCREMENT, 
+  `user_id` int(11) NOT NULL, 
+  `beatmap_md5` varchar(32) NOT NULL, 
+  `rating` int(11) NOT NULL, 
   PRIMARY KEY (`id`)
-) engine = innodb auto_increment = 0 DEFAULT charset = utf8;
-(
-  `id` INT(11) NOT NULL auto_increment, 
+) ENGINE = InnoDB AUTO_INCREMENT = 0 DEFAULT CHARSET = utf8;
+-- Dumping structure for table clans
+CREATE TABLE IF NOT EXISTS `clans` (
+  `id` int(11) NOT NULL AUTO_INCREMENT, 
   `name` text NOT NULL, 
   `description` text NOT NULL, 
   `icon` text NOT NULL, 
-  `tag` VARCHAR(6) NOT NULL, 
-  `mlimit` INT(11) NOT NULL DEFAULT '16', 
+  `tag` varchar(6) NOT NULL, 
+  `mlimit` int(11) NOT NULL DEFAULT '16', 
   PRIMARY KEY (`id`)
-) engine = innodb auto_increment = 0 DEFAULT charset = utf8;
-(
-  `id` INT(11) NOT NULL auto_increment, 
-  `clan` INT(11) NOT NULL, 
-  `invite` VARCHAR(8) NOT NULL, 
+) ENGINE = InnoDB AUTO_INCREMENT = 0 DEFAULT CHARSET = utf8;
+-- Dumping structure for table clans_invites
+CREATE TABLE IF NOT EXISTS `clans_invites` (
+  `id` int(11) NOT NULL AUTO_INCREMENT, 
+  `clan` int(11) NOT NULL, 
+  `invite` varchar(8) NOT NULL, 
   PRIMARY KEY (`id`)
-) engine = innodb auto_increment = 0 DEFAULT charset = utf8;
-(
-  `id` INT(11) NOT NULL auto_increment, 
-  `user_id` INT(11) NOT NULL, 
-  `beatmap_id` INT(11) NOT NULL DEFAULT '0', 
-  `beatmapset_id` INT(11) NOT NULL DEFAULT '0', 
-  `score_id` INT(11) NOT NULL DEFAULT '0', 
-  `mode` INT(11) NOT NULL, 
-  `comment` VARCHAR(128) NOT NULL, 
-  `time` INT(11) NOT NULL, 
-  `who` VARCHAR(11) NOT NULL, 
-  `special_format` VARCHAR(2556) DEFAULT 'FFFFFF', 
+) ENGINE = InnoDB AUTO_INCREMENT = 0 DEFAULT CHARSET = utf8;
+-- Dumping structure for table comments
+CREATE TABLE IF NOT EXISTS `comments` (
+  `id` int(11) NOT NULL AUTO_INCREMENT, 
+  `user_id` int(11) NOT NULL, 
+  `beatmap_id` int(11) NOT NULL DEFAULT '0', 
+  `beatmapset_id` int(11) NOT NULL DEFAULT '0', 
+  `score_id` int(11) NOT NULL DEFAULT '0', 
+  `mode` int(11) NOT NULL, 
+  `comment` varchar(128) NOT NULL, 
+  `time` int(11) NOT NULL, 
+  `who` varchar(11) NOT NULL, 
+  `special_format` varchar(2556) DEFAULT 'FFFFFF', 
   PRIMARY KEY (`id`)
-) engine = innodb auto_increment = 0 DEFAULT charset = utf8;
-(
-  `id` INT(11) UNSIGNED NOT NULL auto_increment, 
-  `doc_name` VARCHAR(255) NOT NULL DEFAULT 'New Documentation File', 
-  `doc_contents` LONGTEXT NOT NULL, 
-  `public` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0', 
-  `old_name` VARCHAR(200) DEFAULT NULL, 
+) ENGINE = InnoDB AUTO_INCREMENT = 0 DEFAULT CHARSET = utf8;
+-- Dumping structure for table docs
+CREATE TABLE IF NOT EXISTS `docs` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT, 
+  `doc_name` varchar(255) NOT NULL DEFAULT 'New Documentation File', 
+  `doc_contents` longtext NOT NULL, 
+  `public` tinyint(1) unsigned NOT NULL DEFAULT '0', 
+  `old_name` varchar(200) DEFAULT NULL, 
   PRIMARY KEY (`id`)
-) engine = myisam DEFAULT charset = utf8;
-(
-  `id` INT(11) NOT NULL auto_increment, 
-  `userid` INT(11) NOT NULL, 
-  `mac` VARCHAR(32) NOT NULL, 
-  `unique_id` VARCHAR(32) NOT NULL, 
-  `disk_id` VARCHAR(32) NOT NULL, 
-  `occurencies` INT(11) NOT NULL DEFAULT '0', 
-  `activated` TINYINT(1) NOT NULL DEFAULT '0', 
+) ENGINE = MyISAM DEFAULT CHARSET = utf8;
+-- Dumping structure for table hw_user
+CREATE TABLE IF NOT EXISTS `hw_user` (
+  `id` int(11) NOT NULL AUTO_INCREMENT, 
+  `userid` int(11) NOT NULL, 
+  `mac` varchar(32) NOT NULL, 
+  `unique_id` varchar(32) NOT NULL, 
+  `disk_id` varchar(32) NOT NULL, 
+  `occurencies` int(11) NOT NULL DEFAULT '0', 
+  `activated` tinyint(1) NOT NULL DEFAULT '0', 
   PRIMARY KEY (`id`), 
   UNIQUE KEY `userid` (`userid`)
-) engine = innodb auto_increment = 0 DEFAULT charset = utf8;
-(
-  `userid` INT(11) NOT NULL, 
-  `token` VARCHAR(64) NOT NULL, 
+) ENGINE = InnoDB AUTO_INCREMENT = 0 DEFAULT CHARSET = utf8;
+-- Dumping structure for table identity_tokens
+CREATE TABLE IF NOT EXISTS `identity_tokens` (
+  `userid` int(11) NOT NULL, 
+  `token` varchar(64) NOT NULL, 
   UNIQUE KEY `userid` (`userid`)
-) engine = innodb DEFAULT charset = utf8;
-(
-  `userid` INT(11) NOT NULL, 
-  `ip` MEDIUMTEXT NOT NULL, 
-  `occurencies` INT(11) NOT NULL, 
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+-- Dumping structure for table ip_user
+CREATE TABLE IF NOT EXISTS `ip_user` (
+  `userid` int(11) NOT NULL, 
+  `ip` mediumtext NOT NULL, 
+  `occurencies` int(11) NOT NULL, 
   PRIMARY KEY (`userid`), 
   UNIQUE KEY `userid` (`userid`)
-) engine = innodb DEFAULT charset = utf8;
-(
-  `userid` INT(11) NOT NULL DEFAULT '0', 
-  `token` VARCHAR(32) NOT NULL DEFAULT '', 
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+-- Dumping structure for table irc_tokens
+CREATE TABLE IF NOT EXISTS `irc_tokens` (
+  `userid` int(11) NOT NULL DEFAULT '0', 
+  `token` varchar(32) NOT NULL DEFAULT '', 
   UNIQUE KEY `userid` (`userid`)
-) engine = innodb DEFAULT charset = utf8;
-(
-  `position` INT(10) UNSIGNED NOT NULL, 
-  `user` INT(11) NOT NULL, 
-  `v` BIGINT(20) NOT NULL, 
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+-- Dumping structure for table leaderboard_ctb
+CREATE TABLE IF NOT EXISTS `leaderboard_ctb` (
+  `position` int(10) unsigned NOT NULL, 
+  `user` int(11) NOT NULL, 
+  `v` bigint(20) NOT NULL, 
   PRIMARY KEY (`position`)
-) engine = innodb DEFAULT charset = utf8;
-(
-  `position` INT(10) UNSIGNED NOT NULL, 
-  `user` INT(11) NOT NULL, 
-  `v` BIGINT(20) NOT NULL, 
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+-- Dumping structure for table leaderboard_mania
+CREATE TABLE IF NOT EXISTS `leaderboard_mania` (
+  `position` int(10) unsigned NOT NULL, 
+  `user` int(11) NOT NULL, 
+  `v` bigint(20) NOT NULL, 
   PRIMARY KEY (`position`)
-) engine = innodb DEFAULT charset = utf8;
-(
-  `position` INT(10) UNSIGNED NOT NULL, 
-  `user` INT(11) NOT NULL, 
-  `v` BIGINT(20) NOT NULL, 
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+-- Dumping structure for table leaderboard_std
+CREATE TABLE IF NOT EXISTS `leaderboard_std` (
+  `position` int(10) unsigned NOT NULL, 
+  `user` int(11) NOT NULL, 
+  `v` bigint(20) NOT NULL, 
   PRIMARY KEY (`position`)
-) engine = innodb DEFAULT charset = utf8;
-(
-  `position` INT(10) UNSIGNED NOT NULL, 
-  `user` INT(11) NOT NULL, 
-  `v` BIGINT(20) NOT NULL, 
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+-- Dumping structure for table leaderboard_taiko
+CREATE TABLE IF NOT EXISTS `leaderboard_taiko` (
+  `position` int(10) unsigned NOT NULL, 
+  `user` int(11) NOT NULL, 
+  `v` bigint(20) NOT NULL, 
   PRIMARY KEY (`position`)
-) engine = innodb DEFAULT charset = utf8;
-`id` INT(11) NOT NULL auto_increment, 
-`is_current` INT(11) NOT NULL, 
-`file_id` VARCHAR(128) NOT NULL, 
-`name` VARCHAR(256) NOT NULL, 
-`url` text NOT NULL, 
-PRIMARY KEY (`id`)
-) engine = innodb auto_increment = 2 DEFAULT charset = utf8;
-INTO `main_menu_icons` (
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+-- Dumping structure for table main_menu_icons
+CREATE TABLE IF NOT EXISTS `main_menu_icons` (
+  `id` int(11) NOT NULL AUTO_INCREMENT, 
+  `is_current` int(11) NOT NULL, 
+  `file_id` varchar(128) NOT NULL, 
+  `name` varchar(256) NOT NULL, 
+  `url` text NOT NULL, 
+  PRIMARY KEY (`id`)
+) ENGINE = InnoDB AUTO_INCREMENT = 2 DEFAULT CHARSET = utf8;
+INSERT IGNORE INTO `main_menu_icons` (
   `id`, `is_current`, `file_id`, `name`, 
   `url`
 ) 
@@ -722,38 +777,44 @@ VALUES
   (
     1, 1, 'logo', 'Ripple!', 'https://ripple.moe/'
   );
-(
-  `scope` INT(11) NOT NULL DEFAULT '0', 
-  `created_at` INT(11) NOT NULL DEFAULT '0', 
-  `client` INT(11) NOT NULL DEFAULT '0', 
-  `extra` INT(11) NOT NULL DEFAULT '0'
-) engine = innodb DEFAULT charset = utf8;
-(
-  `id` INT(11) NOT NULL auto_increment, 
-  `secret` VARCHAR(64) NOT NULL DEFAULT '', 
-  `extra` VARCHAR(127) NOT NULL DEFAULT '', 
-  `redirect_uri` VARCHAR(127) NOT NULL DEFAULT '', 
+-- Dumping structure for table osin_access
+CREATE TABLE IF NOT EXISTS `osin_access` (
+  `scope` int(11) NOT NULL DEFAULT '0', 
+  `created_at` int(11) NOT NULL DEFAULT '0', 
+  `client` int(11) NOT NULL DEFAULT '0', 
+  `extra` int(11) NOT NULL DEFAULT '0'
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+-- Dumping structure for table osin_client
+CREATE TABLE IF NOT EXISTS `osin_client` (
+  `id` int(11) NOT NULL AUTO_INCREMENT, 
+  `secret` varchar(64) NOT NULL DEFAULT '', 
+  `extra` varchar(127) NOT NULL DEFAULT '', 
+  `redirect_uri` varchar(127) NOT NULL DEFAULT '', 
   PRIMARY KEY (`id`)
-) engine = innodb DEFAULT charset = utf8;
-`client_id` INT(11) NOT NULL DEFAULT '0', 
-`user` INT(11) NOT NULL DEFAULT '0'
-) engine = innodb DEFAULT charset = utf8;
-(
-  `id` INT(11) NOT NULL auto_increment, 
-  `k` VARCHAR(80) NOT NULL, 
-  `u` VARCHAR(30) NOT NULL, 
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+-- Dumping structure for table osin_client_user
+CREATE TABLE IF NOT EXISTS `osin_client_user` (
+  `client_id` int(11) NOT NULL DEFAULT '0', 
+  `user` int(11) NOT NULL DEFAULT '0'
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+-- Dumping structure for table password_recovery
+CREATE TABLE IF NOT EXISTS `password_recovery` (
+  `id` int(11) NOT NULL AUTO_INCREMENT, 
+  `k` varchar(80) NOT NULL, 
+  `u` varchar(30) NOT NULL, 
   `t` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, 
   PRIMARY KEY (`id`)
-) engine = myisam auto_increment = 0 DEFAULT charset = utf8;
-(
-  `id` INT(11) NOT NULL auto_increment, 
-  `name` VARCHAR(32) NOT NULL, 
-  `privileges` INT(11) NOT NULL, 
-  `color` VARCHAR(32) NOT NULL, 
+) ENGINE = MyISAM AUTO_INCREMENT = 0 DEFAULT CHARSET = utf8;
+-- Dumping structure for table privileges_groups
+CREATE TABLE IF NOT EXISTS `privileges_groups` (
+  `id` int(11) NOT NULL AUTO_INCREMENT, 
+  `name` varchar(32) NOT NULL, 
+  `privileges` int(11) NOT NULL, 
+  `color` varchar(32) NOT NULL, 
   PRIMARY KEY (`id`), 
   UNIQUE KEY `name` (`name`)
-) engine = innodb auto_increment = 15 DEFAULT charset = utf8;
-INTO `privileges_groups` (
+) ENGINE = InnoDB AUTO_INCREMENT = 15 DEFAULT CHARSET = utf8;
+INSERT IGNORE INTO `privileges_groups` (
   `id`, `name`, `privileges`, `color`
 ) 
 VALUES 
@@ -780,102 +841,109 @@ VALUES
     14, 'New Privilege Group', 33039, 
     'info'
   );
-(
-  `uid` INT(11) NOT NULL, 
-  `time` INT(11) NOT NULL, 
-  `type` INT(11) NOT NULL, 
-  `value` MEDIUMTEXT NOT NULL, 
+-- Dumping structure for table profile_backgrounds
+CREATE TABLE IF NOT EXISTS `profile_backgrounds` (
+  `uid` int(11) NOT NULL, 
+  `time` int(11) NOT NULL, 
+  `type` int(11) NOT NULL, 
+  `value` mediumtext NOT NULL, 
   PRIMARY KEY (`uid`)
-) engine = innodb DEFAULT charset = utf8;
-(
-  `id` INT(11) NOT NULL auto_increment, 
-  `userid` INT(11) NOT NULL, 
-  `bid` INT(11) NOT NULL, 
-  `type` VARCHAR(8) NOT NULL, 
-  `time` INT(11) NOT NULL, 
-  `blacklisted` TINYINT(1) NOT NULL, 
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+-- Dumping structure for table rank_requests
+CREATE TABLE IF NOT EXISTS `rank_requests` (
+  `id` int(11) NOT NULL AUTO_INCREMENT, 
+  `userid` int(11) NOT NULL, 
+  `bid` int(11) NOT NULL, 
+  `type` varchar(8) NOT NULL, 
+  `time` int(11) NOT NULL, 
+  `blacklisted` tinyint(1) NOT NULL, 
   PRIMARY KEY (`id`), 
   UNIQUE KEY `bid` (`bid`)
-) engine = innodb auto_increment = 0 DEFAULT charset = utf8;
-(
-  `id` INT(11) NOT NULL auto_increment, 
-  `userid` INT(11) NOT NULL, 
+) ENGINE = InnoDB AUTO_INCREMENT = 0 DEFAULT CHARSET = utf8;
+-- Dumping structure for table rap_logs
+CREATE TABLE IF NOT EXISTS `rap_logs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT, 
+  `userid` int(11) NOT NULL, 
   `text` text NOT NULL, 
-  `datetime` INT(11) NOT NULL, 
+  `datetime` int(11) NOT NULL, 
   `through` text NOT NULL, 
   PRIMARY KEY (`id`)
-) engine = innodb auto_increment = 0 DEFAULT charset = utf8;
-(
-  `id` INT(11) NOT NULL auto_increment, 
-  `userid` INT(11) NOT NULL, 
-  `series_identifier` INT(11) DEFAULT NULL, 
-  `token_sha` VARCHAR(255) DEFAULT NULL, 
+) ENGINE = InnoDB AUTO_INCREMENT = 0 DEFAULT CHARSET = utf8;
+-- Dumping structure for table remember
+CREATE TABLE IF NOT EXISTS `remember` (
+  `id` int(11) NOT NULL AUTO_INCREMENT, 
+  `userid` int(11) NOT NULL, 
+  `series_identifier` int(11) DEFAULT NULL, 
+  `token_sha` varchar(255) DEFAULT NULL, 
   PRIMARY KEY (`id`)
-) engine = innodb auto_increment = 0 DEFAULT charset = utf8;
-(
-  `id` INT(11) NOT NULL auto_increment, 
-  `from_uid` INT(11) NOT NULL, 
-  `to_uid` INT(11) NOT NULL, 
+) ENGINE = InnoDB AUTO_INCREMENT = 0 DEFAULT CHARSET = utf8;
+-- Dumping structure for table reports
+CREATE TABLE IF NOT EXISTS `reports` (
+  `id` int(11) NOT NULL AUTO_INCREMENT, 
+  `from_uid` int(11) NOT NULL, 
+  `to_uid` int(11) NOT NULL, 
   `reason` text NOT NULL, 
   `chatlog` text NOT NULL, 
-  `time` INT(11) NOT NULL, 
-  `assigned` INT(11) NOT NULL DEFAULT '0', 
+  `time` int(11) NOT NULL, 
+  `assigned` int(11) NOT NULL DEFAULT '0', 
   PRIMARY KEY (`id`)
-) engine = innodb auto_increment = 0 DEFAULT charset = utf8;
-(
-  `id` INT(11) NOT NULL auto_increment, 
-  `user_id` INT(11) NOT NULL, 
-  `beatmap_id` INT(11) DEFAULT NULL, 
-  `game_mode` INT(11) DEFAULT NULL, 
-  `playcount` INT(11) DEFAULT NULL, 
+) ENGINE = InnoDB AUTO_INCREMENT = 0 DEFAULT CHARSET = utf8;
+-- Dumping structure for table rx_beatmap_playcount
+CREATE TABLE IF NOT EXISTS `rx_beatmap_playcount` (
+  `id` int(11) NOT NULL AUTO_INCREMENT, 
+  `user_id` int(11) NOT NULL, 
+  `beatmap_id` int(11) DEFAULT NULL, 
+  `game_mode` int(11) DEFAULT NULL, 
+  `playcount` int(11) DEFAULT NULL, 
   PRIMARY KEY (`id`), 
   UNIQUE KEY `playcount_index` (`user_id`, `beatmap_id`)
-) engine = innodb auto_increment = 0 DEFAULT charset = utf8;
-(
-  `id` INT(11) NOT NULL auto_increment, 
-  `username` VARCHAR(30) NOT NULL, 
-  `username_aka` VARCHAR(32) NOT NULL DEFAULT '', 
-  `user_color` VARCHAR(16) NOT NULL DEFAULT 'black', 
-  `user_style` VARCHAR(128) NOT NULL DEFAULT '', 
-  `favourite_mode` INT(11) NOT NULL DEFAULT '0', 
-  `level_std` INT(11) NOT NULL DEFAULT '1', 
-  `level_taiko` INT(11) NOT NULL DEFAULT '1', 
-  `level_mania` INT(11) NOT NULL DEFAULT '1', 
-  `level_ctb` INT(11) NOT NULL DEFAULT '1', 
-  `total_score_std` INT(11) NOT NULL DEFAULT '0', 
-  `total_score_taiko` INT(11) NOT NULL DEFAULT '0', 
-  `total_score_mania` INT(11) NOT NULL DEFAULT '0', 
-  `total_score_ctb` INT(11) NOT NULL DEFAULT '0', 
-  `total_hits_std` INT(11) NOT NULL DEFAULT '0', 
-  `total_hits_taiko` INT(11) NOT NULL DEFAULT '0', 
-  `total_hits_ctb` INT(11) NOT NULL DEFAULT '0', 
-  `total_hits_mania` INT(11) NOT NULL DEFAULT '0', 
-  `playtime_std` INT(11) NOT NULL DEFAULT '0', 
-  `playtime_taiko` INT(11) NOT NULL DEFAULT '0', 
-  `playtime_mania` INT(11) NOT NULL DEFAULT '0', 
-  `playtime_ctb` INT(11) NOT NULL DEFAULT '0', 
-  `ranked_score_std` BIGINT(11) NOT NULL DEFAULT '0', 
-  `ranked_score_taiko` INT(11) NOT NULL DEFAULT '0', 
-  `ranked_score_mania` INT(11) NOT NULL DEFAULT '0', 
-  `ranked_score_ctb` INT(11) NOT NULL DEFAULT '0', 
-  `avg_accuracy_std` DOUBLE NOT NULL DEFAULT '0', 
-  `avg_accuracy_taiko` DOUBLE NOT NULL DEFAULT '0', 
-  `avg_accuracy_mania` DOUBLE NOT NULL DEFAULT '0', 
-  `avg_accuracy_ctb` DOUBLE NOT NULL DEFAULT '0', 
-  `playcount_std` INT(11) NOT NULL DEFAULT '0', 
-  `playcount_taiko` INT(11) NOT NULL DEFAULT '0', 
-  `playcount_mania` INT(11) NOT NULL DEFAULT '0', 
-  `playcount_ctb` INT(11) NOT NULL DEFAULT '0', 
-  `pp_std` INT(11) NOT NULL DEFAULT '0', 
-  `pp_mania` INT(11) NOT NULL DEFAULT '0', 
-  `pp_ctb` INT(11) NOT NULL DEFAULT '0', 
-  `pp_taiko` INT(11) NOT NULL DEFAULT '0', 
-  `country` CHAR(2) NOT NULL DEFAULT 'XX', 
-  `unrestricted_pp` INT(11) NOT NULL DEFAULT '0', 
-  `ppboard` INT(11) NOT NULL DEFAULT '1', 
+) ENGINE = InnoDB AUTO_INCREMENT = 0 DEFAULT CHARSET = utf8;
+-- Dumping structure for table rx_stats
+CREATE TABLE IF NOT EXISTS `rx_stats` (
+  `id` int(11) NOT NULL AUTO_INCREMENT, 
+  `username` varchar(30) NOT NULL, 
+  `username_aka` varchar(32) NOT NULL DEFAULT '', 
+  `user_color` varchar(16) NOT NULL DEFAULT 'black', 
+  `user_style` varchar(128) NOT NULL DEFAULT '', 
+  `favourite_mode` int(11) NOT NULL DEFAULT '0', 
+  `level_std` int(11) NOT NULL DEFAULT '1', 
+  `level_taiko` int(11) NOT NULL DEFAULT '1', 
+  `level_mania` int(11) NOT NULL DEFAULT '1', 
+  `level_ctb` int(11) NOT NULL DEFAULT '1', 
+  `total_score_std` int(11) NOT NULL DEFAULT '0', 
+  `total_score_taiko` int(11) NOT NULL DEFAULT '0', 
+  `total_score_mania` int(11) NOT NULL DEFAULT '0', 
+  `total_score_ctb` int(11) NOT NULL DEFAULT '0', 
+  `total_hits_std` int(11) NOT NULL DEFAULT '0', 
+  `total_hits_taiko` int(11) NOT NULL DEFAULT '0', 
+  `total_hits_ctb` int(11) NOT NULL DEFAULT '0', 
+  `total_hits_mania` int(11) NOT NULL DEFAULT '0', 
+  `playtime_std` int(11) NOT NULL DEFAULT '0', 
+  `playtime_taiko` int(11) NOT NULL DEFAULT '0', 
+  `playtime_mania` int(11) NOT NULL DEFAULT '0', 
+  `playtime_ctb` int(11) NOT NULL DEFAULT '0', 
+  `ranked_score_std` bigint(11) NOT NULL DEFAULT '0', 
+  `ranked_score_taiko` int(11) NOT NULL DEFAULT '0', 
+  `ranked_score_mania` int(11) NOT NULL DEFAULT '0', 
+  `ranked_score_ctb` int(11) NOT NULL DEFAULT '0', 
+  `avg_accuracy_std` double NOT NULL DEFAULT '0', 
+  `avg_accuracy_taiko` double NOT NULL DEFAULT '0', 
+  `avg_accuracy_mania` double NOT NULL DEFAULT '0', 
+  `avg_accuracy_ctb` double NOT NULL DEFAULT '0', 
+  `playcount_std` int(11) NOT NULL DEFAULT '0', 
+  `playcount_taiko` int(11) NOT NULL DEFAULT '0', 
+  `playcount_mania` int(11) NOT NULL DEFAULT '0', 
+  `playcount_ctb` int(11) NOT NULL DEFAULT '0', 
+  `pp_std` int(11) NOT NULL DEFAULT '0', 
+  `pp_mania` int(11) NOT NULL DEFAULT '0', 
+  `pp_ctb` int(11) NOT NULL DEFAULT '0', 
+  `pp_taiko` int(11) NOT NULL DEFAULT '0', 
+  `country` char(2) NOT NULL DEFAULT 'XX', 
+  `unrestricted_pp` int(11) NOT NULL DEFAULT '0', 
+  `ppboard` int(11) NOT NULL DEFAULT '1', 
   PRIMARY KEY (`id`)
-) engine = innodb auto_increment = 1000 DEFAULT charset = utf8;
-INTO `rx_stats` (
+) ENGINE = InnoDB AUTO_INCREMENT = 1000 DEFAULT CHARSET = utf8;
+INSERT IGNORE INTO `rx_stats` (
   `id`, `username`, `username_aka`, 
   `user_color`, `user_style`, `favourite_mode`, 
   `level_std`, `level_taiko`, `level_mania`, 
@@ -902,58 +970,61 @@ VALUES
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'JP', 
     1, 1
   );
-(
-  `id` INT(11) NOT NULL auto_increment, 
-  `beatmap_md5` VARCHAR(32) NOT NULL DEFAULT '', 
-  `userid` INT(11) NOT NULL, 
-  `score` BIGINT(20) DEFAULT NULL, 
-  `max_combo` INT(11) NOT NULL DEFAULT '0', 
-  `full_combo` TINYINT(1) NOT NULL DEFAULT '0', 
-  `mods` INT(11) NOT NULL DEFAULT '0', 
-  `300_count` INT(11) NOT NULL DEFAULT '0', 
-  `100_count` INT(11) NOT NULL DEFAULT '0', 
-  `50_count` INT(11) NOT NULL DEFAULT '0', 
-  `katus_count` INT(11) NOT NULL DEFAULT '0', 
-  `gekis_count` INT(11) NOT NULL DEFAULT '0', 
-  `misses_count` INT(11) NOT NULL DEFAULT '0', 
-  `time` VARCHAR(18) NOT NULL DEFAULT '', 
-  `play_mode` TINYINT(4) NOT NULL DEFAULT '0', 
-  `completed` TINYINT(11) NOT NULL DEFAULT '0', 
-  `accuracy` FLOAT(15, 12) DEFAULT NULL, 
-  `pp` DOUBLE DEFAULT '0', 
-  `playtime` INT(11) NOT NULL DEFAULT '0', 
+-- Dumping structure for table scores
+CREATE TABLE IF NOT EXISTS `scores` (
+  `id` int(11) NOT NULL AUTO_INCREMENT, 
+  `beatmap_md5` varchar(32) NOT NULL DEFAULT '', 
+  `userid` int(11) NOT NULL, 
+  `score` bigint(20) DEFAULT NULL, 
+  `max_combo` int(11) NOT NULL DEFAULT '0', 
+  `full_combo` tinyint(1) NOT NULL DEFAULT '0', 
+  `mods` int(11) NOT NULL DEFAULT '0', 
+  `300_count` int(11) NOT NULL DEFAULT '0', 
+  `100_count` int(11) NOT NULL DEFAULT '0', 
+  `50_count` int(11) NOT NULL DEFAULT '0', 
+  `katus_count` int(11) NOT NULL DEFAULT '0', 
+  `gekis_count` int(11) NOT NULL DEFAULT '0', 
+  `misses_count` int(11) NOT NULL DEFAULT '0', 
+  `time` varchar(18) NOT NULL DEFAULT '', 
+  `play_mode` tinyint(4) NOT NULL DEFAULT '0', 
+  `completed` tinyint(11) NOT NULL DEFAULT '0', 
+  `accuracy` float(15, 12) DEFAULT NULL, 
+  `pp` double DEFAULT '0', 
+  `playtime` int(11) NOT NULL DEFAULT '0', 
   PRIMARY KEY (`id`)
-) engine = innodb auto_increment = 0 DEFAULT charset = utf8;
-(
-  `id` INT(11) NOT NULL auto_increment, 
-  `beatmap_md5` VARCHAR(32) NOT NULL DEFAULT '', 
-  `userid` INT(11) NOT NULL, 
-  `score` BIGINT(20) DEFAULT NULL, 
-  `max_combo` INT(11) NOT NULL DEFAULT '0', 
-  `full_combo` TINYINT(1) NOT NULL DEFAULT '0', 
-  `mods` INT(11) NOT NULL DEFAULT '0', 
-  `300_count` INT(11) NOT NULL DEFAULT '0', 
-  `100_count` INT(11) NOT NULL DEFAULT '0', 
-  `50_count` INT(11) NOT NULL DEFAULT '0', 
-  `katus_count` INT(11) NOT NULL DEFAULT '0', 
-  `gekis_count` INT(11) NOT NULL DEFAULT '0', 
-  `misses_count` INT(11) NOT NULL DEFAULT '0', 
-  `time` VARCHAR(18) NOT NULL DEFAULT '', 
-  `play_mode` TINYINT(4) NOT NULL DEFAULT '0', 
-  `completed` TINYINT(11) NOT NULL DEFAULT '0', 
-  `accuracy` FLOAT(15, 12) DEFAULT NULL, 
-  `pp` DOUBLE DEFAULT '0', 
-  `playtime` INT(11) NOT NULL DEFAULT '0', 
+) ENGINE = InnoDB AUTO_INCREMENT = 0 DEFAULT CHARSET = utf8;
+-- Dumping structure for table scores_relax
+CREATE TABLE IF NOT EXISTS `scores_relax` (
+  `id` int(11) NOT NULL AUTO_INCREMENT, 
+  `beatmap_md5` varchar(32) NOT NULL DEFAULT '', 
+  `userid` int(11) NOT NULL, 
+  `score` bigint(20) DEFAULT NULL, 
+  `max_combo` int(11) NOT NULL DEFAULT '0', 
+  `full_combo` tinyint(1) NOT NULL DEFAULT '0', 
+  `mods` int(11) NOT NULL DEFAULT '0', 
+  `300_count` int(11) NOT NULL DEFAULT '0', 
+  `100_count` int(11) NOT NULL DEFAULT '0', 
+  `50_count` int(11) NOT NULL DEFAULT '0', 
+  `katus_count` int(11) NOT NULL DEFAULT '0', 
+  `gekis_count` int(11) NOT NULL DEFAULT '0', 
+  `misses_count` int(11) NOT NULL DEFAULT '0', 
+  `time` varchar(18) NOT NULL DEFAULT '', 
+  `play_mode` tinyint(4) NOT NULL DEFAULT '0', 
+  `completed` tinyint(11) NOT NULL DEFAULT '0', 
+  `accuracy` float(15, 12) DEFAULT NULL, 
+  `pp` double DEFAULT '0', 
+  `playtime` int(11) NOT NULL DEFAULT '0', 
   PRIMARY KEY (`id`)
-) engine = innodb auto_increment = 1073741824 DEFAULT charset = utf8;
-(
-  `id` INT(11) NOT NULL auto_increment, 
-  `name` VARCHAR(32) NOT NULL, 
-  `value_int` INT(11) NOT NULL DEFAULT '0', 
-  `value_string` VARCHAR(512) NOT NULL, 
+) ENGINE = InnoDB AUTO_INCREMENT = 1073741824 DEFAULT CHARSET = utf8;
+-- Dumping structure for table system_settings
+CREATE TABLE IF NOT EXISTS `system_settings` (
+  `id` int(11) NOT NULL AUTO_INCREMENT, 
+  `name` varchar(32) NOT NULL, 
+  `value_int` int(11) NOT NULL DEFAULT '0', 
+  `value_string` varchar(512) NOT NULL, 
   PRIMARY KEY (`id`)
-) engine = innodb auto_increment = 7 DEFAULT charset = utf8;
-INTO `system_settings` (
+) ENGINE = InnoDB AUTO_INCREMENT = 7 DEFAULT CHARSET = utf8;
+INSERT IGNORE INTO `system_settings` (
   `id`, `name`, `value_int`, `value_string`
 ) 
 VALUES 
@@ -963,43 +1034,45 @@ VALUES
   (4, 'website_home_alert', 0, ''), 
   (5, 'registrations_enabled', 1, ''), 
   (6, 'ccreation_enabled', 1, '');
-(
-  `id` INT(11) NOT NULL auto_increment, 
-  `user` VARCHAR(31) NOT NULL, 
-  `privileges` INT(11) NOT NULL, 
-  `description` VARCHAR(255) NOT NULL, 
-  `token` VARCHAR(127) NOT NULL, 
-  `private` TINYINT(4) NOT NULL, 
-  `last_updated` INT(11) NOT NULL DEFAULT '0', 
+-- Dumping structure for table tokens
+CREATE TABLE IF NOT EXISTS `tokens` (
+  `id` int(11) NOT NULL AUTO_INCREMENT, 
+  `user` varchar(31) NOT NULL, 
+  `privileges` int(11) NOT NULL, 
+  `description` varchar(255) NOT NULL, 
+  `token` varchar(127) NOT NULL, 
+  `private` tinyint(4) NOT NULL, 
+  `last_updated` int(11) NOT NULL DEFAULT '0', 
   PRIMARY KEY (`id`)
-) engine = innodb auto_increment = 0 DEFAULT charset = utf8;
-(
-  `id` INT(15) NOT NULL auto_increment, 
-  `osuver` VARCHAR(256) DEFAULT NULL, 
-  `username` VARCHAR(30) NOT NULL, 
-  `username_safe` VARCHAR(30) NOT NULL, 
-  `ban_datetime` VARCHAR(30) NOT NULL DEFAULT '0', 
-  `password_md5` VARCHAR(127) NOT NULL, 
-  `salt` VARCHAR(32) NOT NULL, 
-  `email` VARCHAR(254) NOT NULL, 
-  `register_datetime` INT(10) NOT NULL, 
-  `rank` TINYINT(1) NOT NULL DEFAULT '1', 
-  `allowed` TINYINT(1) NOT NULL DEFAULT '1', 
-  `latest_activity` INT(10) NOT NULL DEFAULT '0', 
-  `silence_end` INT(11) NOT NULL DEFAULT '0', 
-  `silence_reason` VARCHAR(127) NOT NULL DEFAULT '', 
-  `password_version` TINYINT(4) NOT NULL DEFAULT '1', 
-  `privileges` BIGINT(11) NOT NULL, 
-  `donor_expire` INT(11) NOT NULL DEFAULT '0', 
-  `flags` INT(11) NOT NULL DEFAULT '0', 
-  `achievements_version` INT(11) NOT NULL DEFAULT '4', 
-  `achievements_0` INT(11) NOT NULL DEFAULT '1', 
-  `achievements_1` INT(11) NOT NULL DEFAULT '1', 
-  `notes` MEDIUMTEXT, 
-  `last_session` VARCHAR(1024) NOT NULL DEFAULT 'check', 
+) ENGINE = InnoDB AUTO_INCREMENT = 0 DEFAULT CHARSET = utf8;
+-- Dumping structure for table users
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` int(15) NOT NULL AUTO_INCREMENT, 
+  `osuver` varchar(256) DEFAULT NULL, 
+  `username` varchar(30) NOT NULL, 
+  `username_safe` varchar(30) NOT NULL, 
+  `ban_datetime` varchar(30) NOT NULL DEFAULT '0', 
+  `password_md5` varchar(127) NOT NULL, 
+  `salt` varchar(32) NOT NULL, 
+  `email` varchar(254) NOT NULL, 
+  `register_datetime` int(10) NOT NULL, 
+  `rank` tinyint(1) NOT NULL DEFAULT '1', 
+  `allowed` tinyint(1) NOT NULL DEFAULT '1', 
+  `latest_activity` int(10) NOT NULL DEFAULT '0', 
+  `silence_end` int(11) NOT NULL DEFAULT '0', 
+  `silence_reason` varchar(127) NOT NULL DEFAULT '', 
+  `password_version` tinyint(4) NOT NULL DEFAULT '1', 
+  `privileges` bigint(11) NOT NULL, 
+  `donor_expire` int(11) NOT NULL DEFAULT '0', 
+  `flags` int(11) NOT NULL DEFAULT '0', 
+  `achievements_version` int(11) NOT NULL DEFAULT '4', 
+  `achievements_0` int(11) NOT NULL DEFAULT '1', 
+  `achievements_1` int(11) NOT NULL DEFAULT '1', 
+  `notes` mediumtext, 
+  `last_session` varchar(1024) NOT NULL DEFAULT 'check', 
   PRIMARY KEY (`id`)
-) engine = innodb auto_increment = 1000 DEFAULT charset = utf8;
-INTO `users` (
+) ENGINE = InnoDB AUTO_INCREMENT = 1000 DEFAULT CHARSET = utf8;
+INSERT IGNORE INTO `users` (
   `id`, `osuver`, `username`, `username_safe`, 
   `ban_datetime`, `password_md5`, 
   `salt`, `email`, `register_datetime`, 
@@ -1017,88 +1090,92 @@ VALUES
     0, '', 1, 3145727, 2147483647, 0, 0, 
     1, 1, '', 'check'
   );
-(
-  `id` INT(11) NOT NULL auto_increment, 
-  `user_id` INT(11) NOT NULL, 
-  `achievement_id` INT(11) NOT NULL, 
-  `time` INT(11) NOT NULL, 
+-- Dumping structure for table users_achievements
+CREATE TABLE IF NOT EXISTS `users_achievements` (
+  `id` int(11) NOT NULL AUTO_INCREMENT, 
+  `user_id` int(11) NOT NULL, 
+  `achievement_id` int(11) NOT NULL, 
+  `time` int(11) NOT NULL, 
   PRIMARY KEY (`id`)
-) engine = innodb auto_increment = 0 DEFAULT charset = utf8;
-(
-  `id` INT(11) NOT NULL auto_increment, 
-  `user_id` INT(11) NOT NULL, 
-  `beatmap_id` INT(11) DEFAULT NULL, 
-  `game_mode` INT(11) DEFAULT NULL, 
-  `playcount` INT(11) DEFAULT NULL, 
+) ENGINE = InnoDB AUTO_INCREMENT = 0 DEFAULT CHARSET = utf8;
+-- Dumping structure for table users_beatmap_playcount
+CREATE TABLE IF NOT EXISTS `users_beatmap_playcount` (
+  `id` int(11) NOT NULL AUTO_INCREMENT, 
+  `user_id` int(11) NOT NULL, 
+  `beatmap_id` int(11) DEFAULT NULL, 
+  `game_mode` int(11) DEFAULT NULL, 
+  `playcount` int(11) DEFAULT NULL, 
   PRIMARY KEY (`id`), 
   UNIQUE KEY `playcount_index` (`user_id`, `beatmap_id`)
-) engine = innodb auto_increment = 0 DEFAULT charset = utf8;
-(
-  `id` INT(11) NOT NULL auto_increment, 
-  `user1` INT(11) NOT NULL, 
-  `user2` INT(11) NOT NULL, 
+) ENGINE = InnoDB AUTO_INCREMENT = 0 DEFAULT CHARSET = utf8;
+-- Dumping structure for table users_relationships
+CREATE TABLE IF NOT EXISTS `users_relationships` (
+  `id` int(11) NOT NULL AUTO_INCREMENT, 
+  `user1` int(11) NOT NULL, 
+  `user2` int(11) NOT NULL, 
   PRIMARY KEY (`id`)
-) engine = innodb auto_increment = 0 DEFAULT charset = utf8;
-(
-  `id` INT(11) NOT NULL auto_increment, 
-  `username` VARCHAR(30) NOT NULL, 
-  `username_aka` VARCHAR(32) NOT NULL DEFAULT '', 
-  `user_color` VARCHAR(16) NOT NULL DEFAULT 'black', 
-  `user_style` VARCHAR(128) NOT NULL DEFAULT '', 
-  `ranked_score_std` BIGINT(20) DEFAULT '0', 
-  `playcount_std` INT(11) NOT NULL DEFAULT '0', 
-  `total_score_std` BIGINT(20) DEFAULT '0', 
-  `replays_watched_std` INT(11) UNSIGNED NOT NULL DEFAULT '0', 
-  `ranked_score_taiko` BIGINT(20) DEFAULT '0', 
-  `playcount_taiko` INT(11) NOT NULL DEFAULT '0', 
-  `total_score_taiko` BIGINT(20) DEFAULT '0', 
-  `replays_watched_taiko` INT(11) NOT NULL DEFAULT '0', 
-  `ranked_score_ctb` BIGINT(20) DEFAULT '0', 
-  `playcount_ctb` INT(11) NOT NULL DEFAULT '0', 
-  `total_score_ctb` BIGINT(20) DEFAULT '0', 
-  `replays_watched_ctb` INT(11) NOT NULL DEFAULT '0', 
-  `ranked_score_mania` BIGINT(20) DEFAULT '0', 
-  `playcount_mania` INT(11) NOT NULL DEFAULT '0', 
-  `total_score_mania` BIGINT(20) DEFAULT '0', 
-  `replays_watched_mania` INT(10) UNSIGNED NOT NULL DEFAULT '0', 
-  `total_hits_std` INT(11) NOT NULL DEFAULT '0', 
-  `total_hits_taiko` INT(11) NOT NULL DEFAULT '0', 
-  `total_hits_ctb` INT(11) NOT NULL DEFAULT '0', 
-  `total_hits_mania` INT(11) NOT NULL DEFAULT '0', 
-  `country` CHAR(2) NOT NULL DEFAULT 'XX', 
-  `unrestricted_pp` INT(11) NOT NULL DEFAULT '0', 
-  `ppboard` INT(11) NOT NULL DEFAULT '0', 
-  `show_country` TINYINT(4) NOT NULL DEFAULT '1', 
-  `level_std` INT(11) NOT NULL DEFAULT '1', 
-  `level_taiko` INT(11) NOT NULL DEFAULT '1', 
-  `level_ctb` INT(11) NOT NULL DEFAULT '1', 
-  `level_mania` INT(11) NOT NULL DEFAULT '1', 
-  `playtime_std` INT(11) NOT NULL DEFAULT '0', 
-  `playtime_taiko` INT(11) NOT NULL DEFAULT '0', 
-  `playtime_ctb` INT(11) NOT NULL DEFAULT '0', 
-  `playtime_mania` INT(11) NOT NULL DEFAULT '0', 
-  `avg_accuracy_std` FLOAT(15, 12) NOT NULL DEFAULT '0.000000000000', 
-  `avg_accuracy_taiko` FLOAT(15, 12) NOT NULL DEFAULT '0.000000000000', 
-  `avg_accuracy_ctb` FLOAT(15, 12) NOT NULL DEFAULT '0.000000000000', 
-  `avg_accuracy_mania` FLOAT(15, 12) NOT NULL DEFAULT '0.000000000000', 
-  `pp_std` INT(11) NOT NULL DEFAULT '0', 
-  `pp_taiko` INT(11) NOT NULL DEFAULT '0', 
-  `pp_ctb` INT(11) NOT NULL DEFAULT '0', 
-  `pp_mania` INT(11) NOT NULL DEFAULT '0', 
-  `badges_shown` VARCHAR(24) NOT NULL DEFAULT '1,0,0,0,0,0', 
-  `safe_title` TINYINT(4) NOT NULL DEFAULT '0', 
-  `userpage_content` LONGTEXT, 
-  `play_style` SMALLINT(6) NOT NULL DEFAULT '0', 
-  `favourite_mode` TINYINT(4) NOT NULL DEFAULT '0', 
-  `prefer_relax` INT(11) NOT NULL DEFAULT '0', 
-  `custom_badge_icon` VARCHAR(32) NOT NULL DEFAULT '', 
-  `custom_badge_name` VARCHAR(256) NOT NULL DEFAULT '', 
-  `can_custom_badge` TINYINT(1) NOT NULL DEFAULT '0', 
-  `show_custom_badge` TINYINT(1) NOT NULL DEFAULT '0', 
-  `current_status` VARCHAR(20000) NOT NULL DEFAULT 'Offline', 
+) ENGINE = InnoDB AUTO_INCREMENT = 0 DEFAULT CHARSET = utf8;
+-- Dumping structure for table users_stats
+CREATE TABLE IF NOT EXISTS `users_stats` (
+  `id` int(11) NOT NULL AUTO_INCREMENT, 
+  `username` varchar(30) NOT NULL, 
+  `username_aka` varchar(32) NOT NULL DEFAULT '', 
+  `user_color` varchar(16) NOT NULL DEFAULT 'black', 
+  `user_style` varchar(128) NOT NULL DEFAULT '', 
+  `ranked_score_std` bigint(20) DEFAULT '0', 
+  `playcount_std` int(11) NOT NULL DEFAULT '0', 
+  `total_score_std` bigint(20) DEFAULT '0', 
+  `replays_watched_std` int(11) unsigned NOT NULL DEFAULT '0', 
+  `ranked_score_taiko` bigint(20) DEFAULT '0', 
+  `playcount_taiko` int(11) NOT NULL DEFAULT '0', 
+  `total_score_taiko` bigint(20) DEFAULT '0', 
+  `replays_watched_taiko` int(11) NOT NULL DEFAULT '0', 
+  `ranked_score_ctb` bigint(20) DEFAULT '0', 
+  `playcount_ctb` int(11) NOT NULL DEFAULT '0', 
+  `total_score_ctb` bigint(20) DEFAULT '0', 
+  `replays_watched_ctb` int(11) NOT NULL DEFAULT '0', 
+  `ranked_score_mania` bigint(20) DEFAULT '0', 
+  `playcount_mania` int(11) NOT NULL DEFAULT '0', 
+  `total_score_mania` bigint(20) DEFAULT '0', 
+  `replays_watched_mania` int(10) unsigned NOT NULL DEFAULT '0', 
+  `total_hits_std` int(11) NOT NULL DEFAULT '0', 
+  `total_hits_taiko` int(11) NOT NULL DEFAULT '0', 
+  `total_hits_ctb` int(11) NOT NULL DEFAULT '0', 
+  `total_hits_mania` int(11) NOT NULL DEFAULT '0', 
+  `country` char(2) NOT NULL DEFAULT 'XX', 
+  `unrestricted_pp` int(11) NOT NULL DEFAULT '0', 
+  `ppboard` int(11) NOT NULL DEFAULT '0', 
+  `show_country` tinyint(4) NOT NULL DEFAULT '1', 
+  `level_std` int(11) NOT NULL DEFAULT '1', 
+  `level_taiko` int(11) NOT NULL DEFAULT '1', 
+  `level_ctb` int(11) NOT NULL DEFAULT '1', 
+  `level_mania` int(11) NOT NULL DEFAULT '1', 
+  `playtime_std` int(11) NOT NULL DEFAULT '0', 
+  `playtime_taiko` int(11) NOT NULL DEFAULT '0', 
+  `playtime_ctb` int(11) NOT NULL DEFAULT '0', 
+  `playtime_mania` int(11) NOT NULL DEFAULT '0', 
+  `avg_accuracy_std` float(15, 12) NOT NULL DEFAULT '0.000000000000', 
+  `avg_accuracy_taiko` float(15, 12) NOT NULL DEFAULT '0.000000000000', 
+  `avg_accuracy_ctb` float(15, 12) NOT NULL DEFAULT '0.000000000000', 
+  `avg_accuracy_mania` float(15, 12) NOT NULL DEFAULT '0.000000000000', 
+  `pp_std` int(11) NOT NULL DEFAULT '0', 
+  `pp_taiko` int(11) NOT NULL DEFAULT '0', 
+  `pp_ctb` int(11) NOT NULL DEFAULT '0', 
+  `pp_mania` int(11) NOT NULL DEFAULT '0', 
+  `badges_shown` varchar(24) NOT NULL DEFAULT '1,0,0,0,0,0', 
+  `safe_title` tinyint(4) NOT NULL DEFAULT '0', 
+  `userpage_content` longtext, 
+  `play_style` smallint(6) NOT NULL DEFAULT '0', 
+  `favourite_mode` tinyint(4) NOT NULL DEFAULT '0', 
+  `prefer_relax` int(11) NOT NULL DEFAULT '0', 
+  `custom_badge_icon` varchar(32) NOT NULL DEFAULT '', 
+  `custom_badge_name` varchar(256) NOT NULL DEFAULT '', 
+  `can_custom_badge` tinyint(1) NOT NULL DEFAULT '0', 
+  `show_custom_badge` tinyint(1) NOT NULL DEFAULT '0', 
+  `current_status` varchar(20000) NOT NULL DEFAULT 'Offline', 
   PRIMARY KEY (`id`)
-) engine = innodb auto_increment = 1000 DEFAULT charset = utf8;
-(
+) ENGINE = InnoDB AUTO_INCREMENT = 1000 DEFAULT CHARSET = utf8;
+INSERT IGNORE INTO `users_stats` (
   `id`, `username`, `username_aka`, 
   `user_color`, `user_style`, `ranked_score_std`, 
   `playcount_std`, `total_score_std`, 
@@ -1110,23 +1187,49 @@ VALUES
   `playcount_mania`, `total_score_mania`, 
   `replays_watched_mania`, `total_hits_std`, 
   `total_hits_taiko`, `total_hits_ctb`, 
-  `total_hits_mania`, `country`, `show_country`, 
-  `level_std`, `level_taiko`, `level_ctb`, 
-  `level_mania`, `avg_accuracy_std`, 
-  `avg_accuracy_taiko`, `avg_accuracy_ctb`, 
-  `avg_accuracy_mania`, `pp_std`, 
-  `pp_taiko`, `pp_ctb`, `pp_mania`, 
+  `total_hits_mania`, `country`, `unrestricted_pp`, 
+  `ppboard`, `show_country`, `level_std`, 
+  `level_taiko`, `level_ctb`, `level_mania`, 
+  `playtime_std`, `playtime_taiko`, 
+  `playtime_ctb`, `playtime_mania`, 
+  `avg_accuracy_std`, `avg_accuracy_taiko`, 
+  `avg_accuracy_ctb`, `avg_accuracy_mania`, 
+  `pp_std`, `pp_taiko`, `pp_ctb`, `pp_mania`, 
   `badges_shown`, `safe_title`, `userpage_content`, 
   `play_style`, `favourite_mode`, 
-  `custom_badge_icon`, `custom_badge_name`, 
-  `can_custom_badge`, `show_custom_badge`
+  `prefer_relax`, `custom_badge_icon`, 
+  `custom_badge_name`, `can_custom_badge`, 
+  `show_custom_badge`, `current_status`
 ) 
 VALUES 
   (
-    999, 'AC', '', 'black', '', 0, 0, 0, 0, 
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-    0, 'US', 1, 0, 0, 0, 0, 0.000000000000, 
+    999, 'AC', '', 'black', '', 0, 26956, 
+    237228316533, 6228506, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'JP', 1, 0, 
+    1, 102, 1, 1, 1, 0, 0, 0, 0, 0.000000000000, 
     0.000000000000, 0.000000000000, 
     0.000000000000, 0, 0, 0, 0, '3,4,11,0,0,0', 
-    0, '', 0, 0, '', '', 0, 0
+    0, '', 0, 0, 0, '', '', 1, 1, ''
   );
+-- Dumping structure for table user_badges
+CREATE TABLE IF NOT EXISTS `user_badges` (
+  `id` int(11) NOT NULL AUTO_INCREMENT, 
+  `user` int(11) NOT NULL, 
+  `badge` int(11) NOT NULL, 
+  PRIMARY KEY (`id`)
+) ENGINE = InnoDB AUTO_INCREMENT = 6 DEFAULT CHARSET = utf8;
+INSERT IGNORE INTO `user_badges` (`id`, `user`, `badge`) 
+VALUES 
+  (1, 1000, 2), 
+  (2, 1000, 4), 
+  (3, 1000, 5), 
+  (4, 1000, 30), 
+  (5, 999, 1005);
+-- Dumping structure for table user_clans
+CREATE TABLE IF NOT EXISTS `user_clans` (
+  `id` int(11) NOT NULL AUTO_INCREMENT, 
+  `user` int(11) NOT NULL, 
+  `clan` int(11) NOT NULL, 
+  `perms` int(11) NOT NULL, 
+  PRIMARY KEY (`id`)
+) ENGINE = InnoDB AUTO_INCREMENT = 0 DEFAULT CHARSET = utf8;
