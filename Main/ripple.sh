@@ -36,9 +36,9 @@
 [ -z "$TR" ] && TR="tr"
 [ -z "$SED" ] && SED="sed"
 [ -z "$GREP" ] && GREP="grep"
-[ -z "$DPKG" ] && GREP="dpkg"
-[ -z "$APT_GET" ] && GREP="apt-get"
-[ -z "$TOR" ] && GREP="tor"
+[ -z "$DPKG" ] && DPKG="dpkg"
+[ -z "$APT_GET" ] && APT_GET="apt-get"
+[ -z "$TOR" ] && TOR="tor"
 
 # Customization of the output
 ## efixme
