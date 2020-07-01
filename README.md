@@ -65,7 +65,8 @@ Note: Execute the script as superuser. For example: `sudo ./ripple --all` to ins
 * To Start the server follow this guide: <a href=https://github.com/Uniminin/Ripple-Auto-Installer/blob/master/Miscellaneous/start.md>start.md</a>.
 
 ### Contact
-Ask me anything
+Questions? Need help? You may join the Discord server or ask me in Discord. 
+* Server: <a href=https://discord.gg/b44kuYv>Developer I/O</a>
 * Discord: `uniminin#7522`
 
 ### Credits
