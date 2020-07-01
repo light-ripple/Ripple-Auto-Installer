@@ -10,6 +10,11 @@
 -------------------------------------------------------------------------------------
 '
 
+# Colors For Prints
+export RED="\033[0;31m"
+export GREEN="\033[0;32m"
+export YELLOW="\033[0;33m"
+export BLUE="\033[0;34m"
 
 # Simplified assertion by Jacob Hrbek <kreyren@rixotstudio.cz> under the terms of GPL-3
 efixme() {
@@ -21,10 +26,10 @@ efixme() {
 		if command -v die >/dev/null; then
 			die 255 "checking for efixme FUNCNAME"
 		elif ! command -v die >/dev/null; then
-			printf 'FATAL: %s\n' "Unexpected happend while checking efixme FUNCNAME"
+			printf "${RED}FATAL: %s\n" "Unexpected happend while checking efixme FUNCNAME"
 			exit 255
 		else
-			printf 'FATAL: %s\n' "Unexpected happend while processing unexpected in efixme"
+			printf "${RED}FATAL: %s\n" "Unexpected happend while processing unexpected in efixme"
 			exit 255
 		fi
 	fi
@@ -40,10 +45,10 @@ efixme() {
 		if command -v die >/dev/null; then
 			die 255 "Unexpected happend while exporting fixme message"
 		elif ! command -v die >/dev/null; then
-			printf 'FATAL: %s\n' "Unexpected happend while exporting fixme message"
+			printf "${RED}FATAL: %s\n" "Unexpected happend while exporting fixme message"
 			exit 255
 		else
-			printf 'FATAL: %s\n' "Unexpected happend while processing unexpected in $FUNCNAME"
+			printf "${RED}FATAL: %s\n" "Unexpected happend while processing unexpected in $FUNCNAME"
 			exit 255
 		fi
 	fi
@@ -64,7 +69,7 @@ set -e
 
 die() {
 	case "$2" in
-		*) printf 'FATAL: %s\n' "$3 $1"
+		*) printf ''"${RED}"'FATAL: %s\n' "$3 $1"
 	esac
 	
 	exit "$2"
@@ -83,15 +88,16 @@ fi
 # Checking If Running [Script] as Root
 checkRoot() {
 	if ! [ "$(id -u)" = 0 ]; then
-		die 1 "The Script needs to be executed as Root."
+		printf "${RED}%s\n" "Fatal: The Script needs to be executed as Root."
+		exit
 	else
-		printf "%s\n" "Superuser Permission: Granted!"
+		printf "${GREEN}%s\n" "Superuser Permission: Granted!"
 	fi
 }
 
 notice() {
 	case "$1" in
-		*) printf 'Installation of %s has been completed! Follow Github Repository for more information.\n'  "$2"
+		*) printf "${GREEN}Installation of %s has been completed! Follow Github Repository for more information.\n"  "$2"
 	esac
 	
 	exit "$1"
@@ -103,7 +109,7 @@ nproc_detector() {
 		[1-9] | [1-9][0-9] | [1-9][0-9][0-9] | [1-9][0-9][0-9][0-9]) procNum="$(nproc)" export procNum exit ;;
 		*)
 			case "$LANG" in
-				en-*|*) eerror "Command 'nproc' does not return an expected value on this system, setting the processor count on '1' which will negatively affect performance on systems with more then one thread"
+				en-*|*) die 1 "Command 'nproc' does not return an expected value on this system, setting the processor count on '1' which will negatively affect performance on systems with more then one thread"
 			esac
 
 			export procNum="1"
@@ -114,15 +120,15 @@ nproc_detector() {
 DetectPackageManager() {
 	if command -v apt >/dev/null; then
 		pm="apt"
-		printf "%s\n" "Found Package Manager: '$pm'"
+		printf "${GREEN}%s\n" "Found Package Manager: '$pm'"
 		export package_manager="$pm"
-		printf "%s\n" "Using Package Manager: '$package_manager'"
+		printf "${YELLOW}%s\n" "Using Package Manager: '$package_manager'"
 
 	elif command -v pacman >/dev/null; then
 		pm="pacman"
-		printf "%s\n" "Found Package Manager: '$pm'"
+		printf "${GREEN}%s\n" "Found Package Manager: '$pm'"
 		export package_manager="$pm"
-		printf "%s\n" "Using Package Manager: '$package_manager'"
+		printf "${YELLOW}%s\n" "Using Package Manager: '$package_manager'"
 	
 	elif ! command -v pacman >/dev/null || ! command -v apt >/dev/null; then
 		die 1 "pacman or apt is not executable on this system! The script is programmed to work on APT & Pacman only."
@@ -136,7 +142,7 @@ python_dependencies() {
 
 	task="python"
 
-	printf "%s\n" "Installing Necessary Dependencies required for '$task'!"
+	printf "${GREEN}%s\n" "Installing Necessary Dependencies required for '$task'!"
 
 	# Dependencies
 	if [ "$package_manager" = "apt" ]; then
@@ -151,7 +157,7 @@ python_dependencies() {
 
 	for packages in gcc make git wget cython; do
 		if command -v $packages >/dev/null; then
-			printf "%s\n" "Done Installing necessary Dependencies required for '$task'" 
+			printf "${GREEN}%s\n" "Done Installing necessary Dependencies required for '$task'" 
 		else
 			die 1 "Failed to Install necessary Dependencies required for '$task'"
 		fi
@@ -163,7 +169,7 @@ python3_5() {
 
 	task="python3.5"
 
-	printf "%s\n" "Setting up '$task'!"
+	printf "${YELLOW}%s\n" "Setting up '$task'!"
 
 	if command -v ping 1>/dev/null; then
 		ping -i 0.5 -c 5 python.org || die 1 "Domain 'python.org' is not reachable from this environment."
@@ -192,7 +198,7 @@ python3_5() {
 			fi
 		
 		if command -v python3.5 >/dev/null; then
-			printf "%s\n" "Python3.5 has been installed on this system."
+			printf "${GREEN}%s\n" "Python3.5 has been installed on this system."
 		else
 			die 1 "Failed to install python3.5!"
 		fi
@@ -208,7 +214,7 @@ python3_6() {
 
 	task="python3.6"
 
-	printf "%s\n" "Setting up '$task'!"
+	printf "${YELLOW}%s\n" "Setting up '$task'!"
 
 	if command -v ping 1>/dev/null; then
 		ping -i 0.5 -c 5 python.org || die 1 "Domain 'python.org' is not reachable from this environment."
@@ -237,7 +243,7 @@ python3_6() {
 			fi
 
 		if command -v python3.6 >/dev/null; then
-			printf "%s\n" "Python3.6 has been installed on this system."
+			printf "${GREEN}%s\n" "Python3.6 has been installed on this system."
 		else
 			die 1 "Failed to install python3.6!"
 		fi
@@ -253,7 +259,7 @@ golang() {
 
 	task="golang"
 
-	printf "%s\n" "Setting up '$task'!"
+	printf "${YELLOW}%s\n" "Setting up '$task'!"
 
 	if [ "$package_manager" = "apt" ]; then
 
@@ -287,7 +293,7 @@ golang() {
 	fi
 
 	if command -v go 1>/dev/null; then
-		printf "%s\n" "Done Setting up '$task'."
+		printf "${GREEN}%s\n" "Done Setting up '$task'."
 	else
 		die 1 "Failed to Setup '$task'."
 	fi
@@ -298,7 +304,7 @@ extra_dependencies() {
 
 	task="Extra Dependencies"
 
-	printf "%s\n" "Installing '$task'!" 
+	printf "${YELLOW}%s\n" "Installing '$task'!" 
 
 	# Dependencies
 	if [ "$package_manager" = "apt" ]; then
@@ -312,7 +318,7 @@ extra_dependencies() {
 
 	for packages in tmux nginx redis-cli; do
 		if command -v $packages >/dev/null; then
-			printf "%s\n" "Done Installing necessary Dependencies required for '$task'" 
+			printf "${GREEN}%s\n" "Done Installing necessary Dependencies required for '$task'" 
 		else
 			die 1 "Failed to Install necessary Dependencies required for '$task'"
 		fi
@@ -324,7 +330,7 @@ nginx() {
 
 	task="nginx"
 
-	printf "%s\n" "Setting up '$task'."
+	printf "${YELLOW}%s\n" "Setting up '$task'."
 	
 	if command -v ping 1>/dev/null; then
 		ping -i 0.5 -c 5 raw.githubusercontent.com || die 1 "Domain 'raw.githubusercontent.com' is not reachable from this environment."
@@ -362,18 +368,18 @@ nginx() {
 			fi
 
 			# Using osuthailand certificate. (since plebs)
-			printf "%s\n" "Downloading Certificates. (ainu-certificate)"
+			printf "${YELLOW}%s\n" "Downloading Certificates. (ainu-certificate)"
 			wget -O "cert.pem" https://raw.githubusercontent.com/osuthailand/ainu-certificate/master/cert.pem || die 1 "Could not download file 'cert.pem'."
 			wget -O "key.pem" https://raw.githubusercontent.com/osuthailand/ainu-certificate/master/key.key || die 1 "Could not download file 'key.pem'."
 			if [ -f "cert.pem" ] && [ -f "key.pem" ]; then
-				printf "%s\n" "Done downloading Certificates."
+				printf "${GREEN}%s\n" "Done downloading Certificates."
 			else
 				die 1 "Failed to download certificates."
 			fi
 		)
 
 		nginx || die 1 "Nginx: BAD CONFIG!"
-		printf "%s\n" "Done setting up '$task'." 
+		printf "${GREEN}%s\n" "Done setting up '$task'." 
 	fi
 }
 
@@ -381,7 +387,7 @@ SSL() {
 
 	task="acme.sh"
 
-	printf "%s\n" "Cloning and Setting up '$task'!"
+	printf "${YELLOW}%s\n" "Cloning and Setting up '$task'!"
 
 	if command -v ping 1>/dev/null; then
 		ping -i 0.5 -c 5 github.com || die 1 "Domain 'github.com' is not reachable from this environment."
@@ -404,7 +410,7 @@ SSL() {
 					./acme.sh --install
 					./acme.sh --issue --standalone -d "$domain" -d c."$domain" -d i."$domain" -d a."$domain" -d s."$domain" -d old."$domain"
 
-					printf "%s\n" "Done setting up '$task'" 
+					printf "${GREEN}%s\n" "Done setting up '$task'" 
 				else
 					die 1 "'$task' not found."
 				fi
@@ -422,7 +428,7 @@ phpmyadmin(){
 
 	task="phpmyadmin"
 
-	printf "%s\n" "Setting up '$task'!"
+	printf "${YELLOW}%s\n" "Setting up '$task'!"
 
 	# Dependencies
 	if [ "$package_manager" = "apt" ]; then
@@ -439,7 +445,7 @@ phpmyadmin(){
 			cd /var/www/osu.ppy.sh || die 1 "Failed to cd into '/var/www/osu.ppy.sh'."
 			ln -s /usr/share/phpmyadmin phpmyadmin
 		)
-		printf "%s\n" "Done setting up '$task'." 
+		printf "${GREEN}%s\n" "Done setting up '$task'." 
 	else
 		die 1 "Directory '/var/www/osu.ppy.sh' does not exist."
 	fi
@@ -451,13 +457,13 @@ inputs() {
 
 	# Creating Master Directory (where all The Repositories will be cloned)
 	while [ -z "$targetDir" ]; do
-		printf "%s" "Enter Master Directory: " 
+		printf "${BLUE}%s" "Enter Master Directory: " 
 		read -r targetDir
 	done
 
 	if [ -n "$targetDir" ]; then
 		master_dir="$(pwd)/$targetDir"
-		printf "%s" "Create Master Directory: '$master_dir' ? y/n " 
+		printf "${BLUE}%s" "Create Master Directory: '$master_dir' ? y/n " 
 		read -r confirmation
 		if [ "$confirmation" = "y" ]; then
 			mkdir -v "$master_dir"
@@ -475,10 +481,10 @@ inputs() {
 
 	# Domain
 	while [ -z "$domain" ]; do
-		printf "%s" "Domain (example: ripple.moe): " 
+		printf "${BLUE}%s" "Domain (example: ripple.moe): " 
 		read -r domain
 	done
-	printf "%s" "Are you sure you want to use '$domain' ? y/n " 
+	printf "${BLUE}%s" "Are you sure you want to use '$domain' ? y/n " 
 	read -r confirmation
 	if [ "$confirmation" = "y" ]; then
 		export domain
@@ -488,10 +494,10 @@ inputs() {
 
 	# Cikey
 	while [ -z "$cikey" ]; do
-		printf "%s" "cikey: "
+		printf "${BLUE}%s" "cikey: "
 		read -r cikey
 	done
-	printf "%s" "Are you sure you want to use '$cikey' ? y/n " 
+	printf "${BLUE}%s" "Are you sure you want to use '$cikey' ? y/n " 
 	read -r confirmation
 	if [ "$confirmation" = "y" ]; then
 		export cikey
@@ -500,12 +506,12 @@ inputs() {
 	fi
 
 	# OSU!API
-	printf "%s" "Get OSU!API Key Here: https://old.ppy.sh/p/api"
+	printf "${BLUE}%s" "Get OSU!API Key Here: https://old.ppy.sh/p/api"
 	while [ -z "$api" ]; do
-		printf "%s" "OSU!API key: " 
+		printf "${BLUE}%s" "OSU!API key: " 
 		read -r api
 	done
-	printf "%s" "Are you sure you want to use '$api' ? y/n " 
+	printf "${BLUE}%s" "Are you sure you want to use '$api' ? y/n " 
 	read -r confirmation
 	if [ "$confirmation" = "y" ]; then
 		export api
@@ -515,10 +521,10 @@ inputs() {
 
 	# API-Secret
 	while [ -z "$api_secret" ]; do
-		printf "%s" "API Secret: " 
+		printf "${BLUE}%s" "API Secret: " 
 		read -r api_secret
 	done
-	printf "%s" "Are you sure you want to use '$api_secret' ? y/n " 
+	printf "${BLUE}%s" "Are you sure you want to use '$api_secret' ? y/n " 
 	read -r confirmation
 	if [ "$confirmation" = "y" ]; then
 		export api_secret
@@ -528,10 +534,10 @@ inputs() {
 
 	# MySQL USERNAME
 	while [ -z "$mysql_user" ]; do
-		printf "%s" "Enter MySQL Username: " 
+		printf "${BLUE}%s" "Enter MySQL Username: " 
 		read -r mysql_user
 	done
-	printf "%s" "Are you sure you want to use '$mysql_user' ? y/n " 
+	printf "${BLUE}%s" "Are you sure you want to use '$mysql_user' ? y/n " 
 	read -r confirmation
 	if [ "$confirmation" = "y" ]; then
 		export mysql_user
@@ -541,10 +547,10 @@ inputs() {
 
 	# MySQL PASSWOD
 	while [ -z "$mysql_password" ]; do
-		printf "%s" "Enter MySQL Password: " 
+		printf "${BLUE}%s" "Enter MySQL Password: " 
 		read -r mysql_password
 	done
-	printf "%s" "Are you sure you want to use '$mysql_password' ? y/n " 
+	printf "${BLUE}%s" "Are you sure you want to use '$mysql_password' ? y/n " 
 	read -r confirmation
 	if [ "$confirmation" = "y" ]; then
 		export mysql_password
@@ -554,10 +560,10 @@ inputs() {
 
 	# MySQL DATABASE NAME
 	while [ -z "$database_name" ]; do
-		printf "%s" "Enter MySQL Database Name For Ripple: " 
+		printf "${BLUE}%s" "Enter MySQL Database Name For Ripple: " 
 		read -r database_name
 	done
-	printf "%s" "Are you sure you want to use '$database_name' ? y/n " 
+	printf "${BLUE}%s" "Are you sure you want to use '$database_name' ? y/n " 
 	read -r confirmation
 	if [ "$confirmation" = "y" ]; then
 		export database_name
@@ -565,7 +571,7 @@ inputs() {
 		die 1 "MYSQL Database Name Not specified!"
 	fi
 
-	printf "%s\n" "Done obtaining all the necessary '$task'."
+	printf "${GREEN}%s\n" "Done obtaining all the necessary '$task'."
 }
 
 # Database is required to access, read, write & manage all the user's data. (Required for all Ripple's Softwares i.e lets, peppy..)
@@ -573,10 +579,10 @@ mysql_database() {
 
 	task="MySQL Database"
 
-	printf "%s\n" "Setting up '$task'." 
+	printf "${YELLOW}%s\n" "Setting up '$task'." 
 	
 	if command -v mysql 1>/dev/null; then
-		printf "%s\n" "Done Installing Mysql Dependencies."
+		printf "${GREEN}%s\n" "Done Installing Mysql Dependencies."
 	else
 		die 1 "Could not find mysql package on this system."
 	fi
@@ -594,7 +600,7 @@ mysql_database() {
 	fi
 
 	if command -v mysql >/dev/null; then
-		printf "%s\n" "Done Installing necessary Dependencies required for '$task'" 
+		printf "${GREEN}%s\n" "Done Installing necessary Dependencies required for '$task'" 
 	else
 		die 1 "Failed to Install necessary Dependencies required for '$task'"
 	fi
@@ -612,10 +618,10 @@ mysql_database() {
 			mkdir -v $mysql_dir ; cd $mysql_dir || die 1 "Failed to cd into '$mysql_dir'."
 			wget -O "ripple.sql" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Database%20files/ripple.sql || die 1 "Could not download file 'ripple.sql'."
 			if [ -f "ripple.sql" ]; then
-				printf "%s\n" "Note: Enter MySql Password. Same for each prompt"
+				printf "${YELLOW}%s\n" "Note: Enter MySql Password. Same for each prompt"
 				mysql -u "$mysql_user" -p -e 'CREATE DATABASE '"$database_name"'';
 				mysql -p -u "$mysql_user" "$database_name" < ripple.sql
-				printf "%s\n" "Done Setting Up '$task'."
+				printf "${GREEN}%s\n" "Done Setting Up '$task'."
 			else
 				die 1 "Failed to Setup '$task'."
 			fi
@@ -630,7 +636,7 @@ peppy () {
 
 	task="pep.py"
 
-	printf "%s\n" "Cloning and Setting up '$task'!" 
+	printf "${YELLOW}%s\n" "Cloning and Setting up '$task'!" 
 
 	if command -v ping 1>/dev/null; then
 		ping -i 0.5 -c 5 zxq.co || die 1 "Domain: zxq.co is not reachable from this environment."
@@ -662,7 +668,7 @@ peppy () {
 						sed -Ei "s:^apikey =.*$:apikey = $api:g" config.ini || die 1 "Failed to Setup Config file. [$task/config.ini -> api]"
 					fi
 				fi
-				printf "%s\n" "Done Setting Up '$task'." 
+				printf "${GREEN}%s\n" "Done Setting Up '$task'." 
 			else
 				die 1 "Could not setup '$task' because python3.5 wasn't found on this system."
 			fi
@@ -676,7 +682,7 @@ secret() {
 
 	task="secret"
 
-	printf "%s\n" "Cloning and Setting up '$task'!" 
+	printf "${YELLOW}%s\n" "Cloning and Setting up '$task'!" 
 
 	if command -v ping 1>/dev/null; then
 		ping -i 0.5 -c 5 github.com || die 1 "Domain 'github.com' is not reachable from this environment."
@@ -697,7 +703,7 @@ secret() {
 			die 1 "git not found on this system!"
 		fi
 	fi
-	printf "%s\n" "Done Setting Up '$task'." 
+	printf "${GREEN}%s\n" "Done Setting Up '$task'." 
 }
 
 # LETS is the Ripple's score server. It manages scores, osu!direct etc.
@@ -705,7 +711,7 @@ lets() {
 
 	task="lets"
 
-	printf "%s\n" "Cloning & Setting Up '$task'!" 
+	printf "${YELLOW}%s\n" "Cloning & Setting Up '$task'!" 
 
 	if command -v ping 1>/dev/null; then
 		ping -i 0.5 -c 5 github.com || die 1 "Domain 'github.com' is not reachable from this environment."
@@ -737,7 +743,7 @@ lets() {
 						sed -Ei "s:^apikey =.*$:apikey = $api:g" config.ini || die 1 "Failed to Setup Config file. [$task/config.ini -> apikey]"
 					fi
 				fi
-				printf "%s\n" "Done Setting Up '$task'." 
+				printf "${GREEN}%s\n" "Done Setting Up '$task'." 
 			else
 				die 1 "Could not install '$task' because python3.6 wasn't found on this system."
 			fi
@@ -750,7 +756,7 @@ lets() {
 					fi
 				)
 			fi
-			printf "%s\n" "Done Setting Up '$task'."
+			printf "${GREEN}%s\n" "Done Setting Up '$task'."
 		)
 	else
 		die 1 "Directory '$directory' doesn't exist."
@@ -762,7 +768,7 @@ hanayo() {
 
 	task="hanayo"
 
-	printf "%s\n" "Cloning & Setting up '$task'!" 
+	printf "${YELLOW}%s\n" "Cloning & Setting up '$task'!" 
 
 	if command -v ping 1>/dev/null; then
 		ping -i 0.5 -c 5 zxq.co || die 1 "Domain 'zxq.co' is not reachable from this environment."
@@ -800,7 +806,7 @@ hanayo() {
 
 				if [ ! -d "$directory/hanayo" ]; then
 					mv -v go/src/zxq.co/ripple/hanayo "$directory"
-					printf "%s\n" "Done Setting Up '$task'." 
+					printf "${GREEN}%s\n" "Done Setting Up '$task'." 
 				else
 					die 1 "Unexpected Error!"
 				fi
@@ -818,7 +824,7 @@ rippleapi() {
 
 	task="rippleapi"
 
-	printf "%s\n" "Cloning & Setting up '$task'." 
+	printf "${YELLOW}%s\n" "Cloning & Setting up '$task'." 
 
 	if command -v ping 1>/dev/null; then
 		ping -i 0.5 -c 5 zxq.co || die 1 "Domain 'zxq.co' is not reachable from this environment."
@@ -859,7 +865,7 @@ avatar_server() {
 
 	task="avatar-server"
 
-	printf "%s\n" "Cloning & Setting up '$task'!" 
+	printf "${YELLOW}%s\n" "Cloning & Setting up '$task'!" 
 
 	if command -v ping 1>/dev/null; then
 		ping -i 0.5 -c 5 github.com || die 1 "Domain 'github.com' is not reachable from this environment."
@@ -880,7 +886,7 @@ avatar_server() {
 			if [ -d "avatar-server" ]; then
 				cd avatar-server || die 1 "Failed to cd into '$task'."
 				python3.6 -m pip install -r requirements.txt
-				printf "%s\n" "Done setting up '$task'." 
+				printf "${GREEN}%s\n" "Done setting up '$task'." 
 			else
 				die 1 "Failed to Setup '$task'."
 			fi
@@ -895,7 +901,7 @@ old_frontend() {
 
 	task="old-frontend"
 
-	printf "%s\n" "Cloning & Setting up '$task'!" 
+	printf "${YELLOW}%s\n" "Cloning & Setting up '$task'!" 
 
 	if command -v ping 1>/dev/null; then
 		ping -i 0.5 -c 5 zxq.co || die 1 "Domain 'zxq.co' is not reachable from this environment."
@@ -917,7 +923,7 @@ old_frontend() {
 
 	for packages in php composer; do
 		if command -v $packages >/dev/null; then
-			printf "%s\n" "Done Installing necessary Dependencies required for '$task'" 
+			printf "${GREEN}%s\n" "Done Installing necessary Dependencies required for '$task'" 
 		else
 			die 1 "Failed to Install necessary Dependencies required for '$task'"
 		fi
@@ -956,7 +962,7 @@ old_frontend() {
 				
 				secret
 
-				printf "%s\n" "Done setting up '$task'." 
+				printf "${GREEN}%s\n" "Done setting up '$task'." 
 			fi
 		else
 			die 1 "Unknown Error!"
@@ -990,7 +996,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		exit ;;
 
 	--help)
-		printf "%s\n" \
+		printf "${GREEN}%s\n" \
 		"Note: 'sudo $0 --<argument>'" \
 		"" \
 		"Usage:" \
@@ -1086,11 +1092,11 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		exit ;;
 
 	"")
-		printf "%s\n" "Fatal: No argument were provided | Try: $0 --help"
+		printf "${RED}%s\n" "Fatal: No argument were provided | Try: $0 --help"
 		exit ;;
 
 	*)
-		printf "%s\n" "Fatal: Unknown argument | Try: $0 --help"
+		printf "${RED}%s\n" "Fatal: Unknown argument | Try: $0 --help"
 		exit ;;
 
 esac; shift; done
