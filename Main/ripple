@@ -6,7 +6,7 @@
 : '
 -------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of AGPLv3  |
-|                   Last Updated on Wednesday, July 1, 2020 (GMT+6)                 |
+|                    Last Updated on Friday, July 10, 2020 (GMT+6)                  |
 -------------------------------------------------------------------------------------
 '
 
@@ -650,7 +650,7 @@ peppy () {
 
 			if command -v git 1>/dev/null; then
 				git clone https://zxq.co/ripple/pep.py ; cd pep.py || die 1 "Failed to cd into '$task'"
-				git submodule init ; git submodule 
+				git submodule init ; git submodule update
 			else
 				die 1 "git not found on this system!"
 			fi
