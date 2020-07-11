@@ -1,6 +1,6 @@
 #!/bin/sh
 # shellcheck disable=SC1090 # Non Acute trigger
-# shellcheck disable=SC2128,SC2178,SC1009,SC1073,SC1020,SC1072 # False trigger
+# shellcheck disable=SC2128,SC2178 # False trigger
 # USING: APT, Pacman, Portage, UNIX or GNU/Linux, Mysql/Mariadb Database.
 # Systemd Support for APT, Pacman Based distros. Openrc Support for Gentoo with Portage based distros.
 
@@ -331,7 +331,7 @@ extra_dependencies() {
 		"$package_manager" --noconfirm -Syyu
 		"$package_manager" --noconfirm -S tmux nginx redis socat
 		
-	elif [ "$package_manager" = "emerge"]; then
+	elif [ "$package_manager" = "emerge" ]; then
 		"$package_manager" -quDN @world
 		"$package_manager" -q app-misc/tmux www-servers/nginx dev-db/redis net-misc/socat
 	fi
