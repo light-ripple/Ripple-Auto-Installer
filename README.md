@@ -55,6 +55,14 @@ Make sure you configure cloudflare properly.
 </p>
 
 ### Running the Script (instructions)
+With Git
+```bash
+git clone https://github.com/Uniminin/Ripple-Auto-Installer ; cd Ripple-Auto-Installer
+cd Main
+chmod +x ripple
+sudo ./ripple --help
+```
+Without Git
 ```bash
 wget -O "ripple" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/ripple
 chmod +x ripple
