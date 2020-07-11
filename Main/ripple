@@ -544,7 +544,8 @@ inputs() {
 				if [ -d "$master_dir" ]; then
 					printf "'%s' has been created!\n" "$master_dir"
 				else
-					die 1 "Failed to create '%s'!\n" "$master_dir" 
+					die 1 "Failed to create '%s'!\n" "$master_dir"
+				fi
 			fi
 		fi
 
