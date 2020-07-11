@@ -1,4 +1,5 @@
 #!/bin/sh
+# shellcheck shell=sh # Written to be posix compatible
 # shellcheck disable=SC1090 # Non Acute trigger
 # shellcheck disable=SC2128,SC2178 # False trigger
 # USING: APT, Pacman, Portage, UNIX or GNU/Linux, Mysql/Mariadb Database.
@@ -10,6 +11,46 @@
 |                   Last Updated on Saturday, July 11, 2020 (GMT+6)                 |
 -------------------------------------------------------------------------------------
 '
+
+###! Script to install & configure Ripple
+###! We need:
+###! - FIXME-DOCS
+###! - TEST-SCRIPT
+###! Requires:
+###! - FIXME
+###! Exit codes:
+###! - FIXME-DOCS(Krey): Defined in die()
+###! Platforms:
+###!  - [*] Linux
+###!  - [*] Debian
+###!  - [*] Ubuntu
+###!  - [x] Fedora
+###!  - [x] NixOS
+###!  - [*] Archlinux
+###!  - [x] Alpine
+###!  - [x] FreeBSD
+###!  - [x] Darwin
+###!  - [x] Redox
+###!  - [*] Gentoo
+###!  - [x] ReactOS
+###!  - [*] Windows (https://github.com/Uniminin/Light-Ripple-Windows)
+###! Package Managers:
+###!  - [x] Apk
+###!  - [*] Apt
+###!  - [*] Pacman
+###!  - [*] Portage
+###!  - [x] Brl
+###!  - [x] cave
+###!  - [x] xbps
+###!  - [x] zypper
+###!  - [x] dnf
+###!  - [x] rpm
+###! Package Managers:
+###!  - [*] Openrc
+###!  - [*] Systemd
+###!  - [x] SysV-init
+###!  - [x] runit
+###!  - [x] s6
 
 # Colors For Prints
 export RED="\033[0;31m"
