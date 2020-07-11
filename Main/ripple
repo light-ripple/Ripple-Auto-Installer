@@ -1,7 +1,7 @@
 #!/bin/sh
 # shellcheck disable=SC1090 # Non Acute trigger
-# shellcheck disable=SC2128,SC2178 # False trigger
-# USING: APT, Pacman, UNIX or GNU/Linux, Mysql/Mariadb Database.
+# shellcheck disable=SC2128,SC2178,SC1009,SC1073,SC1020,SC1072 # False trigger
+# USING: APT, Pacman, Portage, UNIX or GNU/Linux, Mysql/Mariadb Database.
 
 : '
 -------------------------------------------------------------------------------------
@@ -129,9 +129,15 @@ DetectPackageManager() {
 		printf "${GREEN}%s\n" "Found Package Manager: '$pm'"
 		export package_manager="$pm"
 		printf "${YELLOW}%s\n" "Using Package Manager: '$package_manager'"
+		
+	elif command -v emerge >/dev/null; then
+		pm="portage"
+		printf "${GREEN}%s\n" "Found Package Manager: '$pm'"
+		export package_manager="emerge"
+		printf "${YELLOW}%s\n" "Using Package Manager: 'Portage [$package_manager]'"
 	
-	elif ! command -v pacman >/dev/null || ! command -v apt >/dev/null; then
-		die 1 "pacman or apt is not executable on this system! The script is programmed to work on APT & Pacman only."
+	elif ! command -v pacman >/dev/null || ! command -v apt >/dev/null || ! command -v emerge >/dev/null; then
+		die 1 "Any of apt, pacman or portage is not executable on this system! The script is programmed to work on APT, Pacman and Portage only."
 	else
 		die 1 "Unexpected Error!"
 	fi
@@ -148,11 +154,16 @@ python_dependencies() {
 	if [ "$package_manager" = "apt" ]; then
 		"$package_manager" update ; "$package_manager" upgrade -y
 		"$package_manager" install build-essential libssl-dev zlib1g-dev openssl libbz2-dev libsqlite3-dev \
-		git wget python-dev default-libmysqlclient-dev make cython -y
+		git wget python-dev default-libmysqlclient-dev tar make cython -y
 
 	elif [ "$package_manager" = "pacman" ]; then
 		"$package_manager" --noconfirm -Syyu
-		"$package_manager" --noconfirm -S gcc git wget make cython
+		"$package_manager" --noconfirm -S gcc git wget tar make cython
+	
+	elif [ "$package_manager" = "emerge" ]; then
+		"$package_manager" -quDN World
+		"$package_manager" -q sys-devel/gcc dev-vcs/git net-misc/wget \
+		sys-devel/make app-arch/tar dev-python/cython
 	fi
 
 	for packages in gcc make git wget cython; do
@@ -289,7 +300,11 @@ golang() {
 
 	elif [ "$package_manager" = "pacman" ]; then
 		"$package_manager" --noconfirm -Syyu
-		"$package_manager" --noconfirm -S git go
+		"$package_manager" --noconfirm -S go
+		
+	elif [ "$package_manager" = "emerge" ]; then
+		"$package_manager" --sync ; "$package_manager" -quDN @world
+		"$package_manager" -q dev-lang/go
 	fi
 
 	if command -v go 1>/dev/null; then
@@ -314,6 +329,10 @@ extra_dependencies() {
 	elif [ "$package_manager" = "pacman" ]; then
 		"$package_manager" --noconfirm -Syyu
 		"$package_manager" --noconfirm -S tmux nginx redis socat
+		
+	elif [ "$package_manager" = "emerge"]; then
+		"$package_manager" -quDN @world
+		"$package_manager" -q app-misc/tmux www-servers/nginx dev-db/redis net-misc/socat
 	fi
 
 	for packages in tmux nginx redis-cli; do
@@ -438,6 +457,10 @@ phpmyadmin(){
 	elif [ "$package_manager" = "pacman" ]; then
 		"$package_manager" --noconfirm -Syyu
 		"$package_manager" --noconfirm -S phpmyadmin
+		
+	elif [ "$package_manager" = "emerge" ]; then
+		"$package_manager" -quDN @world
+		"$package_manager" -q dev-db/phpmyadmin
 	fi
 
 	if [ -d "/var/www/osu.ppy.sh" ]; then
@@ -545,7 +568,7 @@ inputs() {
 		die 1 "MYSQL Username Not specified!"
 	fi
 
-	# MySQL PASSWOD
+	# MySQL PASSWORD
 	while [ -z "$mysql_password" ]; do
 		printf "${BLUE}%s" "Enter MySQL Password: " 
 		read -r mysql_password
@@ -597,6 +620,16 @@ mysql_database() {
 		"$package_manager" --noconfirm -S mariadb
 		mariadb-install-db --user=mysql --basedir=/usr --datadir=/var/lib/mysql
 		systemctl start mariadb.service
+		
+	elif [ "$package_manager" = "emerge" ]; then
+		"$package_manager" -quDN @world
+		"$package_manager" -q dev-db/mysql
+		if command -v rc >/dev/null; then
+			rc-update add mysql default ; rc-service mysql start
+		elif command -v service >/dev/null; then
+			service mysql start
+		else
+			die 1 "Unable to Detect init system and start Mysql service!"
 	fi
 
 	if command -v mysql >/dev/null; then
@@ -919,6 +952,10 @@ old_frontend() {
 	elif [ "$package_manager" = "pacman" ]; then
 		"$package_manager" --noconfirm -Syyu
 		"$package_manager" --noconfirm -S php composer
+		
+	elif [ "$package_manager" = "emerge" ]; then
+		"$package_manager" -quDN @world
+		"$package_manager" -q dev-lang/php dev-lang/composer
 	fi
 
 	for packages in php composer; do
