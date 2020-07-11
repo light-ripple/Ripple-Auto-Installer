@@ -808,9 +808,9 @@ lets() {
 
 			if command -v python3.6 >/dev/null; then
 				secret
+				git submodule init ; git submodule update
 				python3.6 -m pip install -r requirements.txt
 				python3.6 setup.py build_ext --inplace
-				git submodule init ; git submodule update
 				if [ -f "lets.py" ]; then
 					python3.6 lets.py
 					if [ -f "config.ini" ]; then
