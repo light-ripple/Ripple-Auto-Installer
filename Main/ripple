@@ -834,9 +834,9 @@ lets() {
 						sed -Ei "s:^apikey =.*$:apikey = $api:g" config.ini || die 1 "Failed to Setup Config file. [$task/config.ini -> apikey]"
 					fi
 				fi
-				printf "${GREEN}%s\n" "Done Setting Up '$task'."
+				printf "${GREEN}%s\n" "Done Setting Up 'lets'."
 			else
-				die 1 "Could not install '$task' because python3.6 wasn't found on this system."
+				die 1 "Could not install 'lets' because python3.6 wasn't found on this system."
 			fi
 			# compile oppai-ng to make pp calculation working
 			if [ -d "pp/oppai-ng" ]; then
@@ -1057,7 +1057,7 @@ old_frontend() {
 
 				secret
 
-				printf "${GREEN}%s\n" "Done setting up '$task'."
+				printf "${GREEN}%s\n" "Done setting up 'old-frontend'."
 			fi
 		else
 			die 1 "Unknown Error!"
