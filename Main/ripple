@@ -6,7 +6,7 @@
 : '
 -------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of AGPLv3  |
-|                    Last Updated on Friday, July 10, 2020 (GMT+6)                  |
+|                   Last Updated on Saturday, July 11, 2020 (GMT+6)                 |
 -------------------------------------------------------------------------------------
 '
 
@@ -279,8 +279,8 @@ golang() {
 				if [ -d "/usr/local" ]; then
 					tar -C /usr/local -xzf go1.13.11.linux-amd64.tar.gz
 					export PATH=$PATH:/usr/local/go/bin
-					. "$HOME"/.profile
 					export GOPATH=/root/go
+					. ~/.profile
 				else
 					die 1 "Directory: '/usr/local' doesn't exist."
 				fi
