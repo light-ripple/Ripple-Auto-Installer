@@ -454,7 +454,7 @@ phpmyadmin(){
 	if [ "$package_manager" = "apt" ]; then
 		"$package_manager" update ; "$package_manager" upgrade -y
 		"$package_manager" install phpmyadmin php-mbstring php-gettext -y
-
+		
 	elif [ "$package_manager" = "pacman" ]; then
 		"$package_manager" --noconfirm -Syyu
 		"$package_manager" --noconfirm -S phpmyadmin
@@ -615,7 +615,7 @@ mysql_database() {
 	if [ "$package_manager" = "apt" ]; then
 		"$package_manager" update ; "$package_manager" upgrade -y
 		"$package_manager" install mysql-server mysql-client -y ; service mysql start
-
+		
 	elif [ "$package_manager" = "pacman" ]; then
 		"$package_manager" --noconfirm -Syyu
 		"$package_manager" --noconfirm -S mariadb
@@ -632,7 +632,9 @@ mysql_database() {
 		else
 			die 1 "Unable to Detect init system and start Mysql service!"
 		fi
-
+	fi
+	
+	
 	if command -v mysql >/dev/null; then
 		printf "${GREEN}%s\n" "Done Installing necessary Dependencies required for '$task'" 
 	else
