@@ -78,7 +78,7 @@ Note: Execute the script as superuser. For example: `sudo ./ripple --all` to ins
 Questions? Need help? You may join the Discord server or ask me in Discord. 
 * Server: <a href=https://discord.gg/b44kuYv>Developer I/O</a>
 * Discord: `uniminin#7522`
-* EMAIL: `uniminin@zoho.com` (Message me on discord if you've sent any mail to me. I Don't check Zoho Mails usually)
+* EMAIL: `uniminin@zoho.com` (Message me on Discord after sending me mail)
 
 ### Credits
 * Thanks to <a href=https://github.com/Kreyren>Kreyren</a> for helping me learn and code proper bash script.
