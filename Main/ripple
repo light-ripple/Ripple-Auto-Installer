@@ -529,28 +529,28 @@ inputs() {
 	if [ -n "$targetDir" ]; then
 		master_dir="$(pwd)/$targetDir"
 		if [ -d "$master_dir" ]; then
-		  printf "${BLUE}%s" "Master Directory: '$master_dir' exists. Continue ? y/n "
-		  read -r confirmation
-		  if [ "$confirmation" = "y" ]; then
-		    printf "%s\n" "Using Directory '$master_dir'"
-		  else
-		    die 1 "User Decline!"
-      fi
-		else
-		  printf "${BLUE}%s" "Create Master Directory: '$master_dir' ? y/n "
-		  read -r confirmation
-		  if [ "$confirmation" = "y" ]; then
-			  mkdir -v "$master_dir"
+	  		printf "${BLUE}%s" "Master Directory: '$master_dir' exists. Continue ? y/n "
+		  	read -r confirmation
+			if [ "$confirmation" = "y" ]; then
+				printf "%s\n" "Using Directory '$master_dir'"
+			else
+				die 1 "User Decline!"
 			fi
-    fi
+		else
+			printf "${BLUE}%s" "Create Master Directory: '$master_dir' ? y/n "
+			read -r confirmation
+		  if [ "$confirmation" = "y" ]; then
+			mkdir -v "$master_dir"
+			fi
+		fi
 
-    if [ -d "$master_dir" ]; then
-      chmod -R a+rwx "$master_dir" || die 1 "Unable to change permission of the file '$master_dir'"
-      export directory="$master_dir"
-      printf "'%s' has been created!\n" "$master_dir"
-    else
-      die 1 "Failed to create Directory: $master_dir"
-    fi
+		if [ -d "$master_dir" ]; then
+			chmod -R a+rwx "$master_dir" || die 1 "Unable to change permission of the file '$master_dir'"
+			export directory="$master_dir"
+			printf "'%s' has been created!\n" "$master_dir"
+		else
+			die 1 "Failed to create Directory: $master_dir"
+		fi
 	fi
 
 	# Domain
