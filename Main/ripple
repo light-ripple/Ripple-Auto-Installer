@@ -539,8 +539,8 @@ inputs() {
 		else
 			printf "${BLUE}%s" "Create Master Directory: '$master_dir' ? y/n "
 			read -r confirmation
-		  if [ "$confirmation" = "y" ]; then
-			mkdir -v "$master_dir"
+			if [ "$confirmation" = "y" ]; then
+				mkdir -v "$master_dir"
 			fi
 		fi
 
