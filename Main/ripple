@@ -331,6 +331,11 @@ golang() {
 				wget https://dl.google.com/go/go1.13.11.linux-amd64.tar.gz
 				if [ -d "/usr/local" ]; then
 					tar -C /usr/local -xzf go1.13.11.linux-amd64.tar.gz
+					if [[ -d "/usr/lib/go*"]]; then
+						die 1 "Please uninstall golang via your package manager."
+					elif [ -L "/usr/bin/go" ]; then
+						rm /usr/bin/go; ln -s /usr/local/go/bin/go /usr/bin/go;
+					fi
 					export PATH=$PATH:/usr/local/go/bin
 					export GOPATH=/root/go
 					. ~/.profile
