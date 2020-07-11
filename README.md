@@ -62,7 +62,7 @@ cd Main
 chmod +x ripple
 sudo ./ripple --help
 ```
-Without Git
+Without Git (Recommended)
 ```bash
 wget -O "ripple" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/ripple
 chmod +x ripple
