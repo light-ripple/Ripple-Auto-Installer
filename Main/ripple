@@ -119,6 +119,7 @@ die() {
 	read -r confirmation
 	if [ ! "$confirmation" = "y" ]; then
 		exit "$2"
+	fi
 }
 
 # Die
