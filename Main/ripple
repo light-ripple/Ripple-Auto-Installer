@@ -8,7 +8,7 @@
 : '
 -------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of AGPLv3  |
-|                   Last Updated on Tuesday, July 14, 2020 (GMT+6)                  |
+|				   Last Updated on Tuesday, July 14, 2020 (GMT+6)				  |
 -------------------------------------------------------------------------------------
 '
 
@@ -52,6 +52,17 @@
 ###!  - [ ] SysV-init
 ###!  - [ ] runit
 ###!  - [ ] s6
+
+
+# Maintainer info
+# UPSTREAM="https://github.com/Uniminin/Ripple-Auto-Installer"
+# MAINTAINER_EMAIL="uniminin@zoho.com"
+# MAINTAINER_NICKNAME="Uniminin"
+# MAINTAINER_NAME="uniminin"
+
+
+# Version #
+VERSION=0.3.1
 
 # Colors For Prints
 export RED="\033[0;31m"
@@ -229,44 +240,49 @@ python3_5() {
 
 	task="python3.5"
 
-	printf "${YELLOW}%s\n" "Setting up '$task'!"
-
-	if command -v ping 1>/dev/null; then
-		ping -i 0.5 -c 5 python.org || die 121 "Domain 'python.org' is not reachable from this environment."
+	if command -v python3.5 >/dev/null; then
+		printf "${GREEN}%s\n" "Python3.5 has been found on this system. Skipping.."
 	else
-		die 61 "Unknown Error!"
+		printf "${YELLOW}%s\n" "Setting up '$task'!"
+
+		if command -v ping 1>/dev/null; then
+			ping -i 0.5 -c 5 python.org || die 121 "Domain 'python.org' is not reachable from this environment."
+		else
+			die 61 "Unknown Error!"
+		fi
+
+		(
+			if [ -d "/usr/src" ]; then
+				cd /usr/src || die 1 "Failed to cd into '/usr/src'"
+				wget -O "Python-3.5.9.tar.xz" https://www.python.org/ftp/python/3.5.9/Python-3.5.9.tar.xz || die 1 "Could not download file 'Python-3.5.9.tar.xz'."
+			fi
+
+			if [ -f "Python-3.5.9.tar.xz" ]; then
+				tar -xvf Python-3.5.9.tar.xz
+				if [ -d "Python-3.5.9" ]; then
+					cd Python-3.5.9 || die 1 "Could not cd into 'Python-3.5.9'."
+				else
+					die 1 "Failed to extract 'Python-3.5.9.tar.xz'."
+				fi
+				./configure --enable-optimizations --with-ensurepip=install ; make --jobs "$procNum" ; make install
+				if command -v python3.5 -m pip >/dev/null; then
+					python3.5 -m pip install --upgrade pip
+				else
+					die 1 "python3.5 pip not found."
+				fi
+
+			if command -v python3.5 >/dev/null; then
+				printf "${GREEN}%s\n" "Python3.5 has been installed on this system."
+			else
+				die 1 "Failed to install python3.5!"
+			fi
+
+			else
+				die 1 "Python3.5.9 couldn't be installed because file 'Python-3.5.9.tar.xz' was not found!"
+			fi
+		)
 	fi
 
-	(
-		if [ -d "/usr/src" ]; then
-			cd /usr/src || die 1 "Failed to cd into '/usr/src'"
-			wget -O "Python-3.5.9.tar.xz" https://www.python.org/ftp/python/3.5.9/Python-3.5.9.tar.xz || die 1 "Could not download file 'Python-3.5.9.tar.xz'."
-		fi
-
-		if [ -f "Python-3.5.9.tar.xz" ]; then
-			tar -xvf Python-3.5.9.tar.xz
-			if [ -d "Python-3.5.9" ]; then
-				cd Python-3.5.9 || die 1 "Could not cd into 'Python-3.5.9'."
-			else
-				die 1 "Failed to extract 'Python-3.5.9.tar.xz'."
-			fi
-			./configure --enable-optimizations --with-ensurepip=install ; make --jobs "$procNum" ; make install
-			if command -v python3.5 -m pip >/dev/null; then
-				python3.5 -m pip install --upgrade pip
-			else
-				die 1 "python3.5 pip not found."
-			fi
-
-		if command -v python3.5 >/dev/null; then
-			printf "${GREEN}%s\n" "Python3.5 has been installed on this system."
-		else
-			die 1 "Failed to install python3.5!"
-		fi
-
-		else
-			die 1 "Python3.5.9 couldn't be installed because file 'Python-3.5.9.tar.xz' was not found!"
-		fi
-	)
 }
 
 # Python 3.6 for lets
@@ -274,44 +290,50 @@ python3_6() {
 
 	task="python3.6"
 
-	printf "${YELLOW}%s\n" "Setting up '$task'!"
-
-	if command -v ping 1>/dev/null; then
-		ping -i 0.5 -c 5 python.org || die 121 "Domain 'python.org' is not reachable from this environment."
+	if command -v python3.6 >/dev/null; then
+		printf "${GREEN}%s\n" "Python3.6 has been found on this system. Skipping.."
 	else
-		die 61 "Unknown Error!"
+		printf "${YELLOW}%s\n" "Setting up '$task'!"
+
+		if command -v ping 1>/dev/null; then
+			ping -i 0.5 -c 5 python.org || die 121 "Domain 'python.org' is not reachable from this environment."
+		else
+			die 61 "Unknown Error!"
+		fi
+
+		(
+			if [ -d "/usr/src" ]; then
+				cd /usr/src || die 1 "Failed to cd into '/usr/src'"
+				wget -O "Python-3.6.8.tar.xz" https://www.python.org/ftp/python/3.6.8/Python-3.6.8.tar.xz || die 11 "Could not download file 'Python-3.6.8.tar.xz'."
+			fi
+
+			if [ -f "Python-3.6.8.tar.xz" ]; then
+				tar -xvf Python-3.6.8.tar.xz
+				if [ -d "Python-3.6.8" ]; then
+					cd Python-3.6.8 || die 1 "Failed to cd into 'Python-3.6.8'."
+				else
+					die 1 "Failed to extract 'Python-3.6.8.tar.xz'."
+				fi
+				./configure --enable-optimizations --with-ensurepip=install ; make --jobs "$procNum" ; make install
+				if command -v python3.6 -m pip >/dev/null; then
+					python3.6 -m pip install --upgrade pip
+				else
+					die 1 "python3.6 pip not found."
+				fi
+
+			if command -v python3.6 >/dev/null; then
+				printf "${GREEN}%s\n" "Python3.6 has been installed on this system."
+			else
+				die 1 "Failed to install python3.6!"
+			fi
+
+			else
+				die 1 "Python3.6.8 couldn't be installed because file 'Python-3.6.8.tar.xz' was not found."
+			fi
+		)
 	fi
 
-	(
-		if [ -d "/usr/src" ]; then
-			cd /usr/src || die 1 "Failed to cd into '/usr/src'"
-			wget -O "Python-3.6.8.tar.xz" https://www.python.org/ftp/python/3.6.8/Python-3.6.8.tar.xz || die 11 "Could not download file 'Python-3.6.8.tar.xz'."
-		fi
-
-		if [ -f "Python-3.6.8.tar.xz" ]; then
-			tar -xvf Python-3.6.8.tar.xz
-			if [ -d "Python-3.6.8" ]; then
-				cd Python-3.6.8 || die 1 "Failed to cd into 'Python-3.6.8'."
-			else
-				die 1 "Failed to extract 'Python-3.6.8.tar.xz'."
-			fi
-			./configure --enable-optimizations --with-ensurepip=install ; make --jobs "$procNum" ; make install
-			if command -v python3.6 -m pip >/dev/null; then
-				python3.6 -m pip install --upgrade pip
-			else
-				die 1 "python3.6 pip not found."
-			fi
-
-		if command -v python3.6 >/dev/null; then
-			printf "${GREEN}%s\n" "Python3.6 has been installed on this system."
-		else
-			die 1 "Failed to install python3.6!"
-		fi
-
-		else
-			die 1 "Python3.6.8 couldn't be installed because file 'Python-3.6.8.tar.xz' was not found."
-		fi
-	)
+	
 }
 
 # Golang1.13+ for Hanayo & rippleapi
@@ -319,47 +341,51 @@ golang() {
 
 	task="golang"
 
-	printf "${YELLOW}%s\n" "Setting up '$task'!"
+	if command -v go 1>/dev/null; then
+		printf "${GREEN}%s\n" "Golang has be found on this system. Skipping.."
+	else
+		printf "${YELLOW}%s\n" "Setting up '$task'!"
 
-	if [ "$package_manager" = "apt" ]; then
+		if [ "$package_manager" = "apt" ]; then
 
-		"$package_manager" update ; "$package_manager" upgrade -y
-		"$package_manager" install wget
+			"$package_manager" update ; "$package_manager" upgrade -y
+			"$package_manager" install wget
 
-		if command -v ping 1>/dev/null; then
-			ping -i 0.5 -c 5 dl.google.com || die 121 "Domain 'dl.google.com' is not reachable from this environment."
-		else
-			die 61 "Unknown Error!"
+			if command -v ping 1>/dev/null; then
+				ping -i 0.5 -c 5 dl.google.com || die 121 "Domain 'dl.google.com' is not reachable from this environment."
+			else
+				die 61 "Unknown Error!"
+			fi
+
+			(
+				if [ -d "/usr/src" ]; then
+					cd /usr/src || die 1 "Failed to cd into '/usr/src'."
+					wget https://dl.google.com/go/go1.13.11.linux-amd64.tar.gz
+					if [ -d "/usr/local" ]; then
+						tar -C /usr/local -xzf go1.13.11.linux-amd64.tar.gz
+						export PATH=$PATH:/usr/local/go/bin
+						export GOPATH=/root/go
+						. ~/.profile
+					else
+						die 1 "Directory: '/usr/local' doesn't exist."
+					fi
+				fi
+			)
+
+		elif [ "$package_manager" = "pacman" ]; then
+			"$package_manager" --noconfirm -Syyu
+			"$package_manager" --noconfirm -S go
+
+		elif [ "$package_manager" = "emerge" ]; then
+			"$package_manager" --sync ; "$package_manager" -quDN @world
+			"$package_manager" -q dev-lang/go
 		fi
 
-		(
-			if [ -d "/usr/src" ]; then
-				cd /usr/src || die 1 "Failed to cd into '/usr/src'."
-				wget https://dl.google.com/go/go1.13.11.linux-amd64.tar.gz
-				if [ -d "/usr/local" ]; then
-					tar -C /usr/local -xzf go1.13.11.linux-amd64.tar.gz
-					export PATH=$PATH:/usr/local/go/bin
-					export GOPATH=/root/go
-					. ~/.profile
-				else
-					die 1 "Directory: '/usr/local' doesn't exist."
-				fi
-			fi
-		)
-
-	elif [ "$package_manager" = "pacman" ]; then
-		"$package_manager" --noconfirm -Syyu
-		"$package_manager" --noconfirm -S go
-
-	elif [ "$package_manager" = "emerge" ]; then
-		"$package_manager" --sync ; "$package_manager" -quDN @world
-		"$package_manager" -q dev-lang/go
-	fi
-
-	if command -v go 1>/dev/null; then
-		printf "${GREEN}%s\n" "Done Setting up '$task'."
-	else
-		die 1 "Failed to Setup '$task'."
+		if command -v go 1>/dev/null; then
+			printf "${GREEN}%s\n" "Done Setting up '$task'."
+		else
+			die 1 "Failed to Setup '$task'."
+		fi
 	fi
 }
 
@@ -1083,7 +1109,24 @@ old_frontend() {
 
 
 while [ "$#" -ge 0 ]; do case "$1" in
-	--all)
+	"--all" | "-A")
+		if [ "$2" = "--nodependencies" ] || [ "$2" = "--nodep" ]; then
+			checkRoot
+			DetectPackageManager
+			inputs
+			mysql_database
+			peppy
+			lets
+			avatar_server
+			hanayo
+			rippleapi
+			frontend
+			phpmyadmin
+			nginx
+			SSL
+			notice 1 "Ripple Stack"
+			exit 0
+		fi
 		checkRoot
 		DetectPackageManager
 		inputs
@@ -1104,24 +1147,32 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		nginx
 		SSL
 		notice 1 "Ripple Stack"
-		exit ;;
+		exit 0 ;;
 
-	--help)
+	"--help" | "-h")
 		printf "${GREEN}%s\n" \
 		"Note: 'sudo $0 --<argument>'" \
+		"Version: $VERSION" \
 		"" \
 		"Usage:" \
-		"    --help           Shows the list of all arguments including information." \
-		"    --all            To Setup Entire Ripple Stack!" \
-		"    --dependencies   To Install all the necessary dependencies required for Ripple Stack." \
-		"    --mysql          To Manually Setup MySQL DB with dependencies." \
-		"    --peppy          To Clone and Setup peppy with dependencies." \
-		"    --lets           To Clone and Setup lets with dependencies." \
-		"    --hanayo         To Clone and Setup hanayo with dependencies." \
-		"    --rippleapi      To Clone and Setup rippleapi with dependencies." \
-		"    --avatarserver   To Clone and Setup avatar-server with dependencies." \
-		"    --oldfrontend    To Clone and Setup oldfrontend with dependencies." \
-		"    --nginx   To Install & Configure Nginx." \
+		"	--help, -h             Shows the list of all arguments including information." \
+		"	--all, -A              To Setup Entire Ripple Stack with dependencies!" \
+		"	--dependencies, -dep   To Install all the necessary dependencies required for Ripple Stack." \
+		"	--mysql, -M            To Manually Setup MySQL DB with dependencies." \
+		"	--peppy, -P            To Clone and Setup peppy with dependencies." \
+		"	--lets, -L             To Clone and Setup lets with dependencies." \
+		"	--hanayo, -H           To Clone and Setup hanayo with dependencies." \
+		"	--rippleapi, -api      To Clone and Setup rippleapi with dependencies." \
+		"	--avatarserver, -AS    To Clone and Setup avatar-server with dependencies." \
+		"	--oldfrontend, -OF     To Clone and Setup oldfrontend with dependencies." \
+		"	--nginx, -N            To Install & Configure Nginx with nginx dependencies." \
+		"" \
+		"Without Dependencies:" \
+		"   --nodependencies, --nodep" \
+		"" \
+		"Examples:" \
+		"sudo $0 --all            To Install Entire Ripple Stack with Dependencies!" \
+		"sudo $0 -peppy --nodep   To Install Peppy without Dependencies" \
 		"" \
 		"Report bugs to: 'uniminin@zoho.com' or Discord: 'uniminin#7522'" \
 		"RAI Repository URL: <https://github.com/Uniminin/Ripple-Auto-Installer/>" \
@@ -1129,7 +1180,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		"General help using GNU software: <https://www.gnu.org/gethelp/>"
 		exit 0 ;;
 
-	--dependencies)
+	"--dependencies" | "-dep")
 		checkRoot
 		DetectPackageManager
 		python_dependencies
@@ -1142,14 +1193,19 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		notice 1 "All The Dependencies"
 		exit 0 ;;
 
-	--mysql)
+	"--mysql" | "-M")
 		checkRoot
 		DetectPackageManager
 		inputs
 		mysql_database
 		exit 0 ;;
 
-	--peppy)
+	"--peppy" | "-P")
+		if [ "$2" = "--nodependencies" ] || [ "$2" = "--nodep" ]; then
+			inputs
+			peppy
+			exit 0
+		fi
 		checkRoot
 		DetectPackageManager
 		inputs
@@ -1159,7 +1215,12 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		peppy
 		exit 0 ;;
 
-	--lets)
+	"--lets" | "-L")
+		if [ "$2" = "--nodependencies" ] || [ "$2" = "--nodep" ]; then
+			inputs
+			lets
+			exit 0
+		fi
 		checkRoot
 		DetectPackageManager
 		inputs
@@ -1169,7 +1230,12 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		lets
 		exit 0 ;;
 
-	--avatarserver)
+	"--avatarserver" | "-AS")
+		if [ "$2" = "--nodependencies" ] || [ "$2" = "--nodep" ]; then
+			inputs
+			avatar_server
+			exit 0
+		fi
 		checkRoot
 		DetectPackageManager
 		inputs
@@ -1179,7 +1245,12 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		avatar_server
 		exit 0 ;;
 
-	--hanayo)
+	"--hanayo" | "-H")
+		if [ "$2" = "--nodependencies" ] || [ "$2" = "--nodep" ]; then
+			inputs
+			hanayo
+			exit 0
+		fi
 		checkRoot
 		DetectPackageManager
 		inputs
@@ -1187,7 +1258,12 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		hanayo
 		exit 0 ;;
 
-	--rippleapi)
+	"--rippleapi" | "-api")
+		if [ "$2" = "--nodependencies" ] || [ "$2" = "--nodep" ]; then
+			inputs
+			rippleapi
+			exit 0
+		fi
 		checkRoot
 		DetectPackageManager
 		inputs
@@ -1195,7 +1271,12 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		rippleapi
 		exit 0 ;;
 
-	--oldfrontend)
+	"--oldfrontend" | "-OF")
+		if [ "$2" = "--nodependencies" ] || [ "$2" = "--nodep" ]; then
+			inputs
+			old_frontend
+			exit 0
+		fi
 		checkRoot
 		DetectPackageManager
 		inputs
@@ -1203,7 +1284,13 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		old_frontend
 		exit 0 ;;
 
-	--nginx)
+	"--nginx" | "-N")
+		if [ "$2" = "--nodependencies" ] || [ "$2" = "--nodep" ]; then
+			nginx
+			exit 0
+		fi
+		checkRoot
+		DetectPackageManager
 		extra_dependencies
 		nginx
 		exit 0 ;;
