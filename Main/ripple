@@ -8,7 +8,7 @@
 : '
 -------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of AGPLv3  |
-|				   Last Updated on Tuesday, July 14, 2020 (GMT+6)				  |
+|		     Last Updated on Tuesday, July 14, 2020 (GMT+6)                 |
 -------------------------------------------------------------------------------------
 '
 
@@ -53,6 +53,8 @@
 ###!  - [ ] runit
 ###!  - [ ] s6
 
+# Known Issues: Golang fails on Debian based distros with APT package manager
+# TODO: Detect Operating System/Kernel/Distro and pull proper packages.
 
 # Maintainer info
 # UPSTREAM="https://github.com/Uniminin/Ripple-Auto-Installer"
@@ -345,7 +347,8 @@ golang() {
 		printf "${GREEN}%s\n" "Golang has be found on this system. Skipping.."
 	else
 		printf "${YELLOW}%s\n" "Setting up '$task'!"
-
+		
+		# FIXME: Install golang on Debian with apt based systems properly.
 		if [ "$package_manager" = "apt" ]; then
 
 			"$package_manager" update ; "$package_manager" upgrade -y
