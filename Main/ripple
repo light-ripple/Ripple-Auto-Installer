@@ -8,7 +8,7 @@
 : '
 -------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of AGPLv3  |
-|                   Last Updated on Saturday, July 11, 2020 (GMT+6)                 |
+|                   Last Updated on Tuesday, July 14, 2020 (GMT+6)                  |
 -------------------------------------------------------------------------------------
 '
 
@@ -112,7 +112,7 @@ set -e
 
 die() {
 	case "$2" in
-		*) printf ''"${RED}"'FATAL: %s\n' "$3 $1"
+		*) printf ''"${RED}"'FATAL '"$2"': %s\n' "$3 $1"
 	esac
 	
 	printf "${YELLOW}%s" "Continue ? y/n "
@@ -130,14 +130,15 @@ alias die="die \"[ line \$LINENO\"\ ]"
 # WARNING
 development=""
 if [ "$development" ]; then
-	die 1 "Script is on Development! Execution of any arguments are disabled during development session."
+	printf "${RED}%s" "Script is on Development! Execution of any arguments are disabled during development session."
+	exit 13
 fi
 
 # Checking If Running [Script] as Root
 checkRoot() {
 	if ! [ "$(id -u)" = 0 ]; then
 		printf "${RED}%s\n" "Fatal: The Script needs to be executed as Root."
-		exit
+		exit 13
 	else
 		printf "${GREEN}%s\n" "Superuser Permission: Granted!"
 	fi
@@ -157,7 +158,7 @@ nproc_detector() {
 		[1-9] | [1-9][0-9] | [1-9][0-9][0-9] | [1-9][0-9][0-9][0-9]) procNum="$(nproc)" export procNum exit ;;
 		*)
 			case "$LANG" in
-				en-*|*) die 1 "Command 'nproc' does not return an expected value on this system, setting the processor count on '1' which will negatively affect performance on systems with more then one thread"
+				en-*|*) die 5 "Command 'nproc' does not return an expected value on this system, setting the processor count on '1' which will negatively affect performance on systems with more then one thread"
 			esac
 
 			export procNum="1"
@@ -185,9 +186,9 @@ DetectPackageManager() {
 		printf "${YELLOW}%s\n" "Using Package Manager: 'Portage [$package_manager]'"
 
 	elif ! command -v pacman >/dev/null || ! command -v apt >/dev/null || ! command -v emerge >/dev/null; then
-		die 1 "Any of apt, pacman or portage is not executable on this system! The script is programmed to work on APT, Pacman and Portage only."
+		die 8 "Any of apt, pacman or portage is not executable on this system! The script is programmed to work on APT, Pacman and Portage only."
 	else
-		die 1 "Unexpected Error!"
+		die 14 "Unexpected Error!"
 	fi
 }
 
@@ -218,7 +219,7 @@ python_dependencies() {
 		if command -v $packages >/dev/null; then
 			printf "${GREEN}%s\n" "Done Installing necessary Dependencies required for '$task'"
 		else
-			die 1 "Failed to Install necessary Dependencies required for '$task'"
+			die 123 "Failed to Install necessary Dependencies required for '$task'"
 		fi
 	done
 }
@@ -231,9 +232,9 @@ python3_5() {
 	printf "${YELLOW}%s\n" "Setting up '$task'!"
 
 	if command -v ping 1>/dev/null; then
-		ping -i 0.5 -c 5 python.org || die 1 "Domain 'python.org' is not reachable from this environment."
+		ping -i 0.5 -c 5 python.org || die 121 "Domain 'python.org' is not reachable from this environment."
 	else
-		die 1 "Unknown Error!"
+		die 61 "Unknown Error!"
 	fi
 
 	(
@@ -276,15 +277,15 @@ python3_6() {
 	printf "${YELLOW}%s\n" "Setting up '$task'!"
 
 	if command -v ping 1>/dev/null; then
-		ping -i 0.5 -c 5 python.org || die 1 "Domain 'python.org' is not reachable from this environment."
+		ping -i 0.5 -c 5 python.org || die 121 "Domain 'python.org' is not reachable from this environment."
 	else
-		die 1 "Unknown Error!"
+		die 61 "Unknown Error!"
 	fi
 
 	(
 		if [ -d "/usr/src" ]; then
 			cd /usr/src || die 1 "Failed to cd into '/usr/src'"
-			wget -O "Python-3.6.8.tar.xz" https://www.python.org/ftp/python/3.6.8/Python-3.6.8.tar.xz || die 1 "Could not download file 'Python-3.6.8.tar.xz'."
+			wget -O "Python-3.6.8.tar.xz" https://www.python.org/ftp/python/3.6.8/Python-3.6.8.tar.xz || die 11 "Could not download file 'Python-3.6.8.tar.xz'."
 		fi
 
 		if [ -f "Python-3.6.8.tar.xz" ]; then
@@ -326,9 +327,9 @@ golang() {
 		"$package_manager" install wget
 
 		if command -v ping 1>/dev/null; then
-			ping -i 0.5 -c 5 dl.google.com || die 1 "Domain 'dl.google.com' is not reachable from this environment."
+			ping -i 0.5 -c 5 dl.google.com || die 121 "Domain 'dl.google.com' is not reachable from this environment."
 		else
-			die 1 "Unknown Error!"
+			die 61 "Unknown Error!"
 		fi
 
 		(
@@ -400,9 +401,9 @@ nginx() {
 	printf "${YELLOW}%s\n" "Setting up '$task'."
 
 	if command -v ping 1>/dev/null; then
-		ping -i 0.5 -c 5 raw.githubusercontent.com || die 1 "Domain 'raw.githubusercontent.com' is not reachable from this environment."
+		ping -i 0.5 -c 5 raw.githubusercontent.com || die 121 "Domain 'raw.githubusercontent.com' is not reachable from this environment."
 	else
-		die 1 "Unknown Error!"
+		die 61 "Unknown Error!"
 	fi
 
 	if [ -d "/etc/nginx" ]; then
@@ -412,7 +413,7 @@ nginx() {
 			if [ -f "nginx.conf" ]; then
 				rm -rfv nginx.conf
 			fi
-			wget -O "nginx.conf" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Nginx/N1.conf || die 1 "Could not download file 'nginx.conf'."
+			wget -O "nginx.conf" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Nginx/N1.conf || die 11 "Could not download file 'nginx.conf'."
 			sed -i 's#include /root/ripple/nginx/*.conf\*#include '"$directory"'/nginx/*.conf#' /etc/nginx/nginx.conf || die 1 "Failed to Setup Config file."
 		)
 	else
@@ -424,20 +425,20 @@ nginx() {
 			cd "$directory" || die 1 "Failed to cd into '$directory'"
 			mkdir -v nginx ; cd nginx || die 1 "Failed to cd into 'nginx'"
 
-			wget -O "nginx.conf" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Nginx/N2.conf || die 1 "Could not download file 'nginx.conf'."
+			wget -O "nginx.conf" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Nginx/N2.conf || die 11 "Could not download file 'nginx.conf'."
 			if [ -f "nginx.conf" ]; then
 				sed -Ei 's#DOMAIN#'"$domain"'#g; s#DIRECTORY#'"$directory"'#g' nginx.conf || die 1 "Failed to Setup Config file."
 			fi
 
-			wget -O "old-frontend.conf" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Nginx/old-frontend.conf || die 1 "Could not download file 'old-frontend.conf'."
+			wget -O "old-frontend.conf" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Nginx/old-frontend.conf || die 11 "Could not download file 'old-frontend.conf'."
 			if [ -f "old-frontend.conf" ]; then
 				sed -Ei 's#DOMAIN#'"$domain"'#g; s#DIRECTORY#'"$directory"'#g' old-frontend.conf || die 1 "Failed to Setup Config file."
 			fi
 
 			# Using osuthailand certificate. (since plebs)
 			printf "${YELLOW}%s\n" "Downloading Certificates. (ainu-certificate)"
-			wget -O "cert.pem" https://raw.githubusercontent.com/osuthailand/ainu-certificate/master/cert.pem || die 1 "Could not download file 'cert.pem'."
-			wget -O "key.pem" https://raw.githubusercontent.com/osuthailand/ainu-certificate/master/key.key || die 1 "Could not download file 'key.pem'."
+			wget -O "cert.pem" https://raw.githubusercontent.com/osuthailand/ainu-certificate/master/cert.pem || die 11 "Could not download file 'cert.pem'."
+			wget -O "key.pem" https://raw.githubusercontent.com/osuthailand/ainu-certificate/master/key.key || die 11 "Could not download file 'key.pem'."
 			if [ -f "cert.pem" ] && [ -f "key.pem" ]; then
 				printf "${GREEN}%s\n" "Done downloading Certificates."
 			else
@@ -457,9 +458,9 @@ SSL() {
 	printf "${YELLOW}%s\n" "Cloning and Setting up '$task'!"
 
 	if command -v ping 1>/dev/null; then
-		ping -i 0.5 -c 5 github.com || die 1 "Domain 'github.com' is not reachable from this environment."
+		ping -i 0.5 -c 5 github.com || die 121 "Domain 'github.com' is not reachable from this environment."
 	else
-		die 1 "Unknown Error!"
+		die 61 "Unknown Error!"
 	fi
 
 	if [ -d "$directory" ]; then
@@ -702,9 +703,9 @@ mysql_database() {
 	fi
 
 	if command -v ping 1>/dev/null; then
-		ping -i 0.5 -c 5 raw.githubusercontent.com || die 1 "Domain 'raw.githubusercontent.com' is not reachable from this environment."
+		ping -i 0.5 -c 5 raw.githubusercontent.com || die 121 "Domain 'raw.githubusercontent.com' is not reachable from this environment."
 	else
-		die 1 "Unknown Error!"
+		die 61 "Unknown Error!"
 	fi
 
 	(
@@ -712,7 +713,7 @@ mysql_database() {
 			cd "$directory" || die 1 "Failed to cd into '$directory'"
 			mysql_dir="mysql_db"
 			mkdir -v $mysql_dir ; cd $mysql_dir || die 1 "Failed to cd into '$mysql_dir'."
-			wget -O "ripple.sql" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Database%20files/ripple.sql || die 1 "Could not download file 'ripple.sql'."
+			wget -O "ripple.sql" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Database%20files/ripple.sql || die 11 "Could not download file 'ripple.sql'."
 			if [ -f "ripple.sql" ]; then
 				printf "${YELLOW}%s\n" "Note: Enter MySql Password. Same for each prompt"
 				mysql -u "$mysql_user" -p -e 'CREATE DATABASE '"$database_name"'';
@@ -735,9 +736,9 @@ peppy () {
 	printf "${YELLOW}%s\n" "Cloning and Setting up '$task'!"
 
 	if command -v ping 1>/dev/null; then
-		ping -i 0.5 -c 5 zxq.co || die 1 "Domain: zxq.co is not reachable from this environment."
+		ping -i 0.5 -c 5 zxq.co || die 121 "Domain: zxq.co is not reachable from this environment."
 	else
-		die 1 "Unknown Error!"
+		die 61 "Unknown Error!"
 	fi
 
 	if [ -d "$directory" ]; then
@@ -757,11 +758,11 @@ peppy () {
 				if [ -f "pep.py" ]; then
 					python3.5 pep.py
 					if [ -f "config.ini" ]; then
-						sed -Ei "s:^username =.*$:username = $mysql_user:g" config.ini || die 1 "Failed to Setup Config file. [$task/config.ini -> mysql_user]"
-						sed -Ei "s:^password =.*$:password = $mysql_password:g" config.ini || die 1 "Failed to Setup Config file. [$task/config.ini -> mysql_password]"
-						sed -Ei "s:^database =.*$:database = $database_name:g" config.ini || die 1 "Failed to Setup Config file. [$task/config.ini -> database_name]"
-						sed -Ei "s:^cikey =.*$:cikey = $cikey:g" config.ini || die 1 "Failed to Setup Config file. [$task/config.ini -> cikey]"
-						sed -Ei "s:^apikey =.*$:apikey = $api:g" config.ini || die 1 "Failed to Setup Config file. [$task/config.ini -> api]"
+						sed -Ei "s:^username =.*$:username = $mysql_user:g" config.ini || die 74 "Failed to Setup Config file. [$task/config.ini -> mysql_user]"
+						sed -Ei "s:^password =.*$:password = $mysql_password:g" config.ini || die 74 "Failed to Setup Config file. [$task/config.ini -> mysql_password]"
+						sed -Ei "s:^database =.*$:database = $database_name:g" config.ini || die 74 "Failed to Setup Config file. [$task/config.ini -> database_name]"
+						sed -Ei "s:^cikey =.*$:cikey = $cikey:g" config.ini || die 74 "Failed to Setup Config file. [$task/config.ini -> cikey]"
+						sed -Ei "s:^apikey =.*$:apikey = $api:g" config.ini || die 74 "Failed to Setup Config file. [$task/config.ini -> api]"
 					fi
 				fi
 				printf "${GREEN}%s\n" "Done Setting Up '$task'."
@@ -781,9 +782,9 @@ secret() {
 	printf "${YELLOW}%s\n" "Cloning and Setting up '$task'!"
 
 	if command -v ping 1>/dev/null; then
-		ping -i 0.5 -c 5 github.com || die 1 "Domain 'github.com' is not reachable from this environment."
+		ping -i 0.5 -c 5 github.com || die 121 "Domain 'github.com' is not reachable from this environment."
 	else
-		die 1 "Unknown Error!"
+		die 61 "Unknown Error!"
 	fi
 
 	if [ -d "secret" ]; then
@@ -810,9 +811,9 @@ lets() {
 	printf "${YELLOW}%s\n" "Cloning & Setting Up '$task'!"
 
 	if command -v ping 1>/dev/null; then
-		ping -i 0.5 -c 5 github.com || die 1 "Domain 'github.com' is not reachable from this environment."
+		ping -i 0.5 -c 5 github.com || die 121 "Domain 'github.com' is not reachable from this environment."
 	else
-		die 1 "Unknown Error!"
+		die 61 "Unknown Error!"
 	fi
 
 	if [ -d "$directory" ]; then
@@ -833,11 +834,11 @@ lets() {
 				if [ -f "lets.py" ]; then
 					python3.6 lets.py
 					if [ -f "config.ini" ]; then
-						sed -Ei "s:^username =.*$:username = $mysql_user:g" config.ini || die 1 "Failed to Setup Config file. [$task/config.ini -> mysql_user]"
-						sed -Ei "s:^password =.*$:password = $mysql_password:g" config.ini || die 1 "Failed to Setup Config file. [$task/config.ini -> mysql_password]"
-						sed -Ei "s:^database =.*$:database = $database_name:g" config.ini || die 1 "Failed to Setup Config file. [$task/config.ini -> database_name]"
-						sed -Ei "s/changeme/$cikey/g" config.ini || die 1 "Failed to Setup Config file. [$task/config.ini -> cikey]"
-						sed -Ei "s:^apikey =.*$:apikey = $api:g" config.ini || die 1 "Failed to Setup Config file. [$task/config.ini -> apikey]"
+						sed -Ei "s:^username =.*$:username = $mysql_user:g" config.ini || die 74 "Failed to Setup Config file. [$task/config.ini -> mysql_user]"
+						sed -Ei "s:^password =.*$:password = $mysql_password:g" config.ini || die 74 "Failed to Setup Config file. [$task/config.ini -> mysql_password]"
+						sed -Ei "s:^database =.*$:database = $database_name:g" config.ini || die 74 "Failed to Setup Config file. [$task/config.ini -> database_name]"
+						sed -Ei "s/changeme/$cikey/g" config.ini || die 74 "Failed to Setup Config file. [$task/config.ini -> cikey]"
+						sed -Ei "s:^apikey =.*$:apikey = $api:g" config.ini || die 74 "Failed to Setup Config file. [$task/config.ini -> apikey]"
 					fi
 				fi
 				printf "${GREEN}%s\n" "Done Setting Up 'lets'."
@@ -868,9 +869,9 @@ hanayo() {
 	printf "${YELLOW}%s\n" "Cloning & Setting up '$task'!"
 
 	if command -v ping 1>/dev/null; then
-		ping -i 0.5 -c 5 zxq.co || die 1 "Domain 'zxq.co' is not reachable from this environment."
+		ping -i 0.5 -c 5 zxq.co || die 121 "Domain 'zxq.co' is not reachable from this environment."
 	else
-		die 1 "Unknown Error!"
+		die 61 "Unknown Error!"
 	fi
 
 	if [ -d "$directory" ]; then
@@ -885,14 +886,14 @@ hanayo() {
 				die 1 "Could not install '$task' because golang wasn't found on this system."
 			fi
 				if [ -f "hanayo.conf" ]; then
-					sed -Ei "s/ListenTo=:45221/ListenTo=127.0.0.1:45221/g" hanayo.conf || die 1 "Failed to Setup Config file. [$task/hanayo.conf -> ListenTo]"
+					sed -Ei "s/ListenTo=:45221/ListenTo=127.0.0.1:45221/g" hanayo.conf || die 74 "Failed to Setup Config file. [$task/hanayo.conf -> ListenTo]"
 					sed -E -i -e 'H;1h;$!d;x' hanayo.conf -e 's#DSN=#DSN='"$mysql_user"':'"$mysql_password"'@/'"$database_name"'#' || die 1 "Failed to Setup Config file. [$task/hanayo.conf -> mysql-user, pass, db]"
-					sed -Ei "s:^RedisEnable=.*$:RedisEnable=true:g" hanayo.conf || die 1 "Failed to Setup Config file. [$task/hanayo.conf -> Redis]"
-					sed -Ei "s/ripple.moe/$domain/g" hanayo.conf || die 1 "Failed to Setup Config file. [$task/hanayo.conf -> domain]"
-					sed -Ei "s:^APISecret=.*$:APISecret=$api_secret:g" hanayo.conf || die 1 "Failed to Setup Config file. [$task/hanayo.conf -> api_secret]"
-					sed -Ei "s:^MainRippleFolder=.*$:MainRippleFolder=$directory:g" hanayo.conf || die 1 "Failed to Setup Config file. [$task/hanayo.conf -> directory]"
-					sed -Ei "s:^AvatarsFolder=.*$:AvatarsFolder=$directory/nginx/avatar-server/Avatars:g" hanayo.conf || die 1 "Failed to Setup Config file. [$task/hanayo.conf -> avatar-folder]"
-					sed -Ei "s#https://storage.$domain/api#'https://storage.ripple.moe/api'#g" hanayo.conf || die 1 "Failed to Setup Config file. [$task/hanayo.conf -> cheesegull]"
+					sed -Ei "s:^RedisEnable=.*$:RedisEnable=true:g" hanayo.conf || die 74 "Failed to Setup Config file. [$task/hanayo.conf -> Redis]"
+					sed -Ei "s/ripple.moe/$domain/g" hanayo.conf || die 74 "Failed to Setup Config file. [$task/hanayo.conf -> domain]"
+					sed -Ei "s:^APISecret=.*$:APISecret=$api_secret:g" hanayo.conf || die 74 "Failed to Setup Config file. [$task/hanayo.conf -> api_secret]"
+					sed -Ei "s:^MainRippleFolder=.*$:MainRippleFolder=$directory:g" hanayo.conf || die 74 "Failed to Setup Config file. [$task/hanayo.conf -> directory]"
+					sed -Ei "s:^AvatarsFolder=.*$:AvatarsFolder=$directory/nginx/avatar-server/Avatars:g" hanayo.conf || die 74 "Failed to Setup Config file. [$task/hanayo.conf -> avatar-folder]"
+					sed -Ei "s#https://storage.$domain/api#'https://storage.ripple.moe/api'#g" hanayo.conf || die 74 "Failed to Setup Config file. [$task/hanayo.conf -> cheesegull]"
 				else
 					die 1 "Failed To Configure '$task'."
 				fi
@@ -905,7 +906,7 @@ hanayo() {
 					mv -v go/src/zxq.co/ripple/hanayo "$directory"
 					printf "${GREEN}%s\n" "Done Setting Up '$task'."
 				else
-					die 1 "Unexpected Error!"
+					die 12 "Unexpected Error!"
 				fi
 			else
 				die 1 "Failed to Setup '$task'."
@@ -924,9 +925,9 @@ rippleapi() {
 	printf "${YELLOW}%s\n" "Cloning & Setting up '$task'."
 
 	if command -v ping 1>/dev/null; then
-		ping -i 0.5 -c 5 zxq.co || die 1 "Domain 'zxq.co' is not reachable from this environment."
+		ping -i 0.5 -c 5 zxq.co || die 121 "Domain 'zxq.co' is not reachable from this environment."
 	else
-		die 1 "Unknown Error!"
+		die 61 "Unknown Error!"
 	fi
 
 	if [ -d "$directory" ]; then
@@ -941,15 +942,15 @@ rippleapi() {
 
 			if [ ! -f "api.conf" ]; then
 				sed -E -i -e 'H;1h;$!d;x' api.conf -e 's#DSN=#DSN='"$mysql_user"':'"$mysql_password"'@/'"$database_name"'#' || die 1 "Failed to Setup Config file. [$task/api.conf -> mysql-user, pass, db]"
-				sed -Ei "s:^HanayoKey=.*$:HanayoKey=$api_secret:g" api.conf || die 1 "Failed to Setup Config file. [$task/api.conf -> api_secret]"
-				sed -Ei "s:^OsuAPIKey=.*$:OsuAPIKey=$cikey:g" api.conf || die 1 "Failed to Setup Config file. [$task/api.conf -> cikey]"
+				sed -Ei "s:^HanayoKey=.*$:HanayoKey=$api_secret:g" api.conf || die 74 "Failed to Setup Config file. [$task/api.conf -> api_secret]"
+				sed -Ei "s:^OsuAPIKey=.*$:OsuAPIKey=$cikey:g" api.conf || die 74 "Failed to Setup Config file. [$task/api.conf -> cikey]"
 			fi
 
 			if [ ! -d "$directory/rippleapi" ]; then
 				mv -v go/src/zxq.co/ripple/rippleapi "$directory"
 				printf '%s/n' "Done setting up '$task'."
 			else
-				die 1 "Unexpected Error!"
+				die 12 "Unexpected Error!"
 			fi
 		)
 	else
@@ -965,9 +966,9 @@ avatar_server() {
 	printf "${YELLOW}%s\n" "Cloning & Setting up '$task'!"
 
 	if command -v ping 1>/dev/null; then
-		ping -i 0.5 -c 5 github.com || die 1 "Domain 'github.com' is not reachable from this environment."
+		ping -i 0.5 -c 5 github.com || die 121 "Domain 'github.com' is not reachable from this environment."
 	else
-		die 1 "Unknown Error!"
+		die 61 "Unknown Error!"
 	fi
 
 	if [ -d "$directory" ]; then
@@ -977,7 +978,7 @@ avatar_server() {
 			if command -v git 1>/dev/null; then
 				git clone https://github.com/Uniminin/avatar-server
 			else
-				 1 "git not found on this system!"
+				die 1 "git not found on this system!"
 			fi
 
 			if [ -d "avatar-server" ]; then
@@ -1001,10 +1002,10 @@ old_frontend() {
 	printf "${YELLOW}%s\n" "Cloning & Setting up '$task'!"
 
 	if command -v ping 1>/dev/null; then
-		ping -i 0.5 -c 5 zxq.co || die 1 "Domain 'zxq.co' is not reachable from this environment."
-		ping -i 0.5 -c 5 getcomposer.org || die 1 "Domain 'getcomposer.org' is not reachable from this environment."
+		ping -i 0.5 -c 5 zxq.co || die 121 "Domain 'zxq.co' is not reachable from this environment."
+		ping -i 0.5 -c 5 getcomposer.org || die 121 "Domain 'getcomposer.org' is not reachable from this environment."
 	else
-		die 1 "Unknown Error!"
+		die 61 "Unknown Error!"
 	fi
 
 	# Dependencies
@@ -1075,7 +1076,7 @@ old_frontend() {
 				printf "${GREEN}%s\n" "Done setting up 'old-frontend'."
 			fi
 		else
-			die 1 "Unknown Error!"
+			die 61 "Unknown Error!"
 		fi
 	)
 }
@@ -1120,12 +1121,13 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		"    --rippleapi      To Clone and Setup rippleapi with dependencies." \
 		"    --avatarserver   To Clone and Setup avatar-server with dependencies." \
 		"    --oldfrontend    To Clone and Setup oldfrontend with dependencies." \
+		"    --nginx   To Install & Configure Nginx." \
 		"" \
 		"Report bugs to: 'uniminin@zoho.com' or Discord: 'uniminin#7522'" \
-		"RAI Repository URL: <https://github.com/Uniminin/Ripple-Auto-Installer/> " \
+		"RAI Repository URL: <https://github.com/Uniminin/Ripple-Auto-Installer/>" \
 		"GNU AGPLv3 Licence: <https://www.gnu.org/licenses/agpl-3.0.en.html/>" \
 		"General help using GNU software: <https://www.gnu.org/gethelp/>"
-		exit ;;
+		exit 0 ;;
 
 	--dependencies)
 		checkRoot
@@ -1138,14 +1140,14 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		phpmyadmin
 		extra_dependencies
 		notice 1 "All The Dependencies"
-		exit ;;
+		exit 0 ;;
 
 	--mysql)
 		checkRoot
 		DetectPackageManager
 		inputs
 		mysql_database
-		exit ;;
+		exit 0 ;;
 
 	--peppy)
 		checkRoot
@@ -1155,7 +1157,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		nproc_detector
 		python3_5
 		peppy
-		exit ;;
+		exit 0 ;;
 
 	--lets)
 		checkRoot
@@ -1165,7 +1167,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		nproc_detector
 		python3_6
 		lets
-		exit ;;
+		exit 0 ;;
 
 	--avatarserver)
 		checkRoot
@@ -1175,7 +1177,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		nproc_detector
 		python3_6
 		avatar_server
-		exit ;;
+		exit 0 ;;
 
 	--hanayo)
 		checkRoot
@@ -1183,7 +1185,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		inputs
 		golang
 		hanayo
-		exit ;;
+		exit 0 ;;
 
 	--rippleapi)
 		checkRoot
@@ -1191,7 +1193,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		inputs
 		golang
 		rippleapi
-		exit ;;
+		exit 0 ;;
 
 	--oldfrontend)
 		checkRoot
@@ -1199,14 +1201,19 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		inputs
 		php
 		old_frontend
-		exit ;;
+		exit 0 ;;
+
+	--nginx)
+		extra_dependencies
+		nginx
+		exit 0 ;;
 
 	"")
 		printf "${RED}%s\n" "Fatal: No argument were provided | Try: $0 --help"
-		exit ;;
+		exit 74 ;;
 
 	*)
 		printf "${RED}%s\n" "Fatal: Unknown argument | Try: $0 --help"
-		exit ;;
+		exit 74 ;;
 
 esac; shift; done
