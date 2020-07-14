@@ -118,6 +118,7 @@ die() {
 	printf "${YELLOW}%s" "Continue ? y/n "
 	read -r confirmation
 	if [ ! "$confirmation" = "y" ]; then
+		printf "${RED}%s" "Exiting..."
 		exit "$2"
 	fi
 }
