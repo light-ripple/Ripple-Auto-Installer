@@ -46,7 +46,7 @@
 ###!  - [ ] zypper
 ###!  - [ ] dnf
 ###!  - [ ] rpm
-###! Package Managers:
+###! Init System:
 ###!  - [*] Openrc
 ###!  - [*] Systemd
 ###!  - [ ] SysV-init
