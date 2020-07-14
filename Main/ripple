@@ -24,33 +24,34 @@
 ###!  - [*] Linux
 ###!  - [*] Debian
 ###!  - [*] Ubuntu
-###!  - [x] Fedora
-###!  - [x] NixOS
+###!  - [ ] Fedora
+###!  - [ ] NixOS
 ###!  - [*] Archlinux
-###!  - [x] Alpine
-###!  - [x] FreeBSD
-###!  - [x] Darwin
-###!  - [x] Redox
+###!  - [ ] Alpine
+###!  - [ ] Exherbo
+###!  - [ ] FreeBSD
+###!  - [ ] Darwin
+###!  - [ ] Redox
 ###!  - [*] Gentoo
-###!  - [x] ReactOS
+###!  - [ ] ReactOS
 ###!  - [*] Windows (https://github.com/Uniminin/Light-Ripple-Windows)
 ###! Package Managers:
-###!  - [x] Apk
+###!  - [ ] Apk
 ###!  - [*] Apt
 ###!  - [*] Pacman
 ###!  - [*] Portage
-###!  - [x] Brl
-###!  - [x] cave
-###!  - [x] xbps
-###!  - [x] zypper
-###!  - [x] dnf
-###!  - [x] rpm
+###!  - [ ] Brl
+###!  - [ ] cave
+###!  - [ ] xbps
+###!  - [ ] zypper
+###!  - [ ] dnf
+###!  - [ ] rpm
 ###! Package Managers:
 ###!  - [*] Openrc
 ###!  - [*] Systemd
-###!  - [x] SysV-init
-###!  - [x] runit
-###!  - [x] s6
+###!  - [ ] SysV-init
+###!  - [ ] runit
+###!  - [ ] s6
 
 # Colors For Prints
 export RED="\033[0;31m"
