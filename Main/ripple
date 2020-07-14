@@ -114,8 +114,11 @@ die() {
 	case "$2" in
 		*) printf ''"${RED}"'FATAL: %s\n' "$3 $1"
 	esac
-
-	exit "$2"
+	
+	printf "${YELLOW}%s" "Continue ? y/n "
+	read -r confirmation
+	if [ ! "$confirmation" = "y" ]; then
+		exit "$2"
 }
 
 # Die
