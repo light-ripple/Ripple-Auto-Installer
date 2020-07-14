@@ -1,6 +1,6 @@
 #!/bin/sh
 # shellcheck shell=sh # Written to be posix compatible
-# shellcheck disable=SC1090 # Non Acute trigger
+# shellcheck source=/dev/null
 # shellcheck disable=SC2128,SC2178 # False trigger
 # USING: APT, Pacman, Portage, UNIX or GNU/Linux, Mysql/Mariadb Database.
 # Systemd Support for APT, Pacman Based distros. Openrc Support for Gentoo with Portage based distros.
