@@ -565,8 +565,8 @@ inputs() {
 	if [ -n "$targetDir" ]; then
 		master_dir="$(pwd)/$targetDir"
 		if [ -d "$master_dir" ]; then
-	  		printf "${BLUE}%s" "Master Directory: '$master_dir' exists. Continue ? y/n "
-		  	read -r confirmation
+			printf "${BLUE}%s" "Master Directory: '$master_dir' exists. Continue ? y/n "
+			read -r confirmation
 			if [ "$confirmation" = "y" ]; then
 				printf "%s\n" "Using Directory '$master_dir'"
 			else
