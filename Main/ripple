@@ -134,7 +134,8 @@ die() {
 	fi
 	
 	if [ -f "ErrorLog.txt" ]; then
-		printf "[$Date]\nFATAL: %s\n" "$3 $1" >> ErrorLog.txt
+		printf "[$Date]\nFATAL: %s\n\n" "$3 $1" >> ErrorLog.txt
+		printf "${GREEN}%s\n" "Successfully Written into 'ErrorLog.txt'"
 	fi
 	
 	printf "${YELLOW}%s" "Continue ? y/n "
