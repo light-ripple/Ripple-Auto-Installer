@@ -65,7 +65,7 @@
 
 
 # Version #
-VERSION=0.3.3
+VERSION=0.3.4
 
 # Colors For Prints
 export RED="\033[0;31m"
@@ -1169,7 +1169,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		"" \
 		"Usage:" \
 		"	--help, -h             Shows the list of all arguments including relevant informations." \
-		"	--all, -A              To Setup Entire Ripple Stack with dependencies!" \
+		"	--all, -A              To Setup Entire Ripple Stack with Dependencies!" \
 		"	--dependencies, -dep   To Install all the necessary dependencies required for Ripple Stack." \
 		"	--mysql, -M            To Install & Setup MySQL DB with Dependencies." \
 		"	--peppy, -P            To Clone & Setup peppy with Dependencies." \
@@ -1185,7 +1185,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		"" \
 		"Examples:" \
 		"sudo $0 --all            To Setup Entire Ripple Stack with Dependencies!" \
-		"sudo $0 -peppy --nodep   To Clone & Setup without Dependencies" \
+		"sudo $0 -peppy --nodep   To Clone & Setup without Dependencies." \
 		"" \
 		"Report bugs to: 'uniminin@zoho.com' or Discord: 'uniminin#7522'" \
 		"RAI Repository URL: <https://github.com/Uniminin/Ripple-Auto-Installer/>" \
