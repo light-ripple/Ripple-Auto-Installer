@@ -8,7 +8,7 @@
 : '
 -------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of AGPLv3  |
-|                   Last Updated on Tuesday, July 14, 2020 (GMT+6)                  |
+|                   Last Updated on  Friday, July 17, 2020  (GMT+6)                 |
 -------------------------------------------------------------------------------------
 '
 
@@ -19,7 +19,8 @@
 ###! Requires:
 ###! - FIXME
 ###! Exit codes:
-###! - FIXME-DOCS(Krey): Defined in die()
+###! - FIXME-DOCS: Defined in die()
+###! - Error Log [*]
 ###! Platforms:
 ###!  - [*] Linux
 ###!  - [*] Debian
@@ -127,6 +128,14 @@ die() {
 	case "$2" in
 		*) printf ''"${RED}"'FATAL '"$2"': %s\n' "$3 $1"
 	esac
+	
+	if [ ! -f "ErrorLog.txt" ]; then
+		touch ErrorLog.txt
+	fi
+	
+	if [ -f "ErrorLog.txt" ]; then
+		printf "FATAL: %s\n" "$3 $1 [$date]" >> ErrorLog.txt
+	fi
 	
 	printf "${YELLOW}%s" "Continue ? y/n "
 	read -r confirmation
