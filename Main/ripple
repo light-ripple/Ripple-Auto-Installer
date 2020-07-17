@@ -8,7 +8,7 @@
 : '
 -------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of AGPLv3  |
-|                   Last Updated on Tuesday, July 14, 2020 (GMT+6)                  |
+|                   Last Updated on  Friday, July 17, 2020  (GMT+6)                 |
 -------------------------------------------------------------------------------------
 '
 
@@ -19,7 +19,8 @@
 ###! Requires:
 ###! - FIXME
 ###! Exit codes:
-###! - FIXME-DOCS(Krey): Defined in die()
+###! - FIXME-DOCS: Defined in die()
+###! - Error Log [*]
 ###! Platforms:
 ###!  - [*] Linux
 ###!  - [*] Debian
@@ -64,7 +65,7 @@
 
 
 # Version #
-VERSION=0.3.1
+VERSION=0.3.3
 
 # Colors For Prints
 export RED="\033[0;31m"
@@ -125,8 +126,17 @@ set -e
 
 die() {
 	case "$2" in
-		*) printf ''"${RED}"'FATAL '"$2"': %s\n' "$3 $1"
+		*) printf ''"${RED}"'FATAL '"$2"': %s\n' "$3 $1" ; Date=`date`
 	esac
+	
+	if [ ! -f "ErrorLog.txt" ]; then
+		touch ErrorLog.txt
+	fi
+	
+	if [ -f "ErrorLog.txt" ]; then
+		printf "[$Date]\nFATAL: %s\n\n" "$3 $1" >> ErrorLog.txt
+		printf "${GREEN}%s\n" "Successfully Written into 'ErrorLog.txt'"
+	fi
 	
 	printf "${YELLOW}%s" "Continue ? y/n "
 	read -r confirmation
