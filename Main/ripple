@@ -126,7 +126,7 @@ set -e
 
 die() {
 	case "$2" in
-		*) printf ''"${RED}"'FATAL '"$2"': %s\n' "$3 $1"
+		*) printf ''"${RED}"'FATAL '"$2"': %s\n' "$3 $1" ; Date=`date`
 	esac
 	
 	if [ ! -f "ErrorLog.txt" ]; then
@@ -134,7 +134,7 @@ die() {
 	fi
 	
 	if [ -f "ErrorLog.txt" ]; then
-		printf "FATAL: %s\n" "$3 $1 [$date]" >> ErrorLog.txt
+		printf "[$Date]\nFATAL: %s\n" "$3 $1" >> ErrorLog.txt
 	fi
 	
 	printf "${YELLOW}%s" "Continue ? y/n "
