@@ -60,7 +60,6 @@
 ###!  - [ ] runit
 ###!  - [ ] s6
 
-# Known Issues: Golang fails on Debian based distros with APT package manager
 # TODO: Detect Operating System/Kernel/Distro and pull proper packages.
 
 # Maintainer info
