@@ -3,7 +3,7 @@
 # shellcheck source=/dev/null
 # shellcheck disable=SC2128,SC2178 # False trigger
 # USING: APT, Pacman, Portage, Paludis, UNIX or GNU/Linux, Mysql/Mariadb Database.
-
+# SUPPORTS: systemd and openrc (gentoo, exherbo).
 : '
 -------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of AGPLv3  |
