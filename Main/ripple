@@ -2,13 +2,12 @@
 # shellcheck shell=sh # Written to be posix compatible
 # shellcheck source=/dev/null
 # shellcheck disable=SC2128,SC2178 # False trigger
-# USING: APT, Pacman, Portage, UNIX or GNU/Linux, Mysql/Mariadb Database.
-# Systemd Support for APT, Pacman Based distros. Openrc Support for Gentoo with Portage based distros.
+# USING: APT, Pacman, Portage, Paludis, UNIX or GNU/Linux, Mysql/Mariadb Database.
 
 : '
 -------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of AGPLv3  |
-|                   Last Updated on  Friday, July 17, 2020  (GMT+6)                 |
+|                   Last Updated on  Monday, July 27, 2020  (GMT+6)                 |
 -------------------------------------------------------------------------------------
 '
 
@@ -23,26 +22,33 @@
 ###! - Error Log [*]
 ###! Platforms:
 ###!  - [*] Linux
+###!  - [ ] Arya
 ###!  - [*] Debian
 ###!  - [*] Ubuntu
 ###!  - [ ] Fedora
 ###!  - [ ] NixOS
 ###!  - [*] Archlinux
 ###!  - [ ] Alpine
-###!  - [ ] Exherbo
+###!  - [*] Exherbo
 ###!  - [ ] FreeBSD
 ###!  - [ ] Darwin
+###!  - [ ] MacOS
 ###!  - [ ] Redox
 ###!  - [*] Gentoo
+###!  - [ ] Venom
+###!  - [ ] Void
+###!  - [ ] Slackware
 ###!  - [ ] ReactOS
 ###!  - [*] Windows (https://github.com/Uniminin/Light-Ripple-Windows)
 ###! Package Managers:
 ###!  - [ ] Apk
 ###!  - [*] Apt
+###!  - [ ] ALPS
+###!  - [ ] Brew
 ###!  - [*] Pacman
 ###!  - [*] Portage
 ###!  - [ ] Brl
-###!  - [ ] cave
+###!  - [*] cave
 ###!  - [ ] xbps
 ###!  - [ ] zypper
 ###!  - [ ] dnf
@@ -65,7 +71,7 @@
 
 
 # Version #
-VERSION=0.3.4
+VERSION=0.4.1
 
 # Colors For Prints
 export RED="\033[0;31m"
@@ -126,7 +132,7 @@ set -e
 
 die() {
 	case "$2" in
-		*) printf ''"${RED}"'FATAL '"$2"': %s\n' "$3 $1" ; Date=`date`
+		*) printf ''"${RED}"'FATAL '"$2"': %s\n' "$3 $1" ; Date=$(date)
 	esac
 	
 	if [ ! -f "ErrorLog.txt" ]; then
@@ -157,7 +163,7 @@ if [ "$development" ]; then
 	exit 13
 fi
 
-# Checking If Running [Script] as Root
+# Check If Running [Script] as Root
 checkRoot() {
 	if ! [ "$(id -u)" = 0 ]; then
 		printf "${RED}%s\n" "Fatal: The Script needs to be executed as Root."
@@ -189,6 +195,7 @@ nproc_detector() {
 }
 
 # FIXME: Add more support for other distros and package managers.
+# Supports: apt, pacman, portage and paludis.
 DetectPackageManager() {
 	if command -v apt >/dev/null; then
 		pm="apt"
@@ -206,12 +213,39 @@ DetectPackageManager() {
 		pm="portage"
 		printf "${GREEN}%s\n" "Found Package Manager: '$pm'"
 		export package_manager="emerge"
-		printf "${YELLOW}%s\n" "Using Package Manager: 'Portage [$package_manager]'"
+		printf "${YELLOW}%s\n" "Using Package Manager: 'portage [$package_manager]'"
 
-	elif ! command -v pacman >/dev/null || ! command -v apt >/dev/null || ! command -v emerge >/dev/null; then
-		die 8 "Any of apt, pacman or portage is not executable on this system! The script is programmed to work on APT, Pacman and Portage only."
+	elif command -v cave >/dev/null; then
+		pm="paludis"
+		printf "${GREEN}%s\n" "Found Package Manager: '$pm'"
+		export package_manager="cave"
+		printf "${YELLOW}%s\n" "Using Package Manager: 'paludis [$package_manager]'"
+
+	elif ! command -v apt >/dev/null || ! command -v pacman >/dev/null \
+	|| ! command -v emerge >/dev/null || ! command -v cave >/dev/null; then
+		die 8 "Any of apt, pacman, portage or paludis is not executable on this system! The script is programmed to work on APT, Pacman and Portage only."
 	else
 		die 14 "Unexpected Error!"
+	fi
+}
+
+packageManagerUpgrade() {
+
+	task="packages"
+
+	printf "${GREEN}%s\n" "Upgrading/Updating system '$task'!"
+
+	if command -v apt >/dev/null; then
+		apt upgrade -y ; apt update
+
+	elif command -v pacman >/dev/null; then
+		pacman --noconfirm -Syyu
+	
+	elif command -v emerge >/dev/null; then
+		emerge --sync ; emerge -quDN
+
+	elif command -v cave >/dev/null; then
+		cave sync ; cave resolve world -cx
 	fi
 }
 
@@ -224,18 +258,20 @@ python_dependencies() {
 
 	# Dependencies
 	if [ "$package_manager" = "apt" ]; then
-		"$package_manager" update ; "$package_manager" upgrade -y
 		"$package_manager" install build-essential libssl-dev zlib1g-dev openssl libbz2-dev libsqlite3-dev \
 		git wget python-dev default-libmysqlclient-dev tar make cython -y
 
 	elif [ "$package_manager" = "pacman" ]; then
-		"$package_manager" --noconfirm -Syyu
 		"$package_manager" --noconfirm -S gcc git wget tar make cython
 
 	elif [ "$package_manager" = "emerge" ]; then
-		"$package_manager" -quDN World
 		"$package_manager" -q sys-devel/gcc dev-vcs/git net-misc/wget \
 		sys-devel/make app-arch/tar dev-python/cython
+
+	elif [ "$package_manager" = "cave" ]; then
+		"$package_manager" resolve -x sys-devel/gcc dev-scm/git \
+		sys-devel/make app-arch/tar dev-python/shiboken2
+
 	fi
 
 	for packages in gcc make git wget cython; do
@@ -358,40 +394,50 @@ golang() {
 	else
 		printf "${YELLOW}%s\n" "Setting up '$task'!"
 		
-		# FIXME: Install golang on Debian with apt based systems properly.
 		if [ "$package_manager" = "apt" ]; then
 
 			"$package_manager" update ; "$package_manager" upgrade -y
-			"$package_manager" install wget
+			"$package_manager" install wget go
+			
+			if ! command -v go 1>/dev/null; then
+				if command -v ping 1>/dev/null; then
+					ping -i 0.5 -c 5 dl.google.com || die 121 "Domain 'dl.google.com' is not reachable from this environment."
+				else
+					die 61 "Unknown Error!"
+				fi
 
-			if command -v ping 1>/dev/null; then
-				ping -i 0.5 -c 5 dl.google.com || die 121 "Domain 'dl.google.com' is not reachable from this environment."
-			else
-				die 61 "Unknown Error!"
+				(
+					if [ -d "/usr/src" ]; then
+						cd /usr/src || die 1 "Failed to cd into '/usr/src'."
+						wget https://dl.google.com/go/go1.13.11.linux-amd64.tar.gz
+						if [ -d "/usr/local" ]; then
+							tar -xvf go1.13.11.linux-amd64.tar.gz
+							chown -R root:root ./go
+							mv go /usr/local
+
+							if [ ! -f "$HOME/.profile" ]; then
+								touch ~/.profile
+							fi
+
+							echo export GOPATH=/root/go > ~/.profile
+							echo export PATH="$PATH":/usr/local/go/bin:"$GOPATH"/bin > ~/.profile
+							. ~/.profile
+
+						else
+							die 1 "Directory: '/usr/local' doesn't exist."
+						fi
+					fi
+				)
 			fi
 
-			(
-				if [ -d "/usr/src" ]; then
-					cd /usr/src || die 1 "Failed to cd into '/usr/src'."
-					wget https://dl.google.com/go/go1.13.11.linux-amd64.tar.gz
-					if [ -d "/usr/local" ]; then
-						tar -C /usr/local -xzf go1.13.11.linux-amd64.tar.gz
-						export PATH=$PATH:/usr/local/go/bin
-						export GOPATH=/root/go
-						. ~/.profile
-					else
-						die 1 "Directory: '/usr/local' doesn't exist."
-					fi
-				fi
-			)
-
 		elif [ "$package_manager" = "pacman" ]; then
-			"$package_manager" --noconfirm -Syyu
 			"$package_manager" --noconfirm -S go
 
 		elif [ "$package_manager" = "emerge" ]; then
-			"$package_manager" --sync ; "$package_manager" -quDN @world
 			"$package_manager" -q dev-lang/go
+
+		elif [ "$package_manager" = "cave" ]; then
+			"$package_manager" resolve -x dev-lang/go
 		fi
 
 		if command -v go 1>/dev/null; then
@@ -411,16 +457,17 @@ extra_dependencies() {
 
 	# Dependencies
 	if [ "$package_manager" = "apt" ]; then
-		"$package_manager" update ; "$package_manager" upgrade -y
 		"$package_manager" install tmux nginx redis-server socat -y
 
 	elif [ "$package_manager" = "pacman" ]; then
-		"$package_manager" --noconfirm -Syyu
 		"$package_manager" --noconfirm -S tmux nginx redis socat
 
 	elif [ "$package_manager" = "emerge" ]; then
-		"$package_manager" -quDN @world
 		"$package_manager" -q app-misc/tmux www-servers/nginx dev-db/redis net-misc/socat
+
+	elif [ "$package_manager" = "cave" ]; then
+		"$package_manager" resolve -x app-terminal/tmux www-servers/nginx \
+		dev-db/redis net-misc/socat
 	fi
 
 	for packages in tmux nginx redis-cli; do
@@ -539,16 +586,16 @@ phpmyadmin(){
 
 	# Dependencies
 	if [ "$package_manager" = "apt" ]; then
-		"$package_manager" update ; "$package_manager" upgrade -y
 		"$package_manager" install phpmyadmin php-mbstring php-gettext -y
 
 	elif [ "$package_manager" = "pacman" ]; then
-		"$package_manager" --noconfirm -Syyu
 		"$package_manager" --noconfirm -S phpmyadmin
 
 	elif [ "$package_manager" = "emerge" ]; then
-		"$package_manager" -quDN @world
 		"$package_manager" -q dev-db/phpmyadmin
+
+	elif [ "$package_manager" = "cave" ]; then
+		"$package_manager" resolve -x dev-lang/php
 	fi
 
 	if [ -d "/var/www/osu.ppy.sh" ]; then
@@ -713,18 +760,26 @@ mysql_database() {
 
 	# Dependencies
 	if [ "$package_manager" = "apt" ]; then
-		"$package_manager" update ; "$package_manager" upgrade -y
-		"$package_manager" install mysql-server mysql-client -y ; service mysql start
+		"$package_manager" install mysql-server mysql-client -y
+		service mysql start
 
 	elif [ "$package_manager" = "pacman" ]; then
-		"$package_manager" --noconfirm -Syyu
 		"$package_manager" --noconfirm -S mariadb
 		mariadb-install-db --user=mysql --basedir=/usr --datadir=/var/lib/mysql
 		systemctl start mariadb.service
 
 	elif [ "$package_manager" = "emerge" ]; then
-		"$package_manager" -quDN @world
 		"$package_manager" -q dev-db/mysql
+		if command -v rc >/dev/null; then
+			rc-update add mysql default ; rc-service mysql start
+		elif command -v service >/dev/null; then
+			service mysql start
+		else
+			die 1 "Unable to Detect init system and start Mysql service!"
+		fi
+
+	elif [ "$package_manager" = "cave" ]; then
+		"$package_manager" resolve -x virtual/mysql
 		if command -v rc >/dev/null; then
 			rc-update add mysql default ; rc-service mysql start
 		elif command -v service >/dev/null; then
@@ -951,6 +1006,7 @@ hanayo() {
 				die 1 "Failed to Setup '$task'."
 			fi
 		)
+
 	else
 		die 1 "$directory doesn't exist."
 	fi
@@ -1049,13 +1105,12 @@ old_frontend() {
 
 	# Dependencies
 	if [ "$package_manager" = "apt" ]; then
-		"$package_manager" update ; "$package_manager" upgrade -y
 		"$package_manager" install build-essential \
 		apt install apt-transport-https lsb-release ca-certificates -y
 		wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
 		echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list
-		apt update
-		apt install php7.2 php7.2-cli php7.2-common php7.2-json \
+		"$package_manager" update
+		"$package_manager" install php7.2 php7.2-cli php7.2-common php7.2-json \
 		php7.2-opcache php7.2-mysql php7.2-zip php7.2-fpm php7.2-mbstring -y
 		curl -sS https://getcomposer.org/installer -o composer-setup.php
 		php -r "if (hash_file('SHA384', 'composer-setup.php') === '$HASH') \
@@ -1063,12 +1118,13 @@ old_frontend() {
 		php composer-setup.php --install-dir=/usr/local/bin --filename=composer
 
 	elif [ "$package_manager" = "pacman" ]; then
-		"$package_manager" --noconfirm -Syyu
 		"$package_manager" --noconfirm -S php composer
 
 	elif [ "$package_manager" = "emerge" ]; then
-		"$package_manager" -quDN @world
 		"$package_manager" -q dev-lang/php dev-lang/composer
+
+	elif [ "$package_manager" = "cave" ]; then
+		"$package_manager" resolve -x dev-lang/php dev-php/composer
 	fi
 
 	for packages in php composer; do
@@ -1143,6 +1199,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		checkRoot
 		DetectPackageManager
 		inputs
+		packageManagerUpgrade
 		mysql_database
 		python_dependencies
 		nproc_detector
@@ -1179,6 +1236,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		"	--avatarserver, -AS    To Clone & Setup avatar-server with Dependencies." \
 		"	--oldfrontend, -OF     To Clone & Setup oldfrontend with Dependencies." \
 		"	--nginx, -N            To Install & Configure Nginx with nginx Dependencies." \
+		"   --version, -V          Prints the version of the script." \
 		"" \
 		"Without Dependencies:" \
 		"   --nodependencies, --nodep" \
@@ -1196,6 +1254,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 	"--dependencies" | "-dep")
 		checkRoot
 		DetectPackageManager
+		packageManagerUpgrade
 		python_dependencies
 		nproc_detector
 		python3_5
@@ -1210,6 +1269,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		checkRoot
 		DetectPackageManager
 		inputs
+		packageManagerUpgrade
 		mysql_database
 		exit 0 ;;
 
@@ -1222,6 +1282,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		checkRoot
 		DetectPackageManager
 		inputs
+		packageManagerUpgrade
 		python_dependencies
 		nproc_detector
 		python3_5
@@ -1237,6 +1298,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		checkRoot
 		DetectPackageManager
 		inputs
+		packageManagerUpgrade
 		python_dependencies
 		nproc_detector
 		python3_6
@@ -1252,6 +1314,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		checkRoot
 		DetectPackageManager
 		inputs
+		packageManagerUpgrade
 		python_dependencies
 		nproc_detector
 		python3_6
@@ -1267,6 +1330,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		checkRoot
 		DetectPackageManager
 		inputs
+		packageManagerUpgrade
 		golang
 		hanayo
 		exit 0 ;;
@@ -1280,6 +1344,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		checkRoot
 		DetectPackageManager
 		inputs
+		packageManagerUpgrade
 		golang
 		rippleapi
 		exit 0 ;;
@@ -1293,6 +1358,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		checkRoot
 		DetectPackageManager
 		inputs
+		packageManagerUpgrade
 		php
 		old_frontend
 		exit 0 ;;
@@ -1304,8 +1370,13 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		fi
 		checkRoot
 		DetectPackageManager
+		packageManagerUpgrade
 		extra_dependencies
 		nginx
+		exit 0 ;;
+
+	"--version" | "-V")
+		printf "${YELLOW}%s\n" "Version: $VERSION"
 		exit 0 ;;
 
 	"")
