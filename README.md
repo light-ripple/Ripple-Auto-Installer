@@ -66,7 +66,7 @@ sudo ./ripple --help
 Without Git (Recommended)
 ```bash
 wget -O "ripple" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/ripple
-wget -O "ripple.sha256" https://raw.githubusercontent.com/light-ripple/Ripple-Auto-Installer/master/Main/ripple.sha1
+wget -O "ripple.sha1" https://raw.githubusercontent.com/light-ripple/Ripple-Auto-Installer/master/Main/ripple.sha1
 sha1sum -c ripple.sha1
 chmod +x ripple
 sudo ./ripple --help
