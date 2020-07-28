@@ -63,6 +63,7 @@ sha1sum -c ripple.sha1
 chmod +x ripple
 sudo ./ripple --help
 ```
+
 Without Git (Recommended)
 ```bash
 wget -O "ripple" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/ripple
@@ -71,6 +72,12 @@ sha1sum -c ripple.sha1
 chmod +x ripple
 sudo ./ripple --help
 ```
+
+Bedrock How To:
+```bash
+$ sudo strat -r stratum ./ripple -h  # stratum --> stratum name
+```
+
 Note: Execute the script as superuser. For example: `sudo ./ripple --all` to install & setup full ripple stack with dependencies.
 
 ### Configure/Start The Server
