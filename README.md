@@ -32,10 +32,13 @@ This script gives you a base and foundation if you're willing to setup your own 
 * <a href=https://exherbo.org>Exherbo Linux</a> Based distros
 
 ### Features
-* A configurable shell script for installing Ripple Stack
+* A configurable shell script for installing <a href=https://ripple.moe>Ripple</a> Stack
 * Everything is Pre-ready 
 * Simple and user friendly Installation
-* Installs most of the things for your server within minutes
+* Installs stack softwares within minute(s)
+* Integrated Errorlogs
+* Ability to Install specific stack software(s) chosen by a user
+* Higly Productive & Customizable
 
 ### Domain
 Make sure you set your DNS like this:
@@ -99,6 +102,7 @@ Questions? Need help? You may join the Discord server or ask me in Discord.
 * Thanks to <a href=https://github.com/semyon422>semyon422</a> for their <a href=https://github.com/semyon422/open-ripple>open-ripple</a>.
 * Thanks to <a href=https://github.com/EmilySunpy>EmilySunpy</a> for their <a href=https://github.com/osufx/lets>lets</a> & <a href=https://github.com/osufx/secret>secret</a>.
 * And others who supported the project.
+
 
 ### License :scroll:
 All of the Ripple code including the project itself is licenced under the GNU Affero General Public License V3. For more information, see the `LICENSE` file or visit https://www.gnu.org/licenses/agpl-3.0.
