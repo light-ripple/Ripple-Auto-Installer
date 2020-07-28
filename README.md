@@ -25,6 +25,12 @@ This script gives you a base and foundation if you're willing to setup your own 
 * A Arch/Debian/Gentoo Based GNU/Linux Distro with APT, Pacman or Portage package manager.
 <br>Note: Ubuntu 18.04 is atleast recommended if you want to directly start without any additional tweaking!<br>
 
+### Supported Systems
+* <a href=https://debian.org>Debian</a> Based distros
+* <a href=https://archlinux.org>Arch Linux</a> Based distros
+* <a href=https://gentoo.org>Gentoo Linux</a> Based distros
+* <a href=https://exherbo.org>Exherbo Linux</a> Based distros
+
 ### Features
 * A configurable shell script for installing Ripple Stack
 * Everything is Pre-ready 
@@ -63,7 +69,6 @@ sha1sum -c ripple.sha1
 chmod +x ripple
 sudo ./ripple --help
 ```
-
 Without Git (Recommended)
 ```bash
 wget -O "ripple" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/ripple
@@ -72,12 +77,10 @@ sha1sum -c ripple.sha1
 chmod +x ripple
 sudo ./ripple --help
 ```
-
 Bedrock How To:
 ```bash
 $ sudo strat -r stratum ./ripple -h  # stratum --> stratum name
 ```
-
 Note: Execute the script as superuser. For example: `sudo ./ripple --all` to install & setup full ripple stack with dependencies.
 
 ### Configure/Start The Server
