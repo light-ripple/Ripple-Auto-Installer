@@ -70,7 +70,7 @@
 
 
 # Version #
-VERSION=0.4.1
+VERSION=0.4.3
 
 # Colors For Prints
 alias RPRINT="printf '\033[0;31m%s\n'"
