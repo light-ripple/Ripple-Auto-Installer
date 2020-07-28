@@ -14,7 +14,7 @@
 
 ## Attention
 <b>**THIS SCRIPT IS NOT FOR LOCAL PC (localhost) AND IT IS FOR ADVANCED USERS!**</b><br>
-This script gives you a base and foundation if you're willing to install your own Ripple instance. You’re to think for yourself. Ripple is not a stack system where Ripple/I document everything so you’ll need a basic understanding of how unix or GNU/Linux systems and full stack web applications work to be able to set up Ripple properly and work out with problems efficiently when necessary.<br>
+This script gives you a base and foundation if you're willing to setup your own Ripple instance. You’re to think for yourself. Ripple is not a stack system where Ripple/I document everything so you’ll need a basic understanding of how full stack web applications and unix or GNU/Linux systems work to be able to set up Ripple properly and work out with problems efficiently when necessary.<br>
 * Check out <a href="https://github.com/Uniminin/Light-Ripple-Windows/">Light-Ripple-Windows</a> if you want to host a local Ripple server on your windows system.</a>
 * You might want to look at Ripple's wiki(old): https://github.com/osuripple/ripple/wiki/How-to-setup-ripple
 * Note: The Script has not been fully tested (100%) properly. Bugs may be expected, Report it <a href="https://github.com/Uniminin/Ripple-Auto-Installer#contact">Contact</a>.
