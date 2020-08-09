@@ -129,6 +129,8 @@ lineno() {
 
 set -e
 
+
+# Simplified Assersion by uniminin <uniminin@zoho.com> under the terms of AGPLv3
 die() {
 
 	# Current Time
@@ -160,13 +162,6 @@ die() {
 # Die
 alias die="die \"[ line \$LINENO\"\ ]"
 
-
-# WARNING
-development=""
-if [ "$development" ]; then
-	RPRINT "Script is on Development! Execution of any arguments are disabled during development session."
-	exit 13
-fi
 
 # Check If Running [Script] as Root
 checkRoot() {
