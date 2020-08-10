@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of AGPLv3  |
-|                   Last Updated on  Tuesday, July 28, 2020  (GMT+6)                |
+|                  Last Updated on Monday, August 10, 2020 (GMT+6)                  |
 -------------------------------------------------------------------------------------
 '
 
@@ -70,13 +70,14 @@
 
 
 # Version #
-VERSION=0.4.3
+VERSION=0.4.4
 
 # Colors For Prints
-alias RPRINT="printf '\033[0;31m%s\n'"
-alias GPRINT="printf '\033[0;32m%s\n'"
-alias YPRINT="printf '\033[0;33m%s\n'"
-alias BPRINT="printf '\033[0;34m%s'"
+alias RPRINT="printf '\033[0;31m%s\n'"     # Red
+alias GPRINT="printf '\033[0;32m%s\n'"     # Green
+alias YPRINT="printf '\033[0;33m%s\n'"     # Yellow
+alias BPRINT="printf '\033[0;34m%s'"       # Blue
+
 
 # Modified version of efixme originally designed by Jacob Hrbek <kreyren@rixotstudio.cz> under the terms of GPL-3
 efixme() {
@@ -96,7 +97,7 @@ efixme() {
 		fi
 	fi
 
-	# NOTICE: Ugly, but this way it doesn't have to process following if statement on runtime
+	# NOTICE: Ugly, but this way it doesn't have to process following if statement on runtime #
 	[ -z "$IGNORE_FIXME" ] && if [ -z "$EFIXME_PREFIX" ]; then
 		RPRINT "$EFIXME_PREFIX: $1"
 		return 0
@@ -142,12 +143,12 @@ die() {
 	esac
 	
 	if [ ! -f "ErrorLog.txt" ]; then
-		touch ErrorLog.txt
+		touch Error.log
 	fi
 	
-	if [ -f "ErrorLog.txt" ]; then
-		printf "[$Date]\nFATAL: %s\n\n" "$3 $1" >> ErrorLog.txt
-		GPRINT "Successfully Written into 'ErrorLog.txt'"
+	if [ -f "Error.log" ]; then
+		printf "[$Date]\nFATAL: %s\n\n" "$3 $1" >> Error.log || die 1 "Couldn't write into 'Error.log'."
+		GPRINT "Successfully Written into 'Error.log'"
 	fi
 
 	BPRINT "Continue ? y/n "
