@@ -117,6 +117,7 @@ efixme() {
 	fi
 }
 
+
 # prints line number
 lineno() {
 	if command -v bash 1>/dev/null; then
@@ -161,6 +162,7 @@ die() {
 	fi
 }
 
+
 # Die
 alias die="die \"[ line \$LINENO\"\ ]"
 
@@ -174,6 +176,7 @@ else
 	exit 255
 fi
 
+
 # Detect number of cpu threads for faster compilation/builds
 nproc_detector() {
 	case "$(nproc)" in
@@ -186,6 +189,7 @@ nproc_detector() {
 			export procNum="1"
 	esac
 }
+
 
 # FIXME: Add more support for other distros and package managers.
 # Supports: apt, pacman, portage and paludis.
@@ -222,6 +226,7 @@ DetectPackageManager() {
 	fi
 }
 
+
 packageManagerUpgrade() {
 
 	task="packages"
@@ -241,6 +246,7 @@ packageManagerUpgrade() {
 		cave sync ; cave resolve world -cx
 	fi
 }
+
 
 # Dependencies Requires for Python3.5 & Python3.6
 python_dependencies() {
@@ -275,6 +281,7 @@ python_dependencies() {
 		fi
 	done
 }
+
 
 # Python 3.5 for pep.py
 python3_5() {
@@ -326,6 +333,7 @@ python3_5() {
 
 }
 
+
 # Python 3.6 for lets
 python3_6() {
 
@@ -376,6 +384,7 @@ python3_6() {
 
 	
 }
+
 
 # Golang1.13+ for Hanayo & rippleapi
 golang() {
@@ -441,6 +450,7 @@ golang() {
 	fi
 }
 
+
 # Extra Dependencies required to run stack softwares and get the server online.
 extra_dependencies() {
 
@@ -471,6 +481,7 @@ extra_dependencies() {
 		fi
 	done
 }
+
 
 # Nginx to balance loads & for proxies
 nginx() {
@@ -530,6 +541,7 @@ nginx() {
 	fi
 }
 
+
 SSL() {
 
 	task="acme.sh"
@@ -570,6 +582,7 @@ SSL() {
 	fi
 }
 
+
 # For Interacting with Database online.
 phpmyadmin(){
 
@@ -601,6 +614,7 @@ phpmyadmin(){
 		die 1 "Directory '/var/www/osu.ppy.sh' does not exist."
 	fi
 }
+
 
 inputs() {
 
@@ -738,6 +752,7 @@ inputs() {
 	GPRINT "Done obtaining all the necessary '$task'."
 }
 
+
 # Database is required to access, read, write & manage all the user's data. (Required for all Ripple's Softwares i.e lets, peppy..)
 mysql_database() {
 
@@ -815,6 +830,7 @@ mysql_database() {
 	)
 }
 
+
 # peppy is the backend of osu/bancho, starting from client login, it handles most of the stuff.
 peppy () {
 
@@ -862,6 +878,7 @@ peppy () {
 	fi
 }
 
+
 secret() {
 
 	task="secret"
@@ -889,6 +906,7 @@ secret() {
 	fi
 	GPRINT "Done Setting Up '$task'."
 }
+
 
 # LETS is the Ripple's score server. It manages scores, osu!direct etc.
 lets() {
@@ -948,6 +966,7 @@ lets() {
 	fi
 }
 
+
 # Hanayo: The Ripple's Frontend.
 hanayo() {
 
@@ -1005,6 +1024,7 @@ hanayo() {
 	fi
 }
 
+
 # Ripple API is required to talk with the frontend (hanayo), and all other Ripple's Software (lets, peppy..)
 rippleapi() {
 
@@ -1046,6 +1066,7 @@ rippleapi() {
 	fi
 }
 
+
 # Avatar-Server handles/manages ingame & frontend's avatars of all users.
 avatar_server() {
 
@@ -1081,6 +1102,7 @@ avatar_server() {
 		die 1 "Directory '$directory' doesn't exist."
 	fi
 }
+
 
 # OLD-FRONTEND is the Ripple's Admin Panel. Which can be accessed at old.domain
 old_frontend() {
@@ -1168,6 +1190,7 @@ old_frontend() {
 		fi
 	)
 }
+
 
 
 while [ "$#" -ge 0 ]; do case "$1" in
