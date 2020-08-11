@@ -7,11 +7,12 @@
 : '
 -------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of AGPLv3  |
-|                  Last Updated on Tuesday, August 11, 2020 (GMT+6)                 |
+|            Last Updated on Tuesday, August 11, 2020 at 1:21 PM (GMT+6)            |
 -------------------------------------------------------------------------------------
 '
 
-###! Script to install & configure Ripple
+###! Script to install & configure Ripple (https://ripple.moe)
+###! Main Ripple Git: https://zxq.co/ripple
 ###! We need:
 ###! - FIXME-DOCS
 ###! - TEST-SCRIPT
