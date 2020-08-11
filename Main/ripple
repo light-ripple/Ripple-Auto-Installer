@@ -166,14 +166,15 @@ alias die="die \"[ line \$LINENO\"\ ]"
 
 # Check for root
 if [ "$(id -u)" != 0 ]; then
-	die 3 "The Script needs to be executed as Root/Superuser!"
-elif [ "$(id -u)" = 0 ]; then
-	die 13 "Script executed from an user with ID $(id -u)"
+	RPRINT "Fatal: The Script needs to be executed as Root/Superuser!"
+	exit 3
 else
-	die 255 "Unexpected happend while checking root!"
+	RPRINT "Unexpected happend while checking root!"
+	exit 255
 fi
 
 
+# FIXME: UGLY
 notice() {
 	case "$1" in
 		*) GPRINT "Installation of $2 has been completed! Follow Github Repository for more information.\n"
