@@ -7,11 +7,12 @@
 : '
 -------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of AGPLv3  |
-|                  Last Updated on Monday, August 10, 2020 (GMT+6)                  |
+|            Last Updated on Tuesday, August 11, 2020 at 1:21 PM (GMT+6)            |
 -------------------------------------------------------------------------------------
 '
 
-###! Script to install & configure Ripple
+###! Script to install & configure Ripple (https://ripple.moe)
+###! Main Ripple Git: https://zxq.co/ripple
 ###! We need:
 ###! - FIXME-DOCS
 ###! - TEST-SCRIPT
@@ -70,7 +71,7 @@
 
 
 # Version #
-VERSION=0.4.4
+VERSION=0.4.5
 
 # Colors For Prints
 alias RPRINT="printf '\033[0;31m%s\n'"     # Red
@@ -117,6 +118,8 @@ efixme() {
 	fi
 }
 
+
+# prints line number
 lineno() {
 	if command -v bash 1>/dev/null; then
 		RPRINT "$LINENO"
@@ -134,7 +137,7 @@ set -e
 # Simplified Assersion by uniminin <uniminin@zoho.com> under the terms of AGPLv3
 die() {
 
-	# Current Time
+	# Current Date
 	Date=$(date)
 
 
@@ -160,27 +163,20 @@ die() {
 	fi
 }
 
+
 # Die
 alias die="die \"[ line \$LINENO\"\ ]"
 
 
-# Check If Running [Script] as Root
-checkRoot() {
-	if ! [ "$(id -u)" = 0 ]; then
-		RPRINT "Fatal: The Script needs to be executed as Root/Superuser!"
-		exit 13
-	else
-		GPRINT "Superuser Permission: Granted!"
-	fi
-}
+# Check for root
+if [ "$(id -u)" != 0 ]; then
+	RPRINT "Fatal: The Script needs to be executed as Root/Superuser!"
+	exit 3
+else
+	RPRINT "Unexpected happend while checking root!"
+	exit 255
+fi
 
-notice() {
-	case "$1" in
-		*) GPRINT "Installation of $2 has been completed! Follow Github Repository for more information.\n"
-	esac
-
-	exit "$1"
-}
 
 # Detect number of cpu threads for faster compilation/builds
 nproc_detector() {
@@ -194,6 +190,7 @@ nproc_detector() {
 			export procNum="1"
 	esac
 }
+
 
 # FIXME: Add more support for other distros and package managers.
 # Supports: apt, pacman, portage and paludis.
@@ -230,6 +227,7 @@ DetectPackageManager() {
 	fi
 }
 
+
 packageManagerUpgrade() {
 
 	task="packages"
@@ -249,6 +247,7 @@ packageManagerUpgrade() {
 		cave sync ; cave resolve world -cx
 	fi
 }
+
 
 # Dependencies Requires for Python3.5 & Python3.6
 python_dependencies() {
@@ -283,6 +282,7 @@ python_dependencies() {
 		fi
 	done
 }
+
 
 # Python 3.5 for pep.py
 python3_5() {
@@ -334,6 +334,7 @@ python3_5() {
 
 }
 
+
 # Python 3.6 for lets
 python3_6() {
 
@@ -384,6 +385,7 @@ python3_6() {
 
 	
 }
+
 
 # Golang1.13+ for Hanayo & rippleapi
 golang() {
@@ -449,6 +451,7 @@ golang() {
 	fi
 }
 
+
 # Extra Dependencies required to run stack softwares and get the server online.
 extra_dependencies() {
 
@@ -479,6 +482,7 @@ extra_dependencies() {
 		fi
 	done
 }
+
 
 # Nginx to balance loads & for proxies
 nginx() {
@@ -538,6 +542,7 @@ nginx() {
 	fi
 }
 
+
 SSL() {
 
 	task="acme.sh"
@@ -578,6 +583,7 @@ SSL() {
 	fi
 }
 
+
 # For Interacting with Database online.
 phpmyadmin(){
 
@@ -609,6 +615,7 @@ phpmyadmin(){
 		die 1 "Directory '/var/www/osu.ppy.sh' does not exist."
 	fi
 }
+
 
 inputs() {
 
@@ -746,6 +753,7 @@ inputs() {
 	GPRINT "Done obtaining all the necessary '$task'."
 }
 
+
 # Database is required to access, read, write & manage all the user's data. (Required for all Ripple's Softwares i.e lets, peppy..)
 mysql_database() {
 
@@ -823,6 +831,7 @@ mysql_database() {
 	)
 }
 
+
 # peppy is the backend of osu/bancho, starting from client login, it handles most of the stuff.
 peppy () {
 
@@ -870,6 +879,7 @@ peppy () {
 	fi
 }
 
+
 secret() {
 
 	task="secret"
@@ -897,6 +907,7 @@ secret() {
 	fi
 	GPRINT "Done Setting Up '$task'."
 }
+
 
 # LETS is the Ripple's score server. It manages scores, osu!direct etc.
 lets() {
@@ -956,6 +967,7 @@ lets() {
 	fi
 }
 
+
 # Hanayo: The Ripple's Frontend.
 hanayo() {
 
@@ -1013,6 +1025,7 @@ hanayo() {
 	fi
 }
 
+
 # Ripple API is required to talk with the frontend (hanayo), and all other Ripple's Software (lets, peppy..)
 rippleapi() {
 
@@ -1054,6 +1067,7 @@ rippleapi() {
 	fi
 }
 
+
 # Avatar-Server handles/manages ingame & frontend's avatars of all users.
 avatar_server() {
 
@@ -1089,6 +1103,7 @@ avatar_server() {
 		die 1 "Directory '$directory' doesn't exist."
 	fi
 }
+
 
 # OLD-FRONTEND is the Ripple's Admin Panel. Which can be accessed at old.domain
 old_frontend() {
@@ -1178,6 +1193,7 @@ old_frontend() {
 }
 
 
+
 while [ "$#" -ge 0 ]; do case "$1" in
 	"--all" | "-A")
 		if [ "$2" = "--nodependencies" ] || [ "$2" = "--nodep" ]; then
@@ -1194,7 +1210,6 @@ while [ "$#" -ge 0 ]; do case "$1" in
 			phpmyadmin
 			nginx
 			SSL
-			notice 1 "Ripple Stack"
 			exit 0
 		fi
 		checkRoot
@@ -1217,7 +1232,6 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		phpmyadmin
 		nginx
 		SSL
-		notice 1 "Ripple Stack"
 		exit 0 ;;
 
 	"--help" | "-h")
@@ -1263,7 +1277,6 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		golang
 		phpmyadmin
 		extra_dependencies
-		notice 1 "All The Dependencies"
 		exit 0 ;;
 
 	"--mysql" | "-M")
