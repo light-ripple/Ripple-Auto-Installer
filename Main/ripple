@@ -164,15 +164,15 @@ die() {
 alias die="die \"[ line \$LINENO\"\ ]"
 
 
-# Check If Running [Script] as Root
-checkRoot() {
-	if ! [ "$(id -u)" = 0 ]; then
-		RPRINT "Fatal: The Script needs to be executed as Root/Superuser!"
-		exit 13
-	else
-		GPRINT "Superuser Permission: Granted!"
-	fi
-}
+# Check for root
+if [ "$(id -u)" != 0 ]; then
+	die 3 "The Script needs to be executed as Root/Superuser!"
+elif [ "$(id -u)" = 0 ]; then
+	die 13 "Script executed from an user with ID $(id -u)"
+else
+	die 255 "Unexpected happend while checking root!"
+fi
+
 
 notice() {
 	case "$1" in
