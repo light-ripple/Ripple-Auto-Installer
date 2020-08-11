@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of AGPLv3  |
-|                  Last Updated on Monday, August 10, 2020 (GMT+6)                  |
+|                  Last Updated on Tuesday, August 11, 2020 (GMT+6)                 |
 -------------------------------------------------------------------------------------
 '
 
@@ -70,7 +70,7 @@
 
 
 # Version #
-VERSION=0.4.4
+VERSION=0.4.5
 
 # Colors For Prints
 alias RPRINT="printf '\033[0;31m%s\n'"     # Red
@@ -117,6 +117,7 @@ efixme() {
 	fi
 }
 
+# prints line number
 lineno() {
 	if command -v bash 1>/dev/null; then
 		RPRINT "$LINENO"
@@ -134,7 +135,7 @@ set -e
 # Simplified Assersion by uniminin <uniminin@zoho.com> under the terms of AGPLv3
 die() {
 
-	# Current Time
+	# Current Date
 	Date=$(date)
 
 
@@ -172,16 +173,6 @@ else
 	RPRINT "Unexpected happend while checking root!"
 	exit 255
 fi
-
-
-# FIXME: UGLY
-notice() {
-	case "$1" in
-		*) GPRINT "Installation of $2 has been completed! Follow Github Repository for more information.\n"
-	esac
-
-	exit "$1"
-}
 
 # Detect number of cpu threads for faster compilation/builds
 nproc_detector() {
@@ -1195,7 +1186,6 @@ while [ "$#" -ge 0 ]; do case "$1" in
 			phpmyadmin
 			nginx
 			SSL
-			notice 1 "Ripple Stack"
 			exit 0
 		fi
 		checkRoot
@@ -1218,7 +1208,6 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		phpmyadmin
 		nginx
 		SSL
-		notice 1 "Ripple Stack"
 		exit 0 ;;
 
 	"--help" | "-h")
@@ -1264,7 +1253,6 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		golang
 		phpmyadmin
 		extra_dependencies
-		notice 1 "All The Dependencies"
 		exit 0 ;;
 
 	"--mysql" | "-M")
