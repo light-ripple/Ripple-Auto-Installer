@@ -1,13 +1,14 @@
 #!/bin/sh
 # shellcheck shell=sh # Written to be posix compatible
 # shellcheck source=/dev/null
-# shellcheck disable=SC2128,SC2178 # False trigger
+# shellcheck disable=SC2128,SC2178 # False Trigger
+# shellcheck disable=SC2039 # Non-Acute Trigger
 # USING: APT, Pacman, Portage, Paludis, UNIX or GNU/Linux, Mysql/Mariadb Database.
 # SUPPORTS INIT SYSTEMS: systemd and openrc.
 : '
 -------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of AGPLv3  |
-|            Last Updated on Tuesday, August 11, 2020 at 1:21 PM (GMT+6)            |
+|            Last Updated on Sunday, August 16, 2020 at 12:10 PM (GMT+6)            |
 -------------------------------------------------------------------------------------
 '
 
@@ -71,7 +72,7 @@
 
 
 # Version #
-VERSION=0.4.5
+VERSION=0.4.7
 
 # Colors For Prints
 alias RPRINT="printf '\033[0;31m%s\n'"     # Red
@@ -119,6 +120,30 @@ efixme() {
 }
 
 
+# Get's directory name from filepath
+# Usage: getdir "path"
+getdir() {
+    local tmp=${1:-.}
+
+    [[ $tmp != *[!/]* ]] && {
+        printf '/\n'
+        return
+    }
+
+    tmp=${tmp%%"${tmp##*[!/]}"}
+
+    [[ $tmp != */* ]] && {
+        printf '.\n'
+        return
+    }
+
+    tmp=${tmp%/*}
+    tmp=${tmp%%"${tmp##*[!/]}"}
+
+    printf '%s\n' "${tmp:-/}"
+}
+
+
 # prints line number
 lineno() {
 	if command -v bash 1>/dev/null; then
@@ -135,6 +160,7 @@ set -e
 
 
 # Simplified Assersion by uniminin <uniminin@zoho.com> under the terms of AGPLv3
+# Usage: die "exitcode" "msg..."
 die() {
 
 	# Current Date
@@ -168,13 +194,16 @@ die() {
 alias die="die \"[ line \$LINENO\"\ ]"
 
 
+# Detect Operating System
+. /etc/os-release
+
+
 # Check for root
-if [ "$(id -u)" != 0 ]; then
+ROOT_UID=0
+
+if [ "$UID" -ne "$ROOT_UID" ]; then
 	RPRINT "Fatal: The Script needs to be executed as Root/Superuser!"
-	exit 3
-else
-	RPRINT "Unexpected happend while checking root!"
-	exit 255
+	exit "$E_NOTROOT"
 fi
 
 
@@ -235,16 +264,16 @@ packageManagerUpgrade() {
 	GPRINT "Upgrading/Updating system '$task'!"
 
 	if command -v apt >/dev/null; then
-		apt upgrade -y ; apt update
+		apt update ; apt upgrade -y ; apt update
 
 	elif command -v pacman >/dev/null; then
 		pacman --noconfirm -Syyu
 	
 	elif command -v emerge >/dev/null; then
-		emerge --sync ; emerge -quDN
+		emerge --sync ; emerge -quDN @world
 
 	elif command -v cave >/dev/null; then
-		cave sync ; cave resolve world -cx
+		cave sync ; cave resolve world -x
 	fi
 }
 
@@ -342,45 +371,54 @@ python3_6() {
 
 	if command -v python3.6 >/dev/null; then
 		GPRINT "Python3.6 has been found on this system. Skipping.."
+		
 	else
 		YPRINT "Setting up '$task'!"
-
-		if command -v ping 1>/dev/null; then
-			ping -i 0.5 -c 5 python.org || die 121 "Domain 'python.org' is not reachable from this environment."
+		
+		# FIXME: detect distro version, add and pull proper repository and package respectively
+		if [ "$ID" = "Ubuntu" ]; then
+			add-apt-repository ppa:deadsnakes/ppa -y
+			"$package_manager" update
+			"$package_manager" install python3.6 python3-pip -y
+			
 		else
-			die 61 "Unknown Error!"
+			if command -v ping 1>/dev/null; then
+				ping -i 0.5 -c 5 python.org || die 121 "Domain 'python.org' is not reachable from this environment."
+			else
+				die 61 "Unknown Error!"
+			fi
+
+			(
+				if [ -d "/usr/src" ]; then
+					cd /usr/src || die 1 "Failed to cd into '/usr/src'"
+					wget -O "Python-3.6.8.tar.xz" https://www.python.org/ftp/python/3.6.8/Python-3.6.8.tar.xz || die 11 "Could not download file 'Python-3.6.8.tar.xz'."
+				fi
+
+				if [ -f "Python-3.6.8.tar.xz" ]; then
+					tar -xvf Python-3.6.8.tar.xz
+					if [ -d "Python-3.6.8" ]; then
+						cd Python-3.6.8 || die 1 "Failed to cd into 'Python-3.6.8'."
+					else
+						die 1 "Failed to extract 'Python-3.6.8.tar.xz'."
+					fi
+					./configure --enable-optimizations --with-ensurepip=install ; make --jobs "$procNum" ; make install
+					if command -v python3.6 -m pip >/dev/null; then
+						python3.6 -m pip install --upgrade pip
+					else
+						die 1 "python3.6 pip not found."
+					fi
+
+				if command -v python3.6 >/dev/null; then
+					GPRINT "Python3.6 has been installed on this system."
+				else
+					die 1 "Failed to install python3.6!"
+				fi
+
+				else
+					die 1 "Python3.6.8 couldn't be installed because file 'Python-3.6.8.tar.xz' was not found."
+				fi
+			)
 		fi
-
-		(
-			if [ -d "/usr/src" ]; then
-				cd /usr/src || die 1 "Failed to cd into '/usr/src'"
-				wget -O "Python-3.6.8.tar.xz" https://www.python.org/ftp/python/3.6.8/Python-3.6.8.tar.xz || die 11 "Could not download file 'Python-3.6.8.tar.xz'."
-			fi
-
-			if [ -f "Python-3.6.8.tar.xz" ]; then
-				tar -xvf Python-3.6.8.tar.xz
-				if [ -d "Python-3.6.8" ]; then
-					cd Python-3.6.8 || die 1 "Failed to cd into 'Python-3.6.8'."
-				else
-					die 1 "Failed to extract 'Python-3.6.8.tar.xz'."
-				fi
-				./configure --enable-optimizations --with-ensurepip=install ; make --jobs "$procNum" ; make install
-				if command -v python3.6 -m pip >/dev/null; then
-					python3.6 -m pip install --upgrade pip
-				else
-					die 1 "python3.6 pip not found."
-				fi
-
-			if command -v python3.6 >/dev/null; then
-				GPRINT "Python3.6 has been installed on this system."
-			else
-				die 1 "Failed to install python3.6!"
-			fi
-
-			else
-				die 1 "Python3.6.8 couldn't be installed because file 'Python-3.6.8.tar.xz' was not found."
-			fi
-		)
 	fi
 
 	
@@ -397,10 +435,14 @@ golang() {
 	else
 		YPRINT "Setting up '$task'!"
 		
-		if [ "$package_manager" = "apt" ]; then
-
-			"$package_manager" update ; "$package_manager" upgrade -y
-			"$package_manager" install wget go
+		if [ "$ID" = "Ubuntu" ]; then
+			add-apt-repository ppa:longsleep/golang-backports -y
+			"$package_manager" update
+			"$package_manager" install golang-go -y
+		
+		elif [ "$package_manager" = "apt" ]; then
+			# FIXME: provide proper package name
+			"$package_manager" install wget go golang-go -y
 			
 			if ! command -v go 1>/dev/null; then
 				if command -v ping 1>/dev/null; then
@@ -417,6 +459,9 @@ golang() {
 							tar -xvf go1.13.11.linux-amd64.tar.gz
 							chown -R root:root ./go
 							mv go /usr/local
+							
+							# FIXME: Absolute Path
+							getdir ~/.profile
 
 							if [ ! -f "$HOME/.profile" ]; then
 								touch ~/.profile
