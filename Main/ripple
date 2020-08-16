@@ -123,24 +123,24 @@ efixme() {
 # Get's directory name from filepath
 # Usage: getdir "path"
 getdir() {
-    local tmp=${1:-.}
+	local tmp=${1:-.}
 
-    [[ $tmp != *[!/]* ]] && {
-        printf '/\n'
-        return
-    }
+	[[ $tmp != *[!/]* ]] && {
+		printf '/\n'
+		return
+	}
 
-    tmp=${tmp%%"${tmp##*[!/]}"}
+	tmp=${tmp%%"${tmp##*[!/]}"}
 
-    [[ $tmp != */* ]] && {
-        printf '.\n'
-        return
-    }
+	[[ $tmp != */* ]] && {
+		printf '.\n'
+		return
+	}
 
-    tmp=${tmp%/*}
-    tmp=${tmp%%"${tmp##*[!/]}"}
+	tmp=${tmp%/*}
+	tmp=${tmp%%"${tmp##*[!/]}"}
 
-    printf '%s\n' "${tmp:-/}"
+	printf '%s\n' "${tmp:-/}"
 }
 
 
