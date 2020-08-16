@@ -352,9 +352,9 @@ python3_6() {
 		
 		# FIXME: detect distro version, add and pull proper repository and package respectively
 		if [ "$ID" = "Ubuntu" ]; then
-			add-apt-repository ppa:deadsnakes/ppa
+			add-apt-repository ppa:deadsnakes/ppa -y
 			"$package_manager" update
-			"$package_manager" install python3.6 ; "$package_manager" install python3-pip
+			"$package_manager" install python3.6 python3-pip -y
 			
 		else
 			if command -v ping 1>/dev/null; then
@@ -411,12 +411,13 @@ golang() {
 		YPRINT "Setting up '$task'!"
 		
 		if [ "$ID" = "Ubuntu" ]; then
-			add-apt-repository ppa:longsleep/golang-backports
+			add-apt-repository ppa:longsleep/golang-backports -y
 			"$package_manager" update
-			"$package_manager" install golang-go
+			"$package_manager" install golang-go -y
 		
 		elif [ "$package_manager" = "apt" ]; then
-			"$package_manager" install wget go golang-go # FIXME: provide proper package name
+			# FIXME: provide proper package name
+			"$package_manager" install wget go golang-go -y
 			
 			if ! command -v go 1>/dev/null; then
 				if command -v ping 1>/dev/null; then
