@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of AGPLv3  |
-|            Last Updated on Tuesday, August 11, 2020 at 1:21 PM (GMT+6)            |
+|            Last Updated on Sunday, August 16, 2020 at 11:10 PM (GMT+6)            |
 -------------------------------------------------------------------------------------
 '
 
@@ -169,12 +169,11 @@ alias die="die \"[ line \$LINENO\"\ ]"
 
 
 # Check for root
-if [ "$(id -u)" != 0 ]; then
-	RPRINT "Fatal: The Script needs to be executed as Root/Superuser!"
-	exit 3
-else
-	RPRINT "Unexpected happend while checking root!"
-	exit 255
+ROOT_UID=0
+
+if [ "$UID" -ne "$ROOT_UID" ]; then
+  RPRINT "Fatal: The Script needs to be executed as Root/Superuser!"
+  exit $E_NOTROOT
 fi
 
 
