@@ -1,7 +1,8 @@
 #!/bin/sh
 # shellcheck shell=sh # Written to be posix compatible
 # shellcheck source=/dev/null
-# shellcheck disable=SC2128,SC2178 # False trigger
+# shellcheck disable=SC2128,SC2178 # False Trigger
+# shellcheck disable=SC2039 # Non-Acute Trigger
 # USING: APT, Pacman, Portage, Paludis, UNIX or GNU/Linux, Mysql/Mariadb Database.
 # SUPPORTS INIT SYSTEMS: systemd and openrc.
 : '
@@ -172,8 +173,8 @@ alias die="die \"[ line \$LINENO\"\ ]"
 ROOT_UID=0
 
 if [ "$UID" -ne "$ROOT_UID" ]; then
-  RPRINT "Fatal: The Script needs to be executed as Root/Superuser!"
-  exit $E_NOTROOT
+	RPRINT "Fatal: The Script needs to be executed as Root/Superuser!"
+	exit "$E_NOTROOT"
 fi
 
 
