@@ -354,7 +354,7 @@ python3_6() {
 		if [ "$ID" = "Ubuntu" ]; then
 			add-apt-repository ppa:deadsnakes/ppa
 			"$package_manager" update
-			"$package_manager" install python3.6
+			"$package_manager" install python3.6 ; "$package_manager" install python3-pip
 			
 		else
 			if command -v ping 1>/dev/null; then
