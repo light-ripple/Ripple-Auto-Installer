@@ -8,7 +8,7 @@
 : '
 -------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of AGPLv3  |
-|            Last Updated on Sunday, August 16, 2020 at 11:10 PM (GMT+6)            |
+|            Last Updated on Sunday, August 16, 2020 at 12:10 PM (GMT+6)            |
 -------------------------------------------------------------------------------------
 '
 
@@ -120,6 +120,30 @@ efixme() {
 }
 
 
+# Get's directory name from filepath
+# Usage: getdir "path"
+getdir() {
+    local tmp=${1:-.}
+
+    [[ $tmp != *[!/]* ]] && {
+        printf '/\n'
+        return
+    }
+
+    tmp=${tmp%%"${tmp##*[!/]}"}
+
+    [[ $tmp != */* ]] && {
+        printf '.\n'
+        return
+    }
+
+    tmp=${tmp%/*}
+    tmp=${tmp%%"${tmp##*[!/]}"}
+
+    printf '%s\n' "${tmp:-/}"
+}
+
+
 # prints line number
 lineno() {
 	if command -v bash 1>/dev/null; then
@@ -136,6 +160,7 @@ set -e
 
 
 # Simplified Assersion by uniminin <uniminin@zoho.com> under the terms of AGPLv3
+# Usage: die "exitcode" "msg..."
 die() {
 
 	# Current Date
@@ -434,6 +459,9 @@ golang() {
 							tar -xvf go1.13.11.linux-amd64.tar.gz
 							chown -R root:root ./go
 							mv go /usr/local
+							
+							# FIXME: Absolute Path
+							getdir ~/.profile
 
 							if [ ! -f "$HOME/.profile" ]; then
 								touch ~/.profile
