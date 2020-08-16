@@ -8,7 +8,7 @@
 : '
 -------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of AGPLv3  |
-|            Last Updated on Sunday, August 16, 2020 at 12:10 PM (GMT+6)            |
+|            Last Updated on Sunday, August 16, 2020 at 12:15 PM (GMT+6)            |
 -------------------------------------------------------------------------------------
 '
 
@@ -61,6 +61,9 @@
 ###!  - [ ] SysV-init
 ###!  - [ ] runit
 ###!  - [ ] s6
+###! System Detection:
+###!  - [*] Ubuntu
+
 
 # TODO: Detect Operating System/Kernel/Distro and pull proper packages.
 
@@ -72,7 +75,7 @@
 
 
 # Version #
-VERSION=0.4.7
+VERSION=0.4.8
 
 # Colors For Prints
 alias RPRINT="printf '\033[0;31m%s\n'"     # Red
@@ -123,24 +126,24 @@ efixme() {
 # Get's directory name from filepath
 # Usage: getdir "path"
 getdir() {
-    local tmp=${1:-.}
+	local tmp=${1:-.}
 
-    [[ $tmp != *[!/]* ]] && {
-        printf '/\n'
-        return
-    }
+	[[ $tmp != *[!/]* ]] && {
+		printf '/\n'
+		return
+	}
 
-    tmp=${tmp%%"${tmp##*[!/]}"}
+	tmp=${tmp%%"${tmp##*[!/]}"}
 
-    [[ $tmp != */* ]] && {
-        printf '.\n'
-        return
-    }
+	[[ $tmp != */* ]] && {
+		printf '.\n'
+		return
+	}
 
-    tmp=${tmp%/*}
-    tmp=${tmp%%"${tmp##*[!/]}"}
+	tmp=${tmp%/*}
+	tmp=${tmp%%"${tmp##*[!/]}"}
 
-    printf '%s\n' "${tmp:-/}"
+	printf '%s\n' "${tmp:-/}"
 }
 
 
