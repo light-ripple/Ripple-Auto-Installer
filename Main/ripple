@@ -72,7 +72,7 @@
 
 
 # Version #
-VERSION=0.4.5
+VERSION=0.4.7
 
 # Colors For Prints
 alias RPRINT="printf '\033[0;31m%s\n'"     # Red
@@ -167,6 +167,10 @@ die() {
 
 # Die
 alias die="die \"[ line \$LINENO\"\ ]"
+
+
+# Detect Operating System
+. /etc/os-release
 
 
 # Check for root
@@ -342,45 +346,54 @@ python3_6() {
 
 	if command -v python3.6 >/dev/null; then
 		GPRINT "Python3.6 has been found on this system. Skipping.."
+		
 	else
 		YPRINT "Setting up '$task'!"
-
-		if command -v ping 1>/dev/null; then
-			ping -i 0.5 -c 5 python.org || die 121 "Domain 'python.org' is not reachable from this environment."
+		
+		# FIXME: detect distro version, add and pull proper repository and package respectively
+		if [ "$ID" = "Ubuntu" ]; then
+			add-apt-repository ppa:deadsnakes/ppa
+			"$package_manager" update
+			"$package_manager" install python3.6
+			
 		else
-			die 61 "Unknown Error!"
+			if command -v ping 1>/dev/null; then
+				ping -i 0.5 -c 5 python.org || die 121 "Domain 'python.org' is not reachable from this environment."
+			else
+				die 61 "Unknown Error!"
+			fi
+
+			(
+				if [ -d "/usr/src" ]; then
+					cd /usr/src || die 1 "Failed to cd into '/usr/src'"
+					wget -O "Python-3.6.8.tar.xz" https://www.python.org/ftp/python/3.6.8/Python-3.6.8.tar.xz || die 11 "Could not download file 'Python-3.6.8.tar.xz'."
+				fi
+
+				if [ -f "Python-3.6.8.tar.xz" ]; then
+					tar -xvf Python-3.6.8.tar.xz
+					if [ -d "Python-3.6.8" ]; then
+						cd Python-3.6.8 || die 1 "Failed to cd into 'Python-3.6.8'."
+					else
+						die 1 "Failed to extract 'Python-3.6.8.tar.xz'."
+					fi
+					./configure --enable-optimizations --with-ensurepip=install ; make --jobs "$procNum" ; make install
+					if command -v python3.6 -m pip >/dev/null; then
+						python3.6 -m pip install --upgrade pip
+					else
+						die 1 "python3.6 pip not found."
+					fi
+
+				if command -v python3.6 >/dev/null; then
+					GPRINT "Python3.6 has been installed on this system."
+				else
+					die 1 "Failed to install python3.6!"
+				fi
+
+				else
+					die 1 "Python3.6.8 couldn't be installed because file 'Python-3.6.8.tar.xz' was not found."
+				fi
+			)
 		fi
-
-		(
-			if [ -d "/usr/src" ]; then
-				cd /usr/src || die 1 "Failed to cd into '/usr/src'"
-				wget -O "Python-3.6.8.tar.xz" https://www.python.org/ftp/python/3.6.8/Python-3.6.8.tar.xz || die 11 "Could not download file 'Python-3.6.8.tar.xz'."
-			fi
-
-			if [ -f "Python-3.6.8.tar.xz" ]; then
-				tar -xvf Python-3.6.8.tar.xz
-				if [ -d "Python-3.6.8" ]; then
-					cd Python-3.6.8 || die 1 "Failed to cd into 'Python-3.6.8'."
-				else
-					die 1 "Failed to extract 'Python-3.6.8.tar.xz'."
-				fi
-				./configure --enable-optimizations --with-ensurepip=install ; make --jobs "$procNum" ; make install
-				if command -v python3.6 -m pip >/dev/null; then
-					python3.6 -m pip install --upgrade pip
-				else
-					die 1 "python3.6 pip not found."
-				fi
-
-			if command -v python3.6 >/dev/null; then
-				GPRINT "Python3.6 has been installed on this system."
-			else
-				die 1 "Failed to install python3.6!"
-			fi
-
-			else
-				die 1 "Python3.6.8 couldn't be installed because file 'Python-3.6.8.tar.xz' was not found."
-			fi
-		)
 	fi
 
 	
@@ -396,8 +409,6 @@ golang() {
 		GPRINT "Golang has be found on this system. Skipping.."
 	else
 		YPRINT "Setting up '$task'!"
-		
-		. /etc/os-release
 		
 		if [ "$ID" = "Ubuntu" ]; then
 			add-apt-repository ppa:longsleep/golang-backports
