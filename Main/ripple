@@ -8,12 +8,12 @@
 : '
 -------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of AGPLv3  |
-|            Last Updated on Sunday, August 16, 2020 at 12:15 PM (GMT+6)            |
+|            Last Updated on Monday, August 17, 2020 at 06:50 PM (GMT+6)            |
 -------------------------------------------------------------------------------------
 '
 
-###! Script to install & configure Ripple (https://ripple.moe)
-###! Main Ripple Git: https://zxq.co/ripple
+###! Script to clone, install & configure Ripple (https://ripple.moe)
+###! Main Ripple Git: https://zxq.co/ripple | Mirror: https://github.com/osuripple
 ###! We need:
 ###! - FIXME-DOCS
 ###! - TEST-SCRIPT
@@ -75,7 +75,7 @@
 
 
 # Version #
-VERSION=0.4.8
+VERSION=0.4.9
 
 # Colors For Prints
 alias RPRINT="printf '\033[0;31m%s\n'"     # Red
@@ -129,21 +129,21 @@ getdir() {
 	local tmp=${1:-.}
 
 	[[ $tmp != *[!/]* ]] && {
-		printf '/\n'
+		printf "/\n"
 		return
 	}
 
 	tmp=${tmp%%"${tmp##*[!/]}"}
 
 	[[ $tmp != */* ]] && {
-		printf '.\n'
+		printf ".\n"
 		return
 	}
 
 	tmp=${tmp%/*}
 	tmp=${tmp%%"${tmp##*[!/]}"}
 
-	printf '%s\n' "${tmp:-/}"
+	GPRINT "${tmp:-/}"
 }
 
 
@@ -195,6 +195,26 @@ die() {
 
 # Die
 alias die="die \"[ line \$LINENO\"\ ]"
+
+
+# Simplified Network Checker (IPv4 & DNS connectivity) 
+checkNetwork() {
+	if command -v ping 1>/dev/null; then
+		if ping -q -c 1 -W 1 8.8.8.8 >/dev/null; then
+			GPRINT "IPv4 is up."
+		else
+			die 64 "IPv4 is down!"
+		fi
+
+		if ping -q -c 1 -W 1 google.com >/dev/null; then
+			GPRINT "The network is up."
+		else
+			die 64 "The network is down!"
+		fi
+	else
+		die 127 "ping is not executable on this system. Failed to check network connectivity."
+	fi
+}
 
 
 # Detect Operating System
@@ -1248,6 +1268,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 			checkRoot
 			DetectPackageManager
 			inputs
+			checkNetwork
 			mysql_database
 			peppy
 			lets
@@ -1263,6 +1284,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		checkRoot
 		DetectPackageManager
 		inputs
+		checkNetwork
 		packageManagerUpgrade
 		mysql_database
 		python_dependencies
@@ -1317,6 +1339,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 	"--dependencies" | "-dep")
 		checkRoot
 		DetectPackageManager
+		checkNetwork
 		packageManagerUpgrade
 		python_dependencies
 		nproc_detector
@@ -1331,6 +1354,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		checkRoot
 		DetectPackageManager
 		inputs
+		checkNetwork
 		packageManagerUpgrade
 		mysql_database
 		exit 0 ;;
@@ -1338,12 +1362,14 @@ while [ "$#" -ge 0 ]; do case "$1" in
 	"--peppy" | "-P")
 		if [ "$2" = "--nodependencies" ] || [ "$2" = "--nodep" ]; then
 			inputs
+			checkNetwork
 			peppy
 			exit 0
 		fi
 		checkRoot
 		DetectPackageManager
 		inputs
+		checkNetwork
 		packageManagerUpgrade
 		python_dependencies
 		nproc_detector
@@ -1354,12 +1380,14 @@ while [ "$#" -ge 0 ]; do case "$1" in
 	"--lets" | "-L")
 		if [ "$2" = "--nodependencies" ] || [ "$2" = "--nodep" ]; then
 			inputs
+			checkNetwork
 			lets
 			exit 0
 		fi
 		checkRoot
 		DetectPackageManager
 		inputs
+		checkNetwork
 		packageManagerUpgrade
 		python_dependencies
 		nproc_detector
@@ -1370,12 +1398,14 @@ while [ "$#" -ge 0 ]; do case "$1" in
 	"--avatarserver" | "-AS")
 		if [ "$2" = "--nodependencies" ] || [ "$2" = "--nodep" ]; then
 			inputs
+			checkNetwork
 			avatar_server
 			exit 0
 		fi
 		checkRoot
 		DetectPackageManager
 		inputs
+		checkNetwork
 		packageManagerUpgrade
 		python_dependencies
 		nproc_detector
@@ -1386,12 +1416,14 @@ while [ "$#" -ge 0 ]; do case "$1" in
 	"--hanayo" | "-H")
 		if [ "$2" = "--nodependencies" ] || [ "$2" = "--nodep" ]; then
 			inputs
+			checkNetwork
 			hanayo
 			exit 0
 		fi
 		checkRoot
 		DetectPackageManager
 		inputs
+		checkNetwork
 		packageManagerUpgrade
 		golang
 		hanayo
@@ -1400,12 +1432,14 @@ while [ "$#" -ge 0 ]; do case "$1" in
 	"--rippleapi" | "-api")
 		if [ "$2" = "--nodependencies" ] || [ "$2" = "--nodep" ]; then
 			inputs
+			checkNetwork
 			rippleapi
 			exit 0
 		fi
 		checkRoot
 		DetectPackageManager
 		inputs
+		checkNetwork
 		packageManagerUpgrade
 		golang
 		rippleapi
@@ -1414,12 +1448,14 @@ while [ "$#" -ge 0 ]; do case "$1" in
 	"--oldfrontend" | "-OF")
 		if [ "$2" = "--nodependencies" ] || [ "$2" = "--nodep" ]; then
 			inputs
+			checkNetwork
 			old_frontend
 			exit 0
 		fi
 		checkRoot
 		DetectPackageManager
 		inputs
+		checkNetwork
 		packageManagerUpgrade
 		php
 		old_frontend
@@ -1427,11 +1463,13 @@ while [ "$#" -ge 0 ]; do case "$1" in
 
 	"--nginx" | "-N")
 		if [ "$2" = "--nodependencies" ] || [ "$2" = "--nodep" ]; then
+			checkNetwork
 			nginx
 			exit 0
 		fi
 		checkRoot
 		DetectPackageManager
+		checkNetwork
 		packageManagerUpgrade
 		extra_dependencies
 		nginx
