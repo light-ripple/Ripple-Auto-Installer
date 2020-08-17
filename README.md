@@ -26,10 +26,21 @@ This project gives you a base and foundation if you're willing to setup your own
 * Systemd or Openrc.
 
 ### Supported Systems
-* <a href=https://debian.org>Debian</a> Based distros
-* <a href=https://archlinux.org>Arch Linux</a> Based distros
-* <a href=https://gentoo.org>Gentoo Linux</a> Based distros
-* <a href=https://exherbo.org>Exherbo Linux</a> Based distros
+* <a href=https://debian.org>Debian</a> Based distros.
+* <a href=https://archlinux.org>Arch Linux</a> Based distros.
+* <a href=https://gentoo.org>Gentoo Linux</a> Based distros.
+* <a href=https://exherbo.org>Exherbo Linux</a> Based distros.
+
+### Supported Package Managers
+* <a href=https://wiki.debian.org/Apt>APT</a>
+* <a href=https://wiki.archlinux.org/index.php/pacman>Pacman</a>
+* <a href=https://wiki.gentoo.org/wiki/Portage>Portage</a>
+* <a href=https://paludis.exherbo.org/>Paludis</a>
+
+### Supported Init Systems
+* <a href=https://wiki.archlinux.org/index.php/systemd>systemd</a>
+* <a href=https://wiki.gentoo.org/wiki/OpenRC>openrc</a>
+
 
 ### Features
 * A configurable shell script for installing <a href=https://ripple.moe>Ripple</a> Stack
@@ -69,20 +80,20 @@ With Git
 git clone https://github.com/Uniminin/Ripple-Auto-Installer ; cd Ripple-Auto-Installer
 cd Main
 sha1sum -c ripple.sha1
-chmod +x ripple
-sudo ./ripple --help
+chmod +x ripple.sh
+sudo ./ripple.sh --help
 ```
 Without Git (Recommended)
 ```bash
-wget -O "ripple" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/ripple
+wget -O "ripple.sh" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/ripple.sh
 wget -O "ripple.sha1" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/ripple.sha1
 sha1sum -c ripple.sha1
-chmod +x ripple
-sudo ./ripple --help
+chmod +x ripple.sh
+sudo ./ripple.sh --help
 ```
 Bedrock How To:
 ```bash
-$ sudo strat -r stratum ./ripple -h  # stratum --> stratum name
+$ sudo strat -r stratum ./ripple.sh -h  # stratum --> stratum name
 ```
 Note: Execute the script as superuser. For example: `sudo ./ripple --all` to install & setup full ripple stack with dependencies.
 
