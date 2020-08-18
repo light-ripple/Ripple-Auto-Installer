@@ -1336,7 +1336,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		"	--avatarserver, -AS    To Clone & Setup avatar-server with Dependencies." \
 		"	--oldfrontend, -OF     To Clone & Setup oldfrontend with Dependencies." \
 		"	--nginx, -N            To Install & Configure Nginx with nginx Dependencies." \
-		"		--version, -V      Prints the upstream version of the script." \
+		"	--version, -V          Prints the upstream version of the script." \
 		"" \
 		"Without Dependencies:" \
 		"   --nodependencies, --nodep" \
