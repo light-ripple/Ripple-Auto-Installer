@@ -1,14 +1,14 @@
 #!/bin/sh
 # shellcheck shell=sh # Written to be posix compatible
-# shellcheck source=/dev/null
 # shellcheck disable=SC2128,SC2178 # False Trigger
-# shellcheck disable=SC2039 # Non-Acute Trigger
+# shellcheck disable=SC2039,SC1090,SC1091 # Non-Acute Trigger
 # USING: APT, Pacman, Portage, Paludis, UNIX or GNU/Linux, Mysql/Mariadb Database.
 # SUPPORTS INIT SYSTEMS: systemd and openrc.
+
 : '
 -------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of AGPLv3  |
-|            Last Updated on Monday, August 17, 2020 at 06:50 PM (GMT+6)            |
+|            Last Updated on Tuesday, August 18, 2020 at 04:40 PM (GMT+6)           |
 -------------------------------------------------------------------------------------
 '
 
@@ -24,25 +24,30 @@
 ###! - Error Log [*]
 ###! Platforms:
 ###!  - [*] Linux
-###!  - [*] Bedrock (strat -r x-stratum)
-###!  - [ ] Arya
-###!  - [*] Debian
-###!  - [*] Ubuntu
-###!  - [ ] Fedora
-###!  - [ ] NixOS
-###!  - [*] Archlinux
-###!  - [ ] Alpine
-###!  - [*] Exherbo
-###!  - [ ] FreeBSD
-###!  - [ ] Darwin
-###!  - [ ] MacOS
+###!    - [*] Archlinux
+###!    - [ ] Alpine
+###!    - [ ] Arya
+###!    - [*] Bedrock (strat -r x-stratum)
+###!    - [*] Debian
+###!    - [*] Exherbo
+###!    - [ ] Fedora
+###!    - [*] Gentoo
+###!    - [*] Ubuntu
+###!    - [ ] NixOS
+###!    - [ ] Slackware
+###!    - [ ] Venom
+###!    - [ ] Void
+###!  - [ ] BSD
+###!    - [ ] FreeBSD
+###!    - [ ] GhostBSD
+###!    - [ ] DragonFly BSD
 ###!  - [ ] Redox
-###!  - [*] Gentoo
-###!  - [ ] Venom
-###!  - [ ] Void
-###!  - [ ] Slackware
-###!  - [ ] ReactOS
+###!    - [ ] Redox
 ###!  - [*] Windows (https://github.com/Uniminin/Light-Ripple-Windows)
+###!    - [*] Windows 7
+###!    - [*] Windows 8
+###!    - [*] Windows 8.1
+###!    - [*] Windows 10
 ###! Package Managers:
 ###!  - [ ] Apk
 ###!  - [*] Apt
@@ -55,6 +60,7 @@
 ###!  - [ ] zypper
 ###!  - [ ] dnf
 ###!  - [ ] rpm
+###!  - [ ] Zernit (https://github.com/RXT0112/Zernit)
 ###! Init System:
 ###!  - [*] Openrc
 ###!  - [*] Systemd
@@ -63,6 +69,12 @@
 ###!  - [ ] s6
 ###! System Detection:
 ###!  - [*] Ubuntu
+###!    - [*] Ubuntu 20.04
+###!    - [*] Ubuntu 18.04
+###!    - [ ] Ubuntu 16.10
+###!    - [*] Ubuntu 16.04
+###!    - [*] Ubuntu 14.04
+###!    - [ ] Ubuntu 12.04
 
 
 # TODO: Detect Operating System/Kernel/Distro and pull proper packages.
@@ -75,13 +87,14 @@
 
 
 # Version #
-VERSION=0.4.9
+UPSTREAM_VERSION=0.5.0
+
 
 # Colors For Prints
-alias RPRINT="printf '\033[0;31m%s\n'"     # Red
-alias GPRINT="printf '\033[0;32m%s\n'"     # Green
-alias YPRINT="printf '\033[0;33m%s\n'"     # Yellow
-alias BPRINT="printf '\033[0;34m%s'"       # Blue
+alias RPRINT="printf '\\033[0;31m%s\\n'"     # Red
+alias GPRINT="printf '\\033[0;32m%s\\n'"     # Green
+alias YPRINT="printf '\\033[0;33m%s\\n'"     # Yellow
+alias BPRINT="printf '\\033[0;34m%s'"        # Blue
 
 
 # Modified version of efixme originally designed by Jacob Hrbek <kreyren@rixotstudio.cz> under the terms of GPL-3
@@ -129,14 +142,14 @@ getdir() {
 	local tmp=${1:-.}
 
 	[[ $tmp != *[!/]* ]] && {
-		printf "/\n"
+		printf "/\\n"
 		return
 	}
 
 	tmp=${tmp%%"${tmp##*[!/]}"}
 
 	[[ $tmp != */* ]] && {
-		printf ".\n"
+		printf ".\\n"
 		return
 	}
 
@@ -179,7 +192,7 @@ die() {
 	fi
 	
 	if [ -f "Error.log" ]; then
-		printf "[$Date]\nFATAL: %s\n\n" "$3 $1" >> Error.log || die 1 "Couldn't write into 'Error.log'."
+		printf "[$Date]\\nFATAL: %s\\n\\n" "$3 $1" >> Error.log || die 1 "Couldn't write into 'Error.log'."
 		GPRINT "Successfully Written into 'Error.log'"
 	fi
 
@@ -194,7 +207,7 @@ die() {
 
 
 # Die
-alias die="die \"[ line \$LINENO\"\ ]"
+alias die="die \"[ line \$LINENO\"\\ ]"
 
 
 # Simplified Network Checker (IPv4 & DNS connectivity) 
@@ -711,9 +724,9 @@ inputs() {
 			if [ "$confirmation" = "y" ]; then
 				mkdir -v "$master_dir"
 				if [ -d "$master_dir" ]; then
-					GPRINT "'$master_dir' has been created!\n"
+					GPRINT "'$master_dir' has been created!"
 				else
-					die 1 "Failed to create '%s'!\n" "$master_dir"
+					die 1 "Failed to create '$master_dir'"
 				fi
 			fi
 		fi
@@ -722,7 +735,7 @@ inputs() {
 			chmod -R a+rwx "$master_dir" || die 1 "Unable to change permission of the file '$master_dir'"
 			export directory="$master_dir"
 		else
-			die 1 "Failed to create Directory: $master_dir"
+			die 1 "Failed to create Directory '$master_dir'"
 		fi
 	fi
 
@@ -1264,23 +1277,25 @@ old_frontend() {
 
 while [ "$#" -ge 0 ]; do case "$1" in
 	"--all" | "-A")
-		if [ "$2" = "--nodependencies" ] || [ "$2" = "--nodep" ]; then
-			checkRoot
-			DetectPackageManager
-			inputs
-			checkNetwork
-			mysql_database
-			peppy
-			lets
-			avatar_server
-			hanayo
-			rippleapi
-			frontend
-			phpmyadmin
-			nginx
-			SSL
-			exit 0
-		fi
+		case "$2" in
+			"--nodependencies" | "--nodep")
+				checkRoot
+				DetectPackageManager
+				inputs
+				checkNetwork
+				mysql_database
+				peppy
+				lets
+				avatar_server
+				hanayo
+				rippleapi
+				frontend
+				phpmyadmin
+				nginx
+				SSL
+				exit 0 ;;
+		esac
+		
 		checkRoot
 		DetectPackageManager
 		inputs
@@ -1307,28 +1322,28 @@ while [ "$#" -ge 0 ]; do case "$1" in
 	"--help" | "-h")
 		GPRINT \
 		"Note: 'sudo $0 --<arguments>'" \
-		"Version: $VERSION" \
+		"Upstream Version: $UPSTREAM_VERSION" \
 		"" \
 		"Usage:" \
-		"	--help, -h             Shows the list of all arguments including relevant informations." \
-		"	--all, -A              To Setup Entire Ripple Stack with Dependencies!" \
-		"	--dependencies, -dep   To Install all the necessary dependencies required for Ripple Stack." \
-		"	--mysql, -M            To Install & Setup MySQL DB with Dependencies." \
-		"	--peppy, -P            To Clone & Setup peppy with Dependencies." \
-		"	--lets, -L             To Clone & Setup lets with Dependencies." \
-		"	--hanayo, -H           To Clone & Setup hanayo with Dependencies." \
-		"	--rippleapi, -api      To Clone & Setup rippleapi with Dependencies." \
-		"	--avatarserver, -AS    To Clone & Setup avatar-server with Dependencies." \
-		"	--oldfrontend, -OF     To Clone & Setup oldfrontend with Dependencies." \
-		"	--nginx, -N            To Install & Configure Nginx with nginx Dependencies." \
-		"   --version, -V          Prints the version of the script." \
+		"   --help, -h             Shows the list of all arguments including relevant informations." \
+		"   --all, -A              To Setup Entire Ripple Stack with Dependencies!" \
+		"   --dependencies, -dep   To Install all the necessary dependencies required for Ripple Stack." \
+		"   --mysql, -M            To Install & Setup MySQL DB with Dependencies." \
+		"   --peppy, -P            To Clone & Setup peppy with Dependencies." \
+		"   --lets, -L             To Clone & Setup lets with Dependencies." \
+		"   --hanayo, -H           To Clone & Setup hanayo with Dependencies." \
+		"   --rippleapi, -api      To Clone & Setup rippleapi with Dependencies." \
+		"   --avatarserver, -AS    To Clone & Setup avatar-server with Dependencies." \
+		"   --oldfrontend, -OF     To Clone & Setup oldfrontend with Dependencies." \
+		"   --nginx, -N            To Install & Configure Nginx with nginx Dependencies." \
+		"   --version, -V          Prints the upstream version of the script." \
 		"" \
 		"Without Dependencies:" \
 		"   --nodependencies, --nodep" \
 		"" \
 		"Examples:" \
 		"sudo $0 --all            To Setup Entire Ripple Stack with Dependencies!" \
-		"sudo $0 -peppy --nodep   To Clone & Setup without Dependencies." \
+		"sudo $0 -peppy --nodep   To Clone & Setup peppy without Dependencies." \
 		"" \
 		"Report bugs to: 'uniminin@zoho.com' or Discord: 'uniminin#7522'" \
 		"RAI Repository URL: <https://github.com/Uniminin/Ripple-Auto-Installer/>" \
@@ -1360,12 +1375,14 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		exit 0 ;;
 
 	"--peppy" | "-P")
-		if [ "$2" = "--nodependencies" ] || [ "$2" = "--nodep" ]; then
-			inputs
-			checkNetwork
-			peppy
-			exit 0
-		fi
+		case "$2" in
+			"--nodependencies" | "--nodep")
+				inputs
+				checkNetwork
+				peppy
+				exit 0 ;;
+		esac
+		
 		checkRoot
 		DetectPackageManager
 		inputs
@@ -1378,12 +1395,14 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		exit 0 ;;
 
 	"--lets" | "-L")
-		if [ "$2" = "--nodependencies" ] || [ "$2" = "--nodep" ]; then
-			inputs
-			checkNetwork
-			lets
-			exit 0
-		fi
+		case "$2" in
+			"--nodependencies" | "--nodep")
+				inputs
+				checkNetwork
+				lets
+				exit 0 ;;
+		esac
+		
 		checkRoot
 		DetectPackageManager
 		inputs
@@ -1396,12 +1415,14 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		exit 0 ;;
 
 	"--avatarserver" | "-AS")
-		if [ "$2" = "--nodependencies" ] || [ "$2" = "--nodep" ]; then
-			inputs
-			checkNetwork
-			avatar_server
-			exit 0
-		fi
+		case "$2" in
+			"--nodependencies" | "--nodep")
+				inputs
+				checkNetwork
+				avatar_server
+				exit 0 ;;
+		esac
+		
 		checkRoot
 		DetectPackageManager
 		inputs
@@ -1414,12 +1435,14 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		exit 0 ;;
 
 	"--hanayo" | "-H")
-		if [ "$2" = "--nodependencies" ] || [ "$2" = "--nodep" ]; then
-			inputs
-			checkNetwork
-			hanayo
-			exit 0
-		fi
+		case "$2" in
+			"--nodependencies" | "--nodep")
+				inputs
+				checkNetwork
+				hanayo
+				exit 0 ;;
+		esac
+		
 		checkRoot
 		DetectPackageManager
 		inputs
@@ -1430,12 +1453,14 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		exit 0 ;;
 
 	"--rippleapi" | "-api")
-		if [ "$2" = "--nodependencies" ] || [ "$2" = "--nodep" ]; then
-			inputs
-			checkNetwork
-			rippleapi
-			exit 0
-		fi
+		case "$2" in
+			"--nodependencies" | "--nodep")
+				inputs
+				checkNetwork
+				rippleapi
+				exit 0 ;;
+		esac
+		
 		checkRoot
 		DetectPackageManager
 		inputs
@@ -1446,12 +1471,14 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		exit 0 ;;
 
 	"--oldfrontend" | "-OF")
-		if [ "$2" = "--nodependencies" ] || [ "$2" = "--nodep" ]; then
-			inputs
-			checkNetwork
-			old_frontend
-			exit 0
-		fi
+		case "$2" in
+			"--nodependencies" | "--nodep")
+				inputs
+				checkNetwork
+				old_frontend
+				exit 0 ;;
+		esac
+		
 		checkRoot
 		DetectPackageManager
 		inputs
@@ -1462,11 +1489,13 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		exit 0 ;;
 
 	"--nginx" | "-N")
-		if [ "$2" = "--nodependencies" ] || [ "$2" = "--nodep" ]; then
-			checkNetwork
-			nginx
-			exit 0
-		fi
+		case "$2" in
+			"--nodependencies" | "--nodep")
+				checkNetwork
+				nginx
+				exit 0 ;;
+		esac
+		
 		checkRoot
 		DetectPackageManager
 		checkNetwork
@@ -1476,7 +1505,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		exit 0 ;;
 
 	"--version" | "-V")
-		YPRINT "Version: $VERSION"
+		YPRINT "Version: $UPSTREAM_VERSION"
 		exit 0 ;;
 
 	"")
