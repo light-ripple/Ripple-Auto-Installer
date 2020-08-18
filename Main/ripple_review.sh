@@ -1,6 +1,5 @@
 #!/bin/sh
 # shellcheck shell=sh # Written to be posix compatible
-# shellcheck source=/dev/null
 # shellcheck disable=SC2128,SC2178 # False Trigger
 # shellcheck disable=SC2039 # Non-Acute Trigger
 # USING: APT, Pacman, Portage, Paludis, UNIX or GNU/Linux, Mysql/Mariadb Database.
