@@ -5,7 +5,7 @@ on:
   pull_request:
     types: [ready_for_review]
     paths:
-    - 'Main/ripple'
+    - 'Main/ripple.sh'
 
 jobs:
   # Test runtime on debian
