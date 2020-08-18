@@ -1325,25 +1325,25 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		"Upstream Version: $UPSTREAM_VERSION" \
 		"" \
 		"Usage:" \
-		"	--help, -h             Shows the list of all arguments including relevant informations." \
-		"	--all, -A              To Setup Entire Ripple Stack with Dependencies!" \
-		"	--dependencies, -dep   To Install all the necessary dependencies required for Ripple Stack." \
-		"	--mysql, -M            To Install & Setup MySQL DB with Dependencies." \
-		"	--peppy, -P            To Clone & Setup peppy with Dependencies." \
-		"	--lets, -L             To Clone & Setup lets with Dependencies." \
-		"	--hanayo, -H           To Clone & Setup hanayo with Dependencies." \
-		"	--rippleapi, -api      To Clone & Setup rippleapi with Dependencies." \
-		"	--avatarserver, -AS    To Clone & Setup avatar-server with Dependencies." \
-		"	--oldfrontend, -OF     To Clone & Setup oldfrontend with Dependencies." \
-		"	--nginx, -N            To Install & Configure Nginx with nginx Dependencies." \
-		"	--version, -V          Prints the upstream version of the script." \
+		"   --help, -h             Shows the list of all arguments including relevant informations." \
+		"   --all, -A              To Setup Entire Ripple Stack with Dependencies!" \
+		"   --dependencies, -dep   To Install all the necessary dependencies required for Ripple Stack." \
+		"   --mysql, -M            To Install & Setup MySQL DB with Dependencies." \
+		"   --peppy, -P            To Clone & Setup peppy with Dependencies." \
+		"   --lets, -L             To Clone & Setup lets with Dependencies." \
+		"   --hanayo, -H           To Clone & Setup hanayo with Dependencies." \
+		"   --rippleapi, -api      To Clone & Setup rippleapi with Dependencies." \
+		"   --avatarserver, -AS    To Clone & Setup avatar-server with Dependencies." \
+		"   --oldfrontend, -OF     To Clone & Setup oldfrontend with Dependencies." \
+		"   --nginx, -N            To Install & Configure Nginx with nginx Dependencies." \
+		"   --version, -V          Prints the upstream version of the script." \
 		"" \
 		"Without Dependencies:" \
 		"   --nodependencies, --nodep" \
 		"" \
 		"Examples:" \
 		"sudo $0 --all            To Setup Entire Ripple Stack with Dependencies!" \
-		"sudo $0 -peppy --nodep   To Clone & Setup without Dependencies." \
+		"sudo $0 -peppy --nodep   To Clone & Setup peppy without Dependencies." \
 		"" \
 		"Report bugs to: 'uniminin@zoho.com' or Discord: 'uniminin#7522'" \
 		"RAI Repository URL: <https://github.com/Uniminin/Ripple-Auto-Installer/>" \
