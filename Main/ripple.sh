@@ -235,12 +235,11 @@ checkNetwork() {
 
 
 # Check for root
-ROOT_UID=0
-
-if [ "$UID" -ne "$ROOT_UID" ]; then
-	RPRINT "Fatal: The Script needs to be executed as Root/Superuser!"
-	exit "$E_NOTROOT"
-fi
+checkRoot() {
+	if [ $EUID -ne 0 ]; then
+		die "Fatal: The Script needs to be executed as Root/Superuser!"
+	fi
+}
 
 
 # Detect number of cpu threads for faster compilation/builds
