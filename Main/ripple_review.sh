@@ -5,10 +5,11 @@
 # shellcheck disable=SC2039 # Non-Acute Trigger
 # USING: APT, Pacman, Portage, Paludis, UNIX or GNU/Linux, Mysql/Mariadb Database.
 # SUPPORTS INIT SYSTEMS: systemd and openrc.
+
 : '
 -------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of AGPLv3  |
-|            Last Updated on Monday, August 17, 2020 at 06:50 PM (GMT+6)            |
+|            Last Updated on Tuesday, August 18, 2020 at 12:40 PM (GMT+6)           |
 -------------------------------------------------------------------------------------
 '
 
@@ -24,25 +25,28 @@
 ###! - Error Log [*]
 ###! Platforms:
 ###!  - [*] Linux
-###!  - [*] Bedrock (strat -r x-stratum)
-###!  - [ ] Arya
-###!  - [*] Debian
-###!  - [*] Ubuntu
-###!  - [ ] Fedora
-###!  - [ ] NixOS
-###!  - [*] Archlinux
-###!  - [ ] Alpine
-###!  - [*] Exherbo
-###!  - [ ] FreeBSD
-###!  - [ ] Darwin
-###!  - [ ] MacOS
+###!    - [*] Archlinux
+###!    - [ ] Alpine
+###!    - [ ] Arya
+###!    - [*] Bedrock (strat -r x-stratum)
+###!    - [*] Debian
+###!    - [*] Exherbo
+###!    - [ ] Fedora
+###!    - [*] Gentoo
+###!    - [*] Ubuntu
+###!    - [ ] NixOS
+###!    - [ ] Slackware
+###!    - [ ] Venom
+###!    - [ ] Void
+###!  - [ ] BSD
+###!    - [ ] FreeBSD
 ###!  - [ ] Redox
-###!  - [*] Gentoo
-###!  - [ ] Venom
-###!  - [ ] Void
-###!  - [ ] Slackware
-###!  - [ ] ReactOS
+###!    - [ ] Redox
 ###!  - [*] Windows (https://github.com/Uniminin/Light-Ripple-Windows)
+###!    - [*] Windows 7
+###!    - [*] Windows 8
+###!    - [*] Windows 8.1
+###!    - [*] Windows 10
 ###! Package Managers:
 ###!  - [ ] Apk
 ###!  - [*] Apt
@@ -55,6 +59,7 @@
 ###!  - [ ] zypper
 ###!  - [ ] dnf
 ###!  - [ ] rpm
+###!  - [ ] Zernit (https://github.com/RXT0112/Zernit)
 ###! Init System:
 ###!  - [*] Openrc
 ###!  - [*] Systemd
@@ -63,6 +68,12 @@
 ###!  - [ ] s6
 ###! System Detection:
 ###!  - [*] Ubuntu
+###!    - [*] Ubuntu 20.04
+###!    - [*] Ubuntu 18.04
+###!    - [ ] Ubuntu 16.10
+###!    - [*] Ubuntu 16.04
+###!    - [*] Ubuntu 14.04
+###!    - [ ] Ubuntu 12.04
 
 
 # TODO: Detect Operating System/Kernel/Distro and pull proper packages.
@@ -75,7 +86,8 @@
 
 
 # Version #
-VERSION=0.4.9
+UPSTREAM_VERSION=0.4.10
+
 
 # Colors For Prints
 alias RPRINT="printf '\033[0;31m%s\n'"     # Red
@@ -1307,7 +1319,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 	"--help" | "-h")
 		GPRINT \
 		"Note: 'sudo $0 --<arguments>'" \
-		"Version: $VERSION" \
+		"Upstream Version: $UPSTREAM_VERSION" \
 		"" \
 		"Usage:" \
 		"	--help, -h             Shows the list of all arguments including relevant informations." \
@@ -1321,7 +1333,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		"	--avatarserver, -AS    To Clone & Setup avatar-server with Dependencies." \
 		"	--oldfrontend, -OF     To Clone & Setup oldfrontend with Dependencies." \
 		"	--nginx, -N            To Install & Configure Nginx with nginx Dependencies." \
-		"   --version, -V          Prints the version of the script." \
+		"       --version, -V          Prints the upstream version of the script." \
 		"" \
 		"Without Dependencies:" \
 		"   --nodependencies, --nodep" \
@@ -1476,7 +1488,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		exit 0 ;;
 
 	"--version" | "-V")
-		YPRINT "Version: $VERSION"
+		YPRINT "Version: $UPSTREAM_VERSION"
 		exit 0 ;;
 
 	"")
