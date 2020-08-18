@@ -237,7 +237,8 @@ checkNetwork() {
 # Check for root
 checkRoot() {
 	if [ $EUID -ne 0 ]; then
-		die "Fatal: The Script needs to be executed as Root/Superuser!"
+		RPRINT "The Script needs to be executed as Root/Superuser!"
+		exit 1
 	fi
 }
 
