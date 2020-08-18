@@ -89,10 +89,10 @@ UPSTREAM_VERSION=0.4.10
 
 
 # Colors For Prints
-alias RPRINT="printf '\033[0;31m%s\n'"     # Red
-alias GPRINT="printf '\033[0;32m%s\n'"     # Green
-alias YPRINT="printf '\033[0;33m%s\n'"     # Yellow
-alias BPRINT="printf '\033[0;34m%s'"       # Blue
+alias RPRINT="printf '\\033[0;31m%s\\n'"     # Red
+alias GPRINT="printf '\\033[0;32m%s\\n'"     # Green
+alias YPRINT="printf '\\033[0;33m%s\\n'"     # Yellow
+alias BPRINT="printf '\\033[0;34m%s'"        # Blue
 
 
 # Modified version of efixme originally designed by Jacob Hrbek <kreyren@rixotstudio.cz> under the terms of GPL-3
@@ -140,14 +140,14 @@ getdir() {
 	local tmp=${1:-.}
 
 	[[ $tmp != *[!/]* ]] && {
-		printf "/\n"
+		printf "/\\n"
 		return
 	}
 
 	tmp=${tmp%%"${tmp##*[!/]}"}
 
 	[[ $tmp != */* ]] && {
-		printf ".\n"
+		printf ".\\n"
 		return
 	}
 
@@ -190,7 +190,7 @@ die() {
 	fi
 	
 	if [ -f "Error.log" ]; then
-		printf "[$Date]\nFATAL: %s\n\n" "$3 $1" >> Error.log || die 1 "Couldn't write into 'Error.log'."
+		printf "[$Date]\\nFATAL: %s\\n\\n" "$3 $1" >> Error.log || die 1 "Couldn't write into 'Error.log'."
 		GPRINT "Successfully Written into 'Error.log'"
 	fi
 
@@ -205,7 +205,7 @@ die() {
 
 
 # Die
-alias die="die \"[ line \$LINENO\"\ ]"
+alias die="die \"[ line \$LINENO\"\\ ]"
 
 
 # Simplified Network Checker (IPv4 & DNS connectivity) 
@@ -722,9 +722,9 @@ inputs() {
 			if [ "$confirmation" = "y" ]; then
 				mkdir -v "$master_dir"
 				if [ -d "$master_dir" ]; then
-					GPRINT "'$master_dir' has been created!\n"
+					GPRINT "'$master_dir' has been created!"
 				else
-					die 1 "Failed to create '%s'!\n" "$master_dir"
+					die 1 "Failed to create '$master_dir'"
 				fi
 			fi
 		fi
@@ -733,7 +733,7 @@ inputs() {
 			chmod -R a+rwx "$master_dir" || die 1 "Unable to change permission of the file '$master_dir'"
 			export directory="$master_dir"
 		else
-			die 1 "Failed to create Directory: $master_dir"
+			die 1 "Failed to create Directory '$master_dir'"
 		fi
 	fi
 
