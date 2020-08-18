@@ -8,7 +8,7 @@
 : '
 -------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of AGPLv3  |
-|            Last Updated on Tuesday, August 18, 2020 at 04:40 PM (GMT+6)           |
+|            Last Updated on Tuesday, August 18, 2020 at 05:00 PM (GMT+6)           |
 -------------------------------------------------------------------------------------
 '
 
@@ -87,7 +87,7 @@
 
 
 # Version #
-UPSTREAM_VERSION=0.5.0
+UPSTREAM_VERSION=0.5.1
 
 
 # Colors For Prints
@@ -235,12 +235,11 @@ checkNetwork() {
 
 
 # Check for root
-ROOT_UID=0
-
-if [ "$UID" -ne "$ROOT_UID" ]; then
-	RPRINT "Fatal: The Script needs to be executed as Root/Superuser!"
-	exit "$E_NOTROOT"
-fi
+checkRoot() {
+	if [ $EUID -ne 0 ]; then
+		die "Fatal: The Script needs to be executed as Root/Superuser!"
+	fi
+}
 
 
 # Detect number of cpu threads for faster compilation/builds
