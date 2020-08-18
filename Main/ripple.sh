@@ -1277,24 +1277,23 @@ old_frontend() {
 
 while [ "$#" -ge 0 ]; do case "$1" in
 	"--all" | "-A")
-		case "$2" in
-			"--nodependencies" | "--nodep")
-				checkRoot
-				DetectPackageManager
-				inputs
-				checkNetwork
-				mysql_database
-				peppy
-				lets
-				avatar_server
-				hanayo
-				rippleapi
-				frontend
-				phpmyadmin
-				nginx
-				SSL
-				exit 0 ;;
-		esac
+		if [ "$2" = "--nodependencies" ] || [ "$2" = "--nodep" ]; then
+			checkRoot
+			DetectPackageManager
+			inputs
+			checkNetwork
+			mysql_database
+			peppy
+			lets
+			avatar_server
+			hanayo
+			rippleapi
+			frontend
+			phpmyadmin
+			nginx
+			SSL
+			exit 0
+		fi
 		
 		checkRoot
 		DetectPackageManager
@@ -1375,13 +1374,12 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		exit 0 ;;
 
 	"--peppy" | "-P")
-		case "$2" in
-			"--nodependencies" | "--nodep")
-				inputs
-				checkNetwork
-				peppy
-				exit 0 ;;
-		esac
+		if [ "$2" = "--nodependencies" ] || [ "$2" = "--nodep" ]; then
+			inputs
+			checkNetwork
+			peppy
+			exit 0
+		fi
 		
 		checkRoot
 		DetectPackageManager
@@ -1395,13 +1393,12 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		exit 0 ;;
 
 	"--lets" | "-L")
-		case "$2" in
-			"--nodependencies" | "--nodep")
-				inputs
-				checkNetwork
-				lets
-				exit 0 ;;
-		esac
+		if [ "$2" = "--nodependencies" ] || [ "$2" = "--nodep" ]; then
+			inputs
+			checkNetwork
+			lets
+			exit 0
+		fi
 		
 		checkRoot
 		DetectPackageManager
@@ -1415,13 +1412,12 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		exit 0 ;;
 
 	"--avatarserver" | "-AS")
-		case "$2" in
-			"--nodependencies" | "--nodep")
-				inputs
-				checkNetwork
-				avatar_server
-				exit 0 ;;
-		esac
+		if [ "$2" = "--nodependencies" ] || [ "$2" = "--nodep" ]; then
+			inputs
+			checkNetwork
+			avatar_server
+			exit 0
+		fi
 		
 		checkRoot
 		DetectPackageManager
@@ -1435,13 +1431,12 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		exit 0 ;;
 
 	"--hanayo" | "-H")
-		case "$2" in
-			"--nodependencies" | "--nodep")
-				inputs
-				checkNetwork
-				hanayo
-				exit 0 ;;
-		esac
+		if [ "$2" = "--nodependencies" ] || [ "$2" = "--nodep" ]; then
+			inputs
+			checkNetwork
+			hanayo
+			exit 0
+		fi
 		
 		checkRoot
 		DetectPackageManager
@@ -1453,13 +1448,12 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		exit 0 ;;
 
 	"--rippleapi" | "-api")
-		case "$2" in
-			"--nodependencies" | "--nodep")
-				inputs
-				checkNetwork
-				rippleapi
-				exit 0 ;;
-		esac
+		if [ "$2" = "--nodependencies" ] || [ "$2" = "--nodep" ]; then
+			inputs
+			checkNetwork
+			rippleapi
+			exit 0
+		fi
 		
 		checkRoot
 		DetectPackageManager
@@ -1471,13 +1465,12 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		exit 0 ;;
 
 	"--oldfrontend" | "-OF")
-		case "$2" in
-			"--nodependencies" | "--nodep")
-				inputs
-				checkNetwork
-				old_frontend
-				exit 0 ;;
-		esac
+		if [ "$2" = "--nodependencies" ] || [ "$2" = "--nodep" ]; then
+			inputs
+			checkNetwork
+			old_frontend
+			exit 0
+		fi
 		
 		checkRoot
 		DetectPackageManager
@@ -1489,12 +1482,11 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		exit 0 ;;
 
 	"--nginx" | "-N")
-		case "$2" in
-			"--nodependencies" | "--nodep")
-				checkNetwork
-				nginx
-				exit 0 ;;
-		esac
+		if [ "$2" = "--nodependencies" ] || [ "$2" = "--nodep" ]; then
+			checkNetwork
+			nginx
+			exit 0
+		fi
 		
 		checkRoot
 		DetectPackageManager
