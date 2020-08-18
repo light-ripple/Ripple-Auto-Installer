@@ -1,7 +1,7 @@
 #!/bin/sh
 # shellcheck shell=sh # Written to be posix compatible
 # shellcheck disable=SC2128,SC2178 # False Trigger
-# shellcheck disable=SC2039 # Non-Acute Trigger
+# shellcheck disable=SC2039,SC1090,SC1091 # Non-Acute Trigger
 # USING: APT, Pacman, Portage, Paludis, UNIX or GNU/Linux, Mysql/Mariadb Database.
 # SUPPORTS INIT SYSTEMS: systemd and openrc.
 
@@ -85,7 +85,7 @@
 
 
 # Version #
-UPSTREAM_VERSION=0.4.10
+UPSTREAM_VERSION=0.5.0
 
 
 # Colors For Prints
@@ -1275,23 +1275,25 @@ old_frontend() {
 
 while [ "$#" -ge 0 ]; do case "$1" in
 	"--all" | "-A")
-		if [ "$2" = "--nodependencies" ] || [ "$2" = "--nodep" ]; then
-			checkRoot
-			DetectPackageManager
-			inputs
-			checkNetwork
-			mysql_database
-			peppy
-			lets
-			avatar_server
-			hanayo
-			rippleapi
-			frontend
-			phpmyadmin
-			nginx
-			SSL
-			exit 0
-		fi
+		case "$2" in
+			"--nodependencies" | "--nodep")
+				checkRoot
+				DetectPackageManager
+				inputs
+				checkNetwork
+				mysql_database
+				peppy
+				lets
+				avatar_server
+				hanayo
+				rippleapi
+				frontend
+				phpmyadmin
+				nginx
+				SSL
+				exit 0 ;;
+		esac
+		
 		checkRoot
 		DetectPackageManager
 		inputs
@@ -1332,7 +1334,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		"	--avatarserver, -AS    To Clone & Setup avatar-server with Dependencies." \
 		"	--oldfrontend, -OF     To Clone & Setup oldfrontend with Dependencies." \
 		"	--nginx, -N            To Install & Configure Nginx with nginx Dependencies." \
-		"       --version, -V          Prints the upstream version of the script." \
+		"		--version, -V      Prints the upstream version of the script." \
 		"" \
 		"Without Dependencies:" \
 		"   --nodependencies, --nodep" \
@@ -1371,12 +1373,14 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		exit 0 ;;
 
 	"--peppy" | "-P")
-		if [ "$2" = "--nodependencies" ] || [ "$2" = "--nodep" ]; then
-			inputs
-			checkNetwork
-			peppy
-			exit 0
-		fi
+		case "$2" in
+			"--nodependencies" | "--nodep")
+				inputs
+				checkNetwork
+				peppy
+				exit 0 ;;
+		esac
+		
 		checkRoot
 		DetectPackageManager
 		inputs
@@ -1389,12 +1393,14 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		exit 0 ;;
 
 	"--lets" | "-L")
-		if [ "$2" = "--nodependencies" ] || [ "$2" = "--nodep" ]; then
-			inputs
-			checkNetwork
-			lets
-			exit 0
-		fi
+		case "$2" in
+			"--nodependencies" | "--nodep")
+				inputs
+				checkNetwork
+				lets
+				exit 0 ;;
+		esac
+		
 		checkRoot
 		DetectPackageManager
 		inputs
@@ -1407,12 +1413,14 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		exit 0 ;;
 
 	"--avatarserver" | "-AS")
-		if [ "$2" = "--nodependencies" ] || [ "$2" = "--nodep" ]; then
-			inputs
-			checkNetwork
-			avatar_server
-			exit 0
-		fi
+		case "$2" in
+			"--nodependencies" | "--nodep")
+				inputs
+				checkNetwork
+				avatar_server
+				exit 0 ;;
+		esac
+		
 		checkRoot
 		DetectPackageManager
 		inputs
@@ -1425,12 +1433,14 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		exit 0 ;;
 
 	"--hanayo" | "-H")
-		if [ "$2" = "--nodependencies" ] || [ "$2" = "--nodep" ]; then
-			inputs
-			checkNetwork
-			hanayo
-			exit 0
-		fi
+		case "$2" in
+			"--nodependencies" | "--nodep")
+				inputs
+				checkNetwork
+				hanayo
+				exit 0 ;;
+		esac
+		
 		checkRoot
 		DetectPackageManager
 		inputs
@@ -1441,12 +1451,14 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		exit 0 ;;
 
 	"--rippleapi" | "-api")
-		if [ "$2" = "--nodependencies" ] || [ "$2" = "--nodep" ]; then
-			inputs
-			checkNetwork
-			rippleapi
-			exit 0
-		fi
+		case "$2" in
+			"--nodependencies" | "--nodep")
+				inputs
+				checkNetwork
+				rippleapi
+				exit 0 ;;
+		esac
+		
 		checkRoot
 		DetectPackageManager
 		inputs
@@ -1457,12 +1469,14 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		exit 0 ;;
 
 	"--oldfrontend" | "-OF")
-		if [ "$2" = "--nodependencies" ] || [ "$2" = "--nodep" ]; then
-			inputs
-			checkNetwork
-			old_frontend
-			exit 0
-		fi
+		case "$2" in
+			"--nodependencies" | "--nodep")
+				inputs
+				checkNetwork
+				old_frontend
+				exit 0 ;;
+		esac
+		
 		checkRoot
 		DetectPackageManager
 		inputs
@@ -1473,11 +1487,13 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		exit 0 ;;
 
 	"--nginx" | "-N")
-		if [ "$2" = "--nodependencies" ] || [ "$2" = "--nodep" ]; then
-			checkNetwork
-			nginx
-			exit 0
-		fi
+		case "$2" in
+			"--nodependencies" | "--nodep")
+				checkNetwork
+				nginx
+				exit 0 ;;
+		esac
+		
 		checkRoot
 		DetectPackageManager
 		checkNetwork
