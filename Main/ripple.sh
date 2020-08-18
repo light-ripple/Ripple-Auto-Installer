@@ -8,7 +8,7 @@
 : '
 -------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of AGPLv3  |
-|            Last Updated on Tuesday, August 18, 2020 at 05:00 PM (GMT+6)           |
+|            Last Updated on Tuesday, August 18, 2020 at 05:15 PM (GMT+6)           |
 -------------------------------------------------------------------------------------
 '
 
@@ -87,7 +87,7 @@
 
 
 # Version #
-UPSTREAM_VERSION=0.5.1
+UPSTREAM_VERSION=0.5.2
 
 
 # Colors For Prints
@@ -237,7 +237,8 @@ checkNetwork() {
 # Check for root
 checkRoot() {
 	if [ $EUID -ne 0 ]; then
-		die "Fatal: The Script needs to be executed as Root/Superuser!"
+		RPRINT "The Script needs to be executed as Root/Superuser!"
+		exit 1
 	fi
 }
 

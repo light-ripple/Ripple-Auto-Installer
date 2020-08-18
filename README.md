@@ -79,17 +79,17 @@ With Git
 ```bash
 git clone https://github.com/Uniminin/Ripple-Auto-Installer ; cd Ripple-Auto-Installer
 cd Main
-sha1sum -c ripple.sha1
+sha1sum -c ripple.sha1  # Check file integrity
 chmod +x ripple.sh
-sudo ./ripple.sh --help
+./ripple.sh --help
 ```
 Without Git (Recommended)
 ```bash
 wget -O "ripple.sh" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/ripple.sh
 wget -O "ripple.sha1" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/ripple.sha1
-sha1sum -c ripple.sha1
+sha1sum -c ripple.sha1  # Check file integrity
 chmod +x ripple.sh
-sudo ./ripple.sh --help
+./ripple.sh --help
 ```
 Bedrock How To:
 ```bash
