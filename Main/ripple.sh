@@ -8,7 +8,7 @@
 : '
 -------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of AGPLv3  |
-|            Last Updated on Tuesday, August 18, 2020 at 04:40 PM (GMT+6)           |
+|            Last Updated on Tuesday, August 18, 2020 at 05:00 PM (GMT+6)           |
 -------------------------------------------------------------------------------------
 '
 
@@ -87,7 +87,7 @@
 
 
 # Version #
-UPSTREAM_VERSION=0.5.0
+UPSTREAM_VERSION=0.5.1
 
 
 # Colors For Prints
