@@ -8,12 +8,23 @@
 : '
 -------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of AGPLv3  |
-|            Last Updated on Tuesday, August 18, 2020 at 08:2 PM (GMT+6)           |
+|           Last Updated on Wednesday, August 19, 2020 at 10:30 PM (GMT+6)          |
 -------------------------------------------------------------------------------------
 '
 
 ###! Script to clone, install & configure Ripple (https://ripple.moe)
+###! Ripple is Licensed under the Terms of GNU AGPLv3
 ###! Main Ripple Git: https://zxq.co/ripple | Mirror: https://github.com/osuripple
+###! Using Ripple's:
+###! - peppy (https://zxq.co/ripple/pep.py) [BACKEND]
+###! - hanayo (https://zxq.co/ripple/hanayo) [FRONTEND]
+###! - rippleapi (https://zxq.co/ripple/rippleapi) [API SERVER]
+###! - oldfrontend (https://zxq.co/ripple/old-frontend) [ADMIN PANEL]
+###! osu!fx's:
+###! - secret (https://github.com/osufx/secret) [AUTOMATED ANITCHEAT +-] . Note: Not used by Ripple
+###! - lets (https://github.com/osufx/lets) [SCORE SERVER] . Note: osu!fx's lets is a fork of Ripple
+###! Custom:
+###! - avatar-server (https://github.com/Uniminin/avatar-server)
 ###! We need:
 ###! - FIXME-DOCS
 ###! - TEST-SCRIPT
@@ -78,6 +89,7 @@
 
 
 # TODO: Detect Operating System/Kernel/Distro and pull proper packages.
+# KNOWN ISSUES: UNABLE TO DETECT GOPATH AS A RESULT "hanayo" & "rippleapi" Fails to setup.
 
 # Maintainer info
 # UPSTREAM="https://github.com/Uniminin/Ripple-Auto-Installer"
@@ -87,7 +99,7 @@
 
 
 # Version #
-UPSTREAM_VERSION=0.5.3
+UPSTREAM_VERSION=0.5.4
 
 
 # Colors For Prints
