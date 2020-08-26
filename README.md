@@ -97,7 +97,7 @@ Bedrock How To:
 ```bash
 $ sudo strat -r stratum ./ripple.sh -h  # stratum --> stratum name
 ```
-Note: Execute the script as superuser. For example: `sudo/doas -- ./ripple --all` to install & setup full ripple stack with dependencies.
+Note: Execute the script as superuser. For example: `sudo/doas -- ./ripple.sh --all` to install & setup full ripple stack with dependencies.
 
 ### Configure/Start The Server
 * For manual configuration, see all markdowns in <a href=https://github.com/Uniminin/Ripple-Auto-Installer/tree/master/Miscellaneous>Miscellaneous</a>.
