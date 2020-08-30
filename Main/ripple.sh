@@ -8,7 +8,7 @@
 : '
 -------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of AGPLv3  |
-|           Last Updated on Wednesday, August 19, 2020 at 10:30 PM (GMT+6)          |
+|           Last Updated on Sunday, August 30, 2020 at X:X PM (GMT+6)               |
 -------------------------------------------------------------------------------------
 '
 
@@ -30,10 +30,10 @@
 ###! - TEST-SCRIPT
 ###! Requires:
 ###! - FIXME
-###! Exit codes:
+###! Exit code:
 ###! - FIXME-DOCS: Defined in die()
 ###! - Error Log [*]
-###! Platforms:
+###! Platform:
 ###!  - [*] Linux
 ###!    - [*] Archlinux
 ###!    - [ ] Alpine
@@ -59,7 +59,13 @@
 ###!    - [*] Windows 8
 ###!    - [*] Windows 8.1
 ###!    - [*] Windows 10
-###! Package Managers:
+###! Architecture:
+###!  - [*] AMD64/x86_64
+###!  - [-] x86
+###!  - [ ] arm
+###!  - [ ] arm64
+###!  - [ ] ia64
+###! Package Manager:
 ###!  - [ ] Apk
 ###!  - [*] Apt
 ###!  - [ ] ALPS
