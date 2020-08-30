@@ -483,6 +483,7 @@ golang() {
 	else
 		YPRINT "Setting up '$task'!"
 		
+		# FIXME: use apt to install golang1.14
 		if [ "$ID" = "Ubuntu" ]; then
 			add-apt-repository ppa:longsleep/golang-backports -y
 			"$package_manager" update
@@ -502,9 +503,9 @@ golang() {
 				(
 					if [ -d "/usr/src" ]; then
 						cd /usr/src || die 1 "Failed to cd into '/usr/src'."
-						wget https://dl.google.com/go/go1.13.11.linux-amd64.tar.gz
+						wget https://golang.org/dl/go1.14.linux-amd64.tar.gz
 						if [ -d "/usr/local" ]; then
-							tar -xvf go1.13.11.linux-amd64.tar.gz
+							tar -xvf go1.14.linux-amd64.tar.gz
 							chown -R root:root ./go
 							mv go /usr/local
 							
@@ -525,15 +526,18 @@ golang() {
 					fi
 				)
 			fi
-
+		
+		# FIXME: use pacman to install golang1.14
 		elif [ "$package_manager" = "pacman" ]; then
 			"$package_manager" --noconfirm -S go
 
 		elif [ "$package_manager" = "emerge" ]; then
-			"$package_manager" -q dev-lang/go
+			# Latest stable (Gentoo package database) [12:40 PM | 8/30/20 | Sun | GMT+6]
+			"$package_manager" -q =dev-lang/go-1.14.7
 
 		elif [ "$package_manager" = "cave" ]; then
-			"$package_manager" resolve -x dev-lang/go
+			# Latest stable (Exherbo package database) [12:40 PM | 8/30/20 | Sun | GMT+6]
+			"$package_manager" resolve -x =dev-lang/go-1.14.7
 		fi
 
 		if command -v go 1>/dev/null; then
