@@ -8,21 +8,21 @@
 : '
 -------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of AGPLv3  |
-|           Last Updated on Wednesday, August 19, 2020 at 10:30 PM (GMT+6)          |
+|            Last Updated on Sunday, August 30, 2020 at 01:00 PM (GMT+6)            |
 -------------------------------------------------------------------------------------
 '
 
 ###! Script to clone, install & configure Ripple (https://ripple.moe)
 ###! Ripple is Licensed under the Terms of GNU AGPLv3
-###! Main Ripple Git: https://zxq.co/ripple | Mirror: https://github.com/osuripple
+###! Main Ripple Git: (https://zxq.co/ripple) | Mirror: (https://github.com/osuripple)
 ###! Using Ripple's:
-###! - peppy (https://zxq.co/ripple/pep.py) [BACKEND]
-###! - hanayo (https://zxq.co/ripple/hanayo) [FRONTEND]
-###! - rippleapi (https://zxq.co/ripple/rippleapi) [API SERVER]
+###! - peppy       (https://zxq.co/ripple/pep.py)       [BACKEND]
+###! - hanayo      (https://zxq.co/ripple/hanayo)       [FRONTEND]
+###! - rippleapi   (https://zxq.co/ripple/rippleapi)    [API SERVER]
 ###! - oldfrontend (https://zxq.co/ripple/old-frontend) [ADMIN PANEL]
 ###! osu!fx's:
-###! - secret (https://github.com/osufx/secret) [AUTOMATED ANITCHEAT +-] . Note: Not used by Ripple
-###! - lets (https://github.com/osufx/lets) [SCORE SERVER] . Note: osu!fx's lets is a fork of Ripple
+###! - secret   (https://github.com/osufx/secret) [AUTOMATED ANITCHEAT +-] . Note: Not used by Ripple
+###! - lets     (https://github.com/osufx/lets) [SCORE SERVER] . Note: osu!fx's lets is a fork of Ripple's lets
 ###! Custom:
 ###! - avatar-server (https://github.com/Uniminin/avatar-server)
 ###! We need:
@@ -30,22 +30,26 @@
 ###! - TEST-SCRIPT
 ###! Requires:
 ###! - FIXME
-###! Exit codes:
+###! Exit code:
 ###! - FIXME-DOCS: Defined in die()
 ###! - Error Log [*]
-###! Platforms:
+###! Platform:
 ###!  - [*] Linux
 ###!    - [*] Archlinux
 ###!    - [ ] Alpine
 ###!    - [ ] Arya
 ###!    - [*] Bedrock (strat -r x-stratum)
+###!    - [ ] Crux
+###!    - [ ] Clear
 ###!    - [*] Debian
 ###!    - [*] Exherbo
+###!    - [-] Exherbo-musl
 ###!    - [ ] Fedora
 ###!    - [*] Gentoo
 ###!    - [*] Ubuntu
 ###!    - [ ] NixOS
 ###!    - [ ] Slackware
+###!    - [ ] Solus
 ###!    - [ ] Venom
 ###!    - [ ] Void
 ###!  - [ ] BSD
@@ -59,7 +63,13 @@
 ###!    - [*] Windows 8
 ###!    - [*] Windows 8.1
 ###!    - [*] Windows 10
-###! Package Managers:
+###! Architecture:
+###!  - [*] AMD64/x86_64
+###!  - [-] x86
+###!  - [ ] arm
+###!  - [ ] arm64
+###!  - [ ] ia64
+###! Package Manager:
 ###!  - [ ] Apk
 ###!  - [*] Apt
 ###!  - [ ] ALPS
@@ -91,6 +101,8 @@
 # TODO: Detect Operating System/Kernel/Distro and pull proper packages.
 # KNOWN ISSUES: UNABLE TO DETECT GOPATH AS A RESULT "hanayo" & "rippleapi" Fails to setup.
 
+# WARNING: Script Untested. Use at your own risk.
+
 # Maintainer info
 # UPSTREAM="https://github.com/Uniminin/Ripple-Auto-Installer"
 # MAINTAINER_EMAIL="uniminin@zoho.com"
@@ -99,7 +111,7 @@
 
 
 # Version #
-UPSTREAM_VERSION=0.5.4
+UPSTREAM_VERSION=0.5.5
 
 
 # Colors For Prints
@@ -483,6 +495,7 @@ golang() {
 	else
 		YPRINT "Setting up '$task'!"
 		
+		# FIXME: use apt to install golang1.14
 		if [ "$ID" = "Ubuntu" ]; then
 			add-apt-repository ppa:longsleep/golang-backports -y
 			"$package_manager" update
@@ -502,9 +515,9 @@ golang() {
 				(
 					if [ -d "/usr/src" ]; then
 						cd /usr/src || die 1 "Failed to cd into '/usr/src'."
-						wget https://dl.google.com/go/go1.13.11.linux-amd64.tar.gz
+						wget https://golang.org/dl/go1.14.linux-amd64.tar.gz
 						if [ -d "/usr/local" ]; then
-							tar -xvf go1.13.11.linux-amd64.tar.gz
+							tar -xvf go1.14.linux-amd64.tar.gz
 							chown -R root:root ./go
 							mv go /usr/local
 							
@@ -525,15 +538,18 @@ golang() {
 					fi
 				)
 			fi
-
+		
+		# FIXME: use pacman to install golang1.14
 		elif [ "$package_manager" = "pacman" ]; then
 			"$package_manager" --noconfirm -S go
 
 		elif [ "$package_manager" = "emerge" ]; then
-			"$package_manager" -q dev-lang/go
+			# Latest stable (Gentoo package database) [12:40 PM | 8/30/20 | Sun | GMT+6]
+			"$package_manager" -q =dev-lang/go-1.14.7
 
 		elif [ "$package_manager" = "cave" ]; then
-			"$package_manager" resolve -x dev-lang/go
+			# Latest stable (Exherbo package database) [12:40 PM | 8/30/20 | Sun | GMT+6]
+			"$package_manager" resolve -x =dev-lang/go-1.14.7
 		fi
 
 		if command -v go 1>/dev/null; then

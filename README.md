@@ -102,7 +102,7 @@ Note: Execute the script as superuser. For example: `sudo/doas -- ./ripple.sh --
 ### Configure/Start/connect The Server
 * For manual configuration, see all markdowns in <a href=https://github.com/Uniminin/Ripple-Auto-Installer/tree/master/Miscellaneous>Miscellaneous</a>.
 * To start the server: <a href=https://github.com/Uniminin/Ripple-Auto-Installer/blob/master/Miscellaneous/start.md>start.md</a>.
-* To connect to the server (with osu client): <a href=https://github.com/light-ripple/Ripple-Auto-Installer/blob/master/Miscellaneous/connect.md>connect.md</a>.
+* To connect to the server (with osu client): <a href=https://github.com/Uniminin/Ripple-Auto-Installer/blob/master/Miscellaneous/connect.md>connect.md</a>.
 
 ### Contact
 Questions? Need help? You may join the Discord server or ask me in Discord. 
