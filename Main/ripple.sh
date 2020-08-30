@@ -14,15 +14,15 @@
 
 ###! Script to clone, install & configure Ripple (https://ripple.moe)
 ###! Ripple is Licensed under the Terms of GNU AGPLv3
-###! Main Ripple Git: https://zxq.co/ripple | Mirror: https://github.com/osuripple
+###! Main Ripple Git: (https://zxq.co/ripple) | Mirror: (https://github.com/osuripple)
 ###! Using Ripple's:
-###! - peppy (https://zxq.co/ripple/pep.py) [BACKEND]
-###! - hanayo (https://zxq.co/ripple/hanayo) [FRONTEND]
-###! - rippleapi (https://zxq.co/ripple/rippleapi) [API SERVER]
+###! - peppy       (https://zxq.co/ripple/pep.py)       [BACKEND]
+###! - hanayo      (https://zxq.co/ripple/hanayo)       [FRONTEND]
+###! - rippleapi   (https://zxq.co/ripple/rippleapi)    [API SERVER]
 ###! - oldfrontend (https://zxq.co/ripple/old-frontend) [ADMIN PANEL]
 ###! osu!fx's:
-###! - secret (https://github.com/osufx/secret) [AUTOMATED ANITCHEAT +-] . Note: Not used by Ripple
-###! - lets (https://github.com/osufx/lets) [SCORE SERVER] . Note: osu!fx's lets is a fork of Ripple
+###! - secret   (https://github.com/osufx/secret) [AUTOMATED ANITCHEAT +-] . Note: Not used by Ripple
+###! - lets     (https://github.com/osufx/lets) [SCORE SERVER] . Note: osu!fx's lets is a fork of Ripple's lets
 ###! Custom:
 ###! - avatar-server (https://github.com/Uniminin/avatar-server)
 ###! We need:
