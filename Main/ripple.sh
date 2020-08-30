@@ -8,7 +8,7 @@
 : '
 -------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of AGPLv3  |
-|            Last Updated on Sunday, August 30, 2020 at 12:50 PM (GMT+6)            |
+|            Last Updated on Sunday, August 30, 2020 at 01:00 PM (GMT+6)            |
 -------------------------------------------------------------------------------------
 '
 
@@ -39,13 +39,17 @@
 ###!    - [ ] Alpine
 ###!    - [ ] Arya
 ###!    - [*] Bedrock (strat -r x-stratum)
+###!    - [ ] Crux
+###!    - [ ] Clear
 ###!    - [*] Debian
 ###!    - [*] Exherbo
+###!    - [-] Exherbo-musl
 ###!    - [ ] Fedora
 ###!    - [*] Gentoo
 ###!    - [*] Ubuntu
 ###!    - [ ] NixOS
 ###!    - [ ] Slackware
+###!    - [ ] Solus
 ###!    - [ ] Venom
 ###!    - [ ] Void
 ###!  - [ ] BSD
@@ -97,7 +101,7 @@
 # TODO: Detect Operating System/Kernel/Distro and pull proper packages.
 # KNOWN ISSUES: UNABLE TO DETECT GOPATH AS A RESULT "hanayo" & "rippleapi" Fails to setup.
 
-# WARNING: Script Untested. Use at your own risk #
+# WARNING: Script Untested. Use at your own risk.
 
 # Maintainer info
 # UPSTREAM="https://github.com/Uniminin/Ripple-Auto-Installer"
