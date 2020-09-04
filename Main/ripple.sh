@@ -8,7 +8,7 @@
 : '
 -------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of AGPLv3  |
-|            Last Updated on Friday, September 4, 2020 at 03:41 PM (GMT+6)          |
+|            Last Updated on Friday, September 4, 2020 at 04:22 PM (GMT+6)          |
 -------------------------------------------------------------------------------------
 '
 
@@ -111,7 +111,7 @@
 
 
 # Version #
-UPSTREAM_VERSION=0.5.8
+UPSTREAM_VERSION=0.6.0
 
 
 # Colors For Prints
@@ -1280,6 +1280,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 	"--all" | "-A")
 		case "$2" in
 			"--nodependencies" | "--nodep")
+				GPRINT "[NO Dependencies MODE]"
 				checkRoot
 				DetectPackageManager
 				inputs
@@ -1295,29 +1296,37 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				nginx
 				SSL
 				exit 0 ;;
+
+			"")	
+				GPRINT "[Dependencies MODE]"
+				checkRoot
+				DetectPackageManager
+				inputs
+				checkNetwork
+				packageManagerUpgrade
+				mysql_database
+				python_dependencies
+				nproc_detector
+				python3_5
+				peppy
+				python3_6
+				lets
+				avatar_server
+				golang
+				hanayo
+				rippleapi
+				extra_dependencies
+				old_frontend
+				phpmyadmin
+				nginx
+				SSL
+				exit 0 ;;
+
+			*)
+				RPRINT "Fatal: Unknown argument | Try: $0 --help"
+				exit 74 ;;
 		esac
-		
-		checkRoot
-		DetectPackageManager
-		inputs
-		checkNetwork
-		packageManagerUpgrade
-		mysql_database
-		python_dependencies
-		nproc_detector
-		python3_5
-		peppy
-		python3_6
-		lets
-		avatar_server
-		golang
-		hanayo
-		rippleapi
-		extra_dependencies
-		old_frontend
-		phpmyadmin
-		nginx
-		SSL
+
 		exit 0 ;;
 
 	"--help" | "-h")
@@ -1350,9 +1359,11 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		"RAI Repository URL: <https://github.com/Uniminin/Ripple-Auto-Installer/>" \
 		"GNU AGPLv3 Licence: <https://www.gnu.org/licenses/agpl-3.0.en.html/>" \
 		"General help using GNU software: <https://www.gnu.org/gethelp/>"
+
 		exit 0 ;;
 
 	"--dependencies" | "-dep")
+		GPRINT "[Dependencies MODE]"
 		checkRoot
 		DetectPackageManager
 		checkNetwork
@@ -1364,145 +1375,215 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		golang
 		phpmyadmin
 		extra_dependencies
+
 		exit 0 ;;
 
 	"--mysql" | "-M")
+		GPRINT "[Dependencies MODE]"
 		checkRoot
 		DetectPackageManager
 		inputs
 		checkNetwork
 		packageManagerUpgrade
 		mysql_database
+
 		exit 0 ;;
 
 	"--peppy" | "-P")
 		case "$2" in
 			"--nodependencies" | "--nodep")
+				GPRINT "[NO Dependencies MODE]"
 				inputs
 				checkNetwork
 				peppy
 				exit 0 ;;
+
+			"")
+				GPRINT "[Dependencies MODE]"
+				checkRoot
+				DetectPackageManager
+				inputs
+				checkNetwork
+				packageManagerUpgrade
+				python_dependencies
+				nproc_detector
+				python3_5
+				peppy
+				exit 0 ;;
+
+			*)
+				RPRINT "Fatal: Unknown argument | Try: $0 --help"
+				exit 74 ;;
 		esac
-		
-		checkRoot
-		DetectPackageManager
-		inputs
-		checkNetwork
-		packageManagerUpgrade
-		python_dependencies
-		nproc_detector
-		python3_5
-		peppy
+
 		exit 0 ;;
 
 	"--lets" | "-L")
 		case "$2" in
 			"--nodependencies" | "--nodep")
+				GPRINT "[NO Dependencies MODE]"
 				inputs
 				checkNetwork
 				lets
 				exit 0 ;;
+
+			"")
+				GPRINT "[Dependencies MODE]"
+				checkRoot
+				DetectPackageManager
+				inputs
+				checkNetwork
+				packageManagerUpgrade
+				python_dependencies
+				nproc_detector
+				python3_6
+				lets
+				exit 0 ;;
+
+			*)
+				RPRINT "Fatal: Unknown argument | Try: $0 --help"
+				exit 74 ;;
 		esac
-		
-		checkRoot
-		DetectPackageManager
-		inputs
-		checkNetwork
-		packageManagerUpgrade
-		python_dependencies
-		nproc_detector
-		python3_6
-		lets
+
 		exit 0 ;;
 
 	"--avatarserver" | "-AS")
 		case "$2" in
 			"--nodependencies" | "--nodep")
+				GPRINT "[NO Dependencies MODE]"
 				inputs
 				checkNetwork
 				avatar_server
 				exit 0 ;;
+
+			"")
+				GPRINT "[Dependencies MODE]"
+				checkRoot
+				DetectPackageManager
+				inputs
+				checkNetwork
+				packageManagerUpgrade
+				python_dependencies
+				nproc_detector
+				python3_6
+				avatar_server
+				exit 0 ;;
+
+			*)
+				RPRINT "Fatal: Unknown argument | Try: $0 --help"
+				exit 74 ;;
 		esac
-		
-		checkRoot
-		DetectPackageManager
-		inputs
-		checkNetwork
-		packageManagerUpgrade
-		python_dependencies
-		nproc_detector
-		python3_6
-		avatar_server
+
 		exit 0 ;;
 
 	"--hanayo" | "-H")
 		case "$2" in
 			"--nodependencies" | "--nodep")
+				GPRINT "[NO Dependencies MODE]"
 				inputs
 				checkNetwork
 				hanayo
 				exit 0 ;;
+
+			"")
+				GPRINT "[Dependencies MODE]"
+				checkRoot
+				DetectPackageManager
+				inputs
+				checkNetwork
+				packageManagerUpgrade
+				golang
+				hanayo
+				exit 0 ;;
+
+			*)
+				RPRINT "Fatal: Unknown argument | Try: $0 --help"
+				exit 74 ;;
 		esac
-		
-		checkRoot
-		DetectPackageManager
-		inputs
-		checkNetwork
-		packageManagerUpgrade
-		golang
-		hanayo
+
 		exit 0 ;;
 
 	"--rippleapi" | "-api")
 		case "$2" in
 			"--nodependencies" | "--nodep")
+				GPRINT "[NO Dependencies MODE]"
 				inputs
 				checkNetwork
 				rippleapi
 				exit 0 ;;
+
+			"")
+				GPRINT "[Dependencies MODE]"
+				checkRoot
+				DetectPackageManager
+				inputs
+				checkNetwork
+				packageManagerUpgrade
+				golang
+				rippleapi
+				exit 0 ;;
+
+			*)
+				RPRINT "Fatal: Unknown argument | Try: $0 --help"
+				exit 74 ;;
 		esac
-		
-		checkRoot
-		DetectPackageManager
-		inputs
-		checkNetwork
-		packageManagerUpgrade
-		golang
-		rippleapi
+
 		exit 0 ;;
 
 	"--oldfrontend" | "-OF")
 		case "$2" in
 			"--nodependencies" | "--nodep")
+				GPRINT "[NO Dependencies MODE]"
+				checkRoot
+				DetectPackageManager
 				inputs
 				checkNetwork
 				old_frontend
 				exit 0 ;;
+
+			"")
+				GPRINT "[Dependencies MODE]"
+				checkRoot
+				DetectPackageManager
+				inputs
+				checkNetwork
+				packageManagerUpgrade
+				php
+				old_frontend
+				exit 0 ;;
+
+			*)
+				RPRINT "Fatal: Unknown argument | Try: $0 --help"
+				exit 74 ;;
 		esac
-		
-		checkRoot
-		DetectPackageManager
-		inputs
-		checkNetwork
-		packageManagerUpgrade
-		php
-		old_frontend
+
 		exit 0 ;;
 
 	"--nginx" | "-N")
 		case "$2" in
 			"--nodependencies" | "--nodep")
+				GPRINT "[NO Dependencies MODE]"
+				checkRoot
+				DetectPackageManager
 				checkNetwork
 				nginx
 				exit 0 ;;
+
+			"")
+				GPRINT "[Dependencies MODE]"
+				checkRoot
+				DetectPackageManager
+				checkNetwork
+				packageManagerUpgrade
+				extra_dependencies
+				nginx
+				exit 0 ;;
+
+			*)
+				RPRINT "Fatal: Unknown argument | Try: $0 --help"
+				exit 74 ;;
 		esac
-		
-		checkRoot
-		DetectPackageManager
-		checkNetwork
-		packageManagerUpgrade
-		extra_dependencies
-		nginx
+
 		exit 0 ;;
 
 	"--version" | "-V")
