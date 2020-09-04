@@ -8,7 +8,7 @@
 : '
 -------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of AGPLv3  |
-|            Last Updated on Friday, September 4, 2020 at 03:33 PM (GMT+6)          |
+|            Last Updated on Friday, September 4, 2020 at 03:41 PM (GMT+6)          |
 -------------------------------------------------------------------------------------
 '
 
@@ -111,7 +111,7 @@
 
 
 # Version #
-UPSTREAM_VERSION=0.5.7
+UPSTREAM_VERSION=0.5.8
 
 
 # Colors For Prints
@@ -705,7 +705,7 @@ inputs() {
 
 	# Creating Master Directory (where all The Repositories will be cloned)
 	while [ -z "$targetDir" ]; do
-		BPRINT "Enter Master Directory: "
+		BPRINT "Enter Master Directory [$(pwd)/?]: "
 		read -r targetDir
 	done
 
