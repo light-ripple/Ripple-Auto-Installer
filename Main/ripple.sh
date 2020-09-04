@@ -111,7 +111,7 @@
 
 
 # Version #
-UPSTREAM_VERSION=0.5.6
+UPSTREAM_VERSION=0.5.7
 
 
 # Colors For Prints
@@ -236,8 +236,8 @@ checkNetwork() {
 # Check for root
 checkRoot() {
 	if ! [ "$(id -u)" = 0 ]; then
-	   RPRINT "The Script needs to be executed as Root/Superuser!"
-	   exit 13
+		RPRINT "The Script needs to be executed as Root/Superuser!"
+		exit 13
 	fi
 
 }
