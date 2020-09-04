@@ -8,7 +8,7 @@
 : '
 -------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of AGPLv3  |
-|            Last Updated on Friday, September 4, 2020 at 04:22 PM (GMT+6)          |
+|            Last Updated on Friday, September 4, 2020 at 04:30 PM (GMT+6)          |
 -------------------------------------------------------------------------------------
 '
 
@@ -111,7 +111,7 @@
 
 
 # Version #
-UPSTREAM_VERSION=0.6.0
+UPSTREAM_VERSION=0.6.1
 
 
 # Colors For Prints
@@ -254,6 +254,143 @@ nproc_detector() {
 
 			export procNum="1"
 	esac
+}
+
+
+inputs() {
+
+	task="Inputs"
+
+	# Creating Master Directory (where all The Repositories will be cloned)
+	while [ -z "$targetDir" ]; do
+		BPRINT "Enter Master Directory [$(pwd)/?]: "
+		read -r targetDir
+	done
+
+	if [ -n "$targetDir" ]; then
+		master_dir="$(pwd)/$targetDir"
+		if [ -d "$master_dir" ]; then
+			BPRINT "Master Directory: '$master_dir' exists. Continue ? y/n "
+			read -r confirmation
+			if [ "$confirmation" = "y" ]; then
+				GPRINT "Using Directory '$master_dir'"
+			else
+				die 1 "Input Declined by the user!"
+			fi
+		else
+			BPRINT "Create Master Directory: '$master_dir' ? y/n "
+			read -r confirmation
+			if [ "$confirmation" = "y" ]; then
+				mkdir -v "$master_dir"
+				if [ -d "$master_dir" ]; then
+					GPRINT "'$master_dir' has been created!"
+				else
+					die 1 "Failed to create '$master_dir'"
+				fi
+			fi
+		fi
+
+		if [ -d "$master_dir" ]; then
+			chmod -R a+rwx "$master_dir" || die 1 "Unable to change permission of the file '$master_dir'"
+			export directory="$master_dir"
+		else
+			die 1 "Failed to create Directory '$master_dir'"
+		fi
+	fi
+
+	# Domain
+	while [ -z "$domain" ]; do
+		BPRINT "Domain (example: ripple.moe): "
+		read -r domain
+	done
+	BPRINT "Are you sure you want to use '$domain' ? y/n "
+	read -r confirmation
+	if [ "$confirmation" = "y" ]; then
+		export domain
+	else
+		die 1 "Domain Not specified!"
+	fi
+
+	# Cikey
+	while [ -z "$cikey" ]; do
+		BPRINT "cikey: "
+		read -r cikey
+	done
+	BPRINT "Are you sure you want to use '$cikey' ? y/n "
+	read -r confirmation
+	if [ "$confirmation" = "y" ]; then
+		export cikey
+	else
+		die 1 "cikey Not specified!"
+	fi
+
+	# OSU!API
+	BPRINT "Get OSU!API Key Here: https://old.ppy.sh/p/api"
+	while [ -z "$api" ]; do
+		BPRINT "OSU!API key: "
+		read -r api
+	done
+	BPRINT "Are you sure you want to use '$api' ? y/n "
+	read -r confirmation
+	if [ "$confirmation" = "y" ]; then
+		export api
+	else
+		die 1 "OSU!API Key Not specified!"
+	fi
+
+	# API-Secret
+	while [ -z "$api_secret" ]; do
+		BPRINT "API Secret: "
+		read -r api_secret
+	done
+	BPRINT "Are you sure you want to use '$api_secret' ? y/n "
+	read -r confirmation
+	if [ "$confirmation" = "y" ]; then
+		export api_secret
+	else
+		die 1 "API Secret Not specified!"
+	fi
+
+	# MySQL USERNAME
+	while [ -z "$mysql_user" ]; do
+		BPRINT "Enter MySQL Username: "
+		read -r mysql_user
+	done
+	BPRINT "Are you sure you want to use '$mysql_user' ? y/n "
+	read -r confirmation
+	if [ "$confirmation" = "y" ]; then
+		export mysql_user
+	else
+		die 1 "MYSQL Username Not specified!"
+	fi
+
+	# MySQL PASSWORD
+	while [ -z "$mysql_password" ]; do
+		BPRINT "Enter MySQL Password: "
+		read -r mysql_password
+	done
+	BPRINT "Are you sure you want to use '$mysql_password' ? y/n "
+	read -r confirmation
+	if [ "$confirmation" = "y" ]; then
+		export mysql_password
+	else
+		die 1 "MYSQL Password Not specified!"
+	fi
+
+	# MySQL DATABASE NAME
+	while [ -z "$database_name" ]; do
+		BPRINT "Enter MySQL Database Name For Ripple: "
+		read -r database_name
+	done
+	BPRINT "Are you sure you want to use '$database_name' ? y/n "
+	read -r confirmation
+	if [ "$confirmation" = "y" ]; then
+		export database_name
+	else
+		die 1 "MYSQL Database Name Not specified!"
+	fi
+
+	GPRINT "Done obtaining all the necessary '$task'."
 }
 
 
@@ -566,276 +703,6 @@ extra_dependencies() {
 }
 
 
-# Nginx to balance loads & for proxies
-nginx() {
-
-	task="nginx"
-
-	YPRINT "Setting up '$task'."
-
-	if command -v ping 1>/dev/null; then
-		ping -i 0.5 -c 5 raw.githubusercontent.com || die 121 "Domain 'raw.githubusercontent.com' is not reachable from this environment."
-	else
-		die 61 "Unknown Error!"
-	fi
-
-	if [ -d "/etc/nginx" ]; then
-		pkill -f nginx || die 1 "Failed to kill process '$task'."
-		(
-			cd /etc/nginx || die 1 "Failed to cd into '/etc/nginx'."
-			if [ -f "nginx.conf" ]; then
-				rm -rfv nginx.conf
-			fi
-			wget -O "nginx.conf" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Nginx/N1.conf || die 11 "Could not download file 'nginx.conf'."
-			sed -i 's#include /root/ripple/nginx/*.conf\*#include '"$directory"'/nginx/*.conf#' /etc/nginx/nginx.conf || die 1 "Failed to Setup Config file."
-		)
-	else
-		die 1 "Directory '/etc/nginx' does not exist!"
-	fi
-
-	if [ -d "$directory" ]; then
-		(
-			cd "$directory" || die 1 "Failed to cd into '$directory'"
-			mkdir -v nginx ; cd nginx || die 1 "Failed to cd into 'nginx'"
-
-			wget -O "nginx.conf" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Nginx/N2.conf || die 11 "Could not download file 'nginx.conf'."
-			if [ -f "nginx.conf" ]; then
-				sed -Ei 's#DOMAIN#'"$domain"'#g; s#DIRECTORY#'"$directory"'#g' nginx.conf || die 1 "Failed to Setup Config file."
-			fi
-
-			wget -O "old-frontend.conf" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Nginx/old-frontend.conf || die 11 "Could not download file 'old-frontend.conf'."
-			if [ -f "old-frontend.conf" ]; then
-				sed -Ei 's#DOMAIN#'"$domain"'#g; s#DIRECTORY#'"$directory"'#g' old-frontend.conf || die 1 "Failed to Setup Config file."
-			fi
-
-			# Using osuthailand certificate. (since plebs)
-			YPRINT "Downloading Certificates. (ainu-certificate)"
-			wget -O "cert.pem" https://raw.githubusercontent.com/osuthailand/ainu-certificate/master/cert.pem || die 11 "Could not download file 'cert.pem'."
-			wget -O "key.pem" https://raw.githubusercontent.com/osuthailand/ainu-certificate/master/key.key || die 11 "Could not download file 'key.pem'."
-			if [ -f "cert.pem" ] && [ -f "key.pem" ]; then
-				GPRINT "Done downloading Certificates."
-			else
-				die 1 "Failed to download certificates."
-			fi
-		)
-
-		nginx || die 1 "Nginx: BAD CONFIG!"
-		GPRINT "Done setting up '$task'."
-	fi
-}
-
-
-SSL() {
-
-	task="acme.sh"
-
-	YPRINT "Cloning and Setting up '$task'!"
-
-	if command -v ping 1>/dev/null; then
-		ping -i 0.5 -c 5 github.com || die 121 "Domain 'github.com' is not reachable from this environment."
-	else
-		die 61 "Unknown Error!"
-	fi
-
-	if [ -d "$directory" ]; then
-		(
-			cd "$directory" || die 1 "Failed to cd into '$directory'."
-			if command -v git 1>/dev/null; then
-				git clone https://github.com/Neilpang/acme.sh
-			else
-				die 1 "git not found on this system!"
-			fi
-
-			if [ -d "acme.sh" ]; then
-				cd acme.sh || die 1 "Failed to cd into acme.sh"
-				if [ -f "acme.sh" ]; then
-					./acme.sh --install
-					./acme.sh --issue --standalone -d "$domain" -d c."$domain" -d i."$domain" -d a."$domain" -d s."$domain" -d old."$domain"
-
-					GPRINT "Done setting up '$task'"
-				else
-					die 1 "'$task' not found."
-				fi
-			else
-				die 1 "Failed to clone '$task'"
-			fi
-		)
-	else
-			die 1 "Directory '$directory' doesn't exist."
-	fi
-}
-
-
-# For Interacting with Database online.
-phpmyadmin(){
-
-	task="phpmyadmin"
-
-	YPRINT "Setting up '$task'!"
-
-	# Dependencies
-	if [ "$package_manager" = "apt" ]; then
-		"$package_manager" install phpmyadmin php-mbstring php-gettext -y
-
-	elif [ "$package_manager" = "pacman" ]; then
-		"$package_manager" --noconfirm -S phpmyadmin
-
-	elif [ "$package_manager" = "emerge" ]; then
-		"$package_manager" -q dev-db/phpmyadmin
-
-	elif [ "$package_manager" = "cave" ]; then
-		"$package_manager" resolve -x dev-lang/php
-	fi
-
-	if [ -d "/var/www/osu.ppy.sh" ]; then
-		(
-			cd /var/www/osu.ppy.sh || die 1 "Failed to cd into '/var/www/osu.ppy.sh'."
-			ln -s /usr/share/phpmyadmin phpmyadmin
-		)
-		GPRINT "Done setting up '$task'."
-	else
-		die 1 "Directory '/var/www/osu.ppy.sh' does not exist."
-	fi
-}
-
-
-inputs() {
-
-	task="Inputs"
-
-	# Creating Master Directory (where all The Repositories will be cloned)
-	while [ -z "$targetDir" ]; do
-		BPRINT "Enter Master Directory [$(pwd)/?]: "
-		read -r targetDir
-	done
-
-	if [ -n "$targetDir" ]; then
-		master_dir="$(pwd)/$targetDir"
-		if [ -d "$master_dir" ]; then
-			BPRINT "Master Directory: '$master_dir' exists. Continue ? y/n "
-			read -r confirmation
-			if [ "$confirmation" = "y" ]; then
-				GPRINT "Using Directory '$master_dir'"
-			else
-				die 1 "Input Declined by the user!"
-			fi
-		else
-			BPRINT "Create Master Directory: '$master_dir' ? y/n "
-			read -r confirmation
-			if [ "$confirmation" = "y" ]; then
-				mkdir -v "$master_dir"
-				if [ -d "$master_dir" ]; then
-					GPRINT "'$master_dir' has been created!"
-				else
-					die 1 "Failed to create '$master_dir'"
-				fi
-			fi
-		fi
-
-		if [ -d "$master_dir" ]; then
-			chmod -R a+rwx "$master_dir" || die 1 "Unable to change permission of the file '$master_dir'"
-			export directory="$master_dir"
-		else
-			die 1 "Failed to create Directory '$master_dir'"
-		fi
-	fi
-
-	# Domain
-	while [ -z "$domain" ]; do
-		BPRINT "Domain (example: ripple.moe): "
-		read -r domain
-	done
-	BPRINT "Are you sure you want to use '$domain' ? y/n "
-	read -r confirmation
-	if [ "$confirmation" = "y" ]; then
-		export domain
-	else
-		die 1 "Domain Not specified!"
-	fi
-
-	# Cikey
-	while [ -z "$cikey" ]; do
-		BPRINT "cikey: "
-		read -r cikey
-	done
-	BPRINT "Are you sure you want to use '$cikey' ? y/n "
-	read -r confirmation
-	if [ "$confirmation" = "y" ]; then
-		export cikey
-	else
-		die 1 "cikey Not specified!"
-	fi
-
-	# OSU!API
-	BPRINT "Get OSU!API Key Here: https://old.ppy.sh/p/api"
-	while [ -z "$api" ]; do
-		BPRINT "OSU!API key: "
-		read -r api
-	done
-	BPRINT "Are you sure you want to use '$api' ? y/n "
-	read -r confirmation
-	if [ "$confirmation" = "y" ]; then
-		export api
-	else
-		die 1 "OSU!API Key Not specified!"
-	fi
-
-	# API-Secret
-	while [ -z "$api_secret" ]; do
-		BPRINT "API Secret: "
-		read -r api_secret
-	done
-	BPRINT "Are you sure you want to use '$api_secret' ? y/n "
-	read -r confirmation
-	if [ "$confirmation" = "y" ]; then
-		export api_secret
-	else
-		die 1 "API Secret Not specified!"
-	fi
-
-	# MySQL USERNAME
-	while [ -z "$mysql_user" ]; do
-		BPRINT "Enter MySQL Username: "
-		read -r mysql_user
-	done
-	BPRINT "Are you sure you want to use '$mysql_user' ? y/n "
-	read -r confirmation
-	if [ "$confirmation" = "y" ]; then
-		export mysql_user
-	else
-		die 1 "MYSQL Username Not specified!"
-	fi
-
-	# MySQL PASSWORD
-	while [ -z "$mysql_password" ]; do
-		BPRINT "Enter MySQL Password: "
-		read -r mysql_password
-	done
-	BPRINT "Are you sure you want to use '$mysql_password' ? y/n "
-	read -r confirmation
-	if [ "$confirmation" = "y" ]; then
-		export mysql_password
-	else
-		die 1 "MYSQL Password Not specified!"
-	fi
-
-	# MySQL DATABASE NAME
-	while [ -z "$database_name" ]; do
-		BPRINT "Enter MySQL Database Name For Ripple: "
-		read -r database_name
-	done
-	BPRINT "Are you sure you want to use '$database_name' ? y/n "
-	read -r confirmation
-	if [ "$confirmation" = "y" ]; then
-		export database_name
-	else
-		die 1 "MYSQL Database Name Not specified!"
-	fi
-
-	GPRINT "Done obtaining all the necessary '$task'."
-}
-
-
 # Database is required to access, read, write & manage all the user's data. (Required for all Ripple's Softwares i.e lets, peppy..)
 mysql_database() {
 
@@ -911,6 +778,39 @@ mysql_database() {
 			die 1 "Directory '$directory' doesn't exist."
 		fi
 	)
+}
+
+
+# For Interacting with Database online.
+phpmyadmin(){
+
+	task="phpmyadmin"
+
+	YPRINT "Setting up '$task'!"
+
+	# Dependencies
+	if [ "$package_manager" = "apt" ]; then
+		"$package_manager" install phpmyadmin php-mbstring php-gettext -y
+
+	elif [ "$package_manager" = "pacman" ]; then
+		"$package_manager" --noconfirm -S phpmyadmin
+
+	elif [ "$package_manager" = "emerge" ]; then
+		"$package_manager" -q dev-db/phpmyadmin
+
+	elif [ "$package_manager" = "cave" ]; then
+		"$package_manager" resolve -x dev-lang/php
+	fi
+
+	if [ -d "/var/www/osu.ppy.sh" ]; then
+		(
+			cd /var/www/osu.ppy.sh || die 1 "Failed to cd into '/var/www/osu.ppy.sh'."
+			ln -s /usr/share/phpmyadmin phpmyadmin
+		)
+		GPRINT "Done setting up '$task'."
+	else
+		die 1 "Directory '/var/www/osu.ppy.sh' does not exist."
+	fi
 }
 
 
@@ -1183,6 +1083,106 @@ avatar_server() {
 		)
 	else
 		die 1 "Directory '$directory' doesn't exist."
+	fi
+}
+
+
+# Nginx to balance loads & for proxies
+nginx() {
+
+	task="nginx"
+
+	YPRINT "Setting up '$task'."
+
+	if command -v ping 1>/dev/null; then
+		ping -i 0.5 -c 5 raw.githubusercontent.com || die 121 "Domain 'raw.githubusercontent.com' is not reachable from this environment."
+	else
+		die 61 "Unknown Error!"
+	fi
+
+	if [ -d "/etc/nginx" ]; then
+		pkill -f nginx || die 1 "Failed to kill process '$task'."
+		(
+			cd /etc/nginx || die 1 "Failed to cd into '/etc/nginx'."
+			if [ -f "nginx.conf" ]; then
+				rm -rfv nginx.conf
+			fi
+			wget -O "nginx.conf" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Nginx/N1.conf || die 11 "Could not download file 'nginx.conf'."
+			sed -i 's#include /root/ripple/nginx/*.conf\*#include '"$directory"'/nginx/*.conf#' /etc/nginx/nginx.conf || die 1 "Failed to Setup Config file."
+		)
+	else
+		die 1 "Directory '/etc/nginx' does not exist!"
+	fi
+
+	if [ -d "$directory" ]; then
+		(
+			cd "$directory" || die 1 "Failed to cd into '$directory'"
+			mkdir -v nginx ; cd nginx || die 1 "Failed to cd into 'nginx'"
+
+			wget -O "nginx.conf" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Nginx/N2.conf || die 11 "Could not download file 'nginx.conf'."
+			if [ -f "nginx.conf" ]; then
+				sed -Ei 's#DOMAIN#'"$domain"'#g; s#DIRECTORY#'"$directory"'#g' nginx.conf || die 1 "Failed to Setup Config file."
+			fi
+
+			wget -O "old-frontend.conf" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Nginx/old-frontend.conf || die 11 "Could not download file 'old-frontend.conf'."
+			if [ -f "old-frontend.conf" ]; then
+				sed -Ei 's#DOMAIN#'"$domain"'#g; s#DIRECTORY#'"$directory"'#g' old-frontend.conf || die 1 "Failed to Setup Config file."
+			fi
+
+			# Using osuthailand certificate. (since plebs)
+			YPRINT "Downloading Certificates. (ainu-certificate)"
+			wget -O "cert.pem" https://raw.githubusercontent.com/osuthailand/ainu-certificate/master/cert.pem || die 11 "Could not download file 'cert.pem'."
+			wget -O "key.pem" https://raw.githubusercontent.com/osuthailand/ainu-certificate/master/key.key || die 11 "Could not download file 'key.pem'."
+			if [ -f "cert.pem" ] && [ -f "key.pem" ]; then
+				GPRINT "Done downloading Certificates."
+			else
+				die 1 "Failed to download certificates."
+			fi
+		)
+
+		nginx || die 1 "Nginx: BAD CONFIG!"
+		GPRINT "Done setting up '$task'."
+	fi
+}
+
+
+SSL() {
+
+	task="acme.sh"
+
+	YPRINT "Cloning and Setting up '$task'!"
+
+	if command -v ping 1>/dev/null; then
+		ping -i 0.5 -c 5 github.com || die 121 "Domain 'github.com' is not reachable from this environment."
+	else
+		die 61 "Unknown Error!"
+	fi
+
+	if [ -d "$directory" ]; then
+		(
+			cd "$directory" || die 1 "Failed to cd into '$directory'."
+			if command -v git 1>/dev/null; then
+				git clone https://github.com/Neilpang/acme.sh
+			else
+				die 1 "git not found on this system!"
+			fi
+
+			if [ -d "acme.sh" ]; then
+				cd acme.sh || die 1 "Failed to cd into acme.sh"
+				if [ -f "acme.sh" ]; then
+					./acme.sh --install
+					./acme.sh --issue --standalone -d "$domain" -d c."$domain" -d i."$domain" -d a."$domain" -d s."$domain" -d old."$domain"
+
+					GPRINT "Done setting up '$task'"
+				else
+					die 1 "'$task' not found."
+				fi
+			else
+				die 1 "Failed to clone '$task'"
+			fi
+		)
+	else
+			die 1 "Directory '$directory' doesn't exist."
 	fi
 }
 
