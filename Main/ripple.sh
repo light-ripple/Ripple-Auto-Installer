@@ -8,7 +8,7 @@
 : '
 -------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of AGPLv3  |
-|            Last Updated on Sunday, August 30, 2020 at 01:00 PM (GMT+6)            |
+|            Last Updated on Friday, September 4, 2020 at 03:33 PM (GMT+6)          |
 -------------------------------------------------------------------------------------
 '
 
@@ -111,7 +111,7 @@
 
 
 # Version #
-UPSTREAM_VERSION=0.5.5
+UPSTREAM_VERSION=0.5.6
 
 
 # Colors For Prints
@@ -158,31 +158,6 @@ efixme() {
 		fi
 	fi
 }
-
-
-# Get's directory name from filepath
-# Usage: getdir "path"
-getdir() {
-	local tmp=${1:-.}
-
-	[[ $tmp != *[!/]* ]] && {
-		printf "/\\n"
-		return
-	}
-
-	tmp=${tmp%%"${tmp##*[!/]}"}
-
-	[[ $tmp != */* ]] && {
-		printf ".\\n"
-		return
-	}
-
-	tmp=${tmp%/*}
-	tmp=${tmp%%"${tmp##*[!/]}"}
-
-	GPRINT "${tmp:-/}"
-}
-
 
 # prints line number
 lineno() {
@@ -260,10 +235,11 @@ checkNetwork() {
 
 # Check for root
 checkRoot() {
-	if [ $EUID -ne 0 ]; then
-		RPRINT "The Script needs to be executed as Root/Superuser!"
-		exit 1
+	if ! [ "$(id -u)" = 0 ]; then
+	   RPRINT "The Script needs to be executed as Root/Superuser!"
+	   exit 13
 	fi
+
 }
 
 
@@ -520,9 +496,6 @@ golang() {
 							tar -xvf go1.14.linux-amd64.tar.gz
 							chown -R root:root ./go
 							mv go /usr/local
-							
-							# FIXME: Absolute Path
-							getdir ~/.profile
 
 							if [ ! -f "$HOME/.profile" ]; then
 								touch ~/.profile
