@@ -107,7 +107,7 @@ Note: Execute the script as superuser. For example: `sudo/doas -- ./ripple.sh --
 ### Contact
 Questions? Need help? You may join the Discord server or ask me in Discord. 
 * Server: <a href=https://discord.gg/W2VSJnA>Developer I/O</a>
-* Discord: `Inaya#7522`
+* Discord: `uniminin#7522`
 * EMAIL: `uniminin@zoho.com` (Message me on Discord after sending me mail)
 
 ### Credits
