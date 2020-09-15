@@ -8,7 +8,7 @@
 : '
 -------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of AGPLv3  |
-|            Last Updated on Friday, September 4, 2020 at 04:30 PM (GMT+6)          |
+|           Last Updated on Tuesday, September 15, 2020 at 10:48 PM (GMT+6)         |
 -------------------------------------------------------------------------------------
 '
 
@@ -111,7 +111,7 @@
 
 
 # Version #
-UPSTREAM_VERSION=0.6.1
+UPSTREAM_VERSION=0.6.3
 
 
 # Colors For Prints
@@ -515,7 +515,7 @@ python3_5() {
 				else
 					die 1 "Failed to extract 'Python-3.5.9.tar.xz'."
 				fi
-				./configure --enable-optimizations --with-ensurepip=install ; make --jobs "$procNum" ; make install
+				./configure --enable-optimizations --with-ensurepip=install ; make --jobs "$procNum" build_all ; make install
 				if command -v python3.5 -m pip >/dev/null; then
 					python3.5 -m pip install --upgrade pip
 				else
@@ -574,7 +574,7 @@ python3_6() {
 					else
 						die 1 "Failed to extract 'Python-3.6.8.tar.xz'."
 					fi
-					./configure --enable-optimizations --with-ensurepip=install ; make --jobs "$procNum" ; make install
+					./configure --enable-optimizations --with-ensurepip=install ; make --jobs "$procNum" build_all ; make install
 					if command -v python3.6 -m pip >/dev/null; then
 						python3.6 -m pip install --upgrade pip
 					else
