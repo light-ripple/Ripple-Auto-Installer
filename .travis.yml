@@ -9,7 +9,7 @@ on:
     types: [synchronize, opened, reopened, ready_for_review]
     paths:
     - '**.bash'
-    - "Main/ripple"
+    - "Main/ripple.sh"
 
 jobs:
   # Linting
