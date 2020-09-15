@@ -8,7 +8,7 @@
 : '
 -------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of AGPLv3  |
-|            Last Updated on Friday, September 4, 2020 at 04:30 PM (GMT+6)          |
+|           Last Updated on Tuesday, September 15, 2020 at 11:14 AM (GMT+6)         |
 -------------------------------------------------------------------------------------
 '
 
@@ -111,7 +111,7 @@
 
 
 # Version #
-UPSTREAM_VERSION=0.6.1
+UPSTREAM_VERSION=0.6.4
 
 
 # Colors For Prints
@@ -171,6 +171,9 @@ lineno() {
 	fi
 }
 
+
+# For capturing Bugs
+# kills the script if anything returns false
 set -e
 
 
@@ -515,7 +518,7 @@ python3_5() {
 				else
 					die 1 "Failed to extract 'Python-3.5.9.tar.xz'."
 				fi
-				./configure --enable-optimizations --with-ensurepip=install ; make --jobs "$procNum" ; make install
+				./configure --enable-optimizations --with-ensurepip=install ; make --jobs "$procNum" build_all ; make install
 				if command -v python3.5 -m pip >/dev/null; then
 					python3.5 -m pip install --upgrade pip
 				else
@@ -574,7 +577,7 @@ python3_6() {
 					else
 						die 1 "Failed to extract 'Python-3.6.8.tar.xz'."
 					fi
-					./configure --enable-optimizations --with-ensurepip=install ; make --jobs "$procNum" ; make install
+					./configure --enable-optimizations --with-ensurepip=install ; make --jobs "$procNum" build_all ; make install
 					if command -v python3.6 -m pip >/dev/null; then
 						python3.6 -m pip install --upgrade pip
 					else
@@ -634,13 +637,9 @@ golang() {
 							chown -R root:root ./go
 							mv go /usr/local
 
-							if [ ! -f "$HOME/.profile" ]; then
-								touch ~/.profile
-							fi
-
-							echo export GOPATH=/root/go > ~/.profile
-							echo export PATH="$PATH":/usr/local/go/bin:"$GOPATH"/bin > ~/.profile
-							. ~/.profile
+							echo export GOPATH=/root/go > ~/.bashrc
+							echo export PATH="$PATH":/usr/local/go/bin:"$GOPATH"/bin > ~/.bashrc
+							. ~/.bashrc
 
 						else
 							die 1 "Directory: '/usr/local' doesn't exist."
@@ -969,8 +968,7 @@ hanayo() {
 				go get zxq.co/ripple/hanayo
 				if [ -d "/root/go/src/zxq.co/ripple/hanayo" ]; then
 					cd /root/go/src/zxq.co/ripple/hanayo || die 1 "Failed to cd into '$task'."
-					# twice. Not a mistake!!!
-					go build ; ./hanayo ; ./hanayo
+					go build ; ./hanayo
 			else
 				die 1 "Could not install '$task' because golang wasn't found on this system."
 			fi
