@@ -50,12 +50,13 @@ This project gives you a base and foundation if you're willing to setup your own
 
 ### Features
 * A configurable shell script for installing <a href=https://ripple.moe>Ripple</a> Stack
-* Everything is Pre-ready 
+* Everything is Pre-ready
 * Simple and user friendly Installation
-* Installs stack softwares within minute(s)
-* Integrated Errorlogs
+* Installs stack software(s) within minute(s)
+* Integrated Error-logging system
 * Ability to Install specific stack software(s) chosen by a user
 * Higly Productive & Customizable
+* Posix compatible
 
 
 ### Domain
