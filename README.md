@@ -118,7 +118,7 @@ Questions? Need help? You may join the Discord server or ask me in Discord.
 * And others who supported and contributed to the project.
 
 
-### License [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FUniminin%2FRipple-Auto-Installer.svg?type=small)](https://app.fossa.com/projects/git%2Bgithub.com%2FUniminin%2FRipple-Auto-Installer?ref=badge_small)
+## License [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FUniminin%2FRipple-Auto-Installer.svg?type=small)](https://app.fossa.com/projects/git%2Bgithub.com%2FUniminin%2FRipple-Auto-Installer?ref=badge_small)
 All of the Ripple code including the project itself is licenced under the GNU Affero General Public License V3. For more information, see the `LICENSE` file or visit https://www.gnu.org/licenses/agpl-3.0.
 
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FUniminin%2FRipple-Auto-Installer.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FUniminin%2FRipple-Auto-Installer?ref=badge_large)
