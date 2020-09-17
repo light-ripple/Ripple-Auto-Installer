@@ -6,14 +6,14 @@
 # SUPPORTS INIT SYSTEMS: systemd and openrc.
 
 : '
--------------------------------------------------------------------------------------
-|  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of AGPLv3  |
-|           Last Updated on Tuesday, September 15, 2020 at 11:14 AM (GMT+6)         |
--------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------
+|  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
+|             Last Updated on Tuesday, September 17, 2020 at 06:15 PM (GMT+6)             |
+-------------------------------------------------------------------------------------------
 '
 
 ###! Script to clone, install & configure Ripple (https://ripple.moe)
-###! Ripple is Licensed under the Terms of GNU AGPLv3
+###! Ripple is Licensed under the Terms of GNU AGPL-3.0
 ###! Main Ripple Git: (https://zxq.co/ripple) | Mirror: (https://github.com/osuripple)
 ###! Using Ripple's:
 ###! - peppy       (https://zxq.co/ripple/pep.py)       [BACKEND]
@@ -111,7 +111,7 @@
 
 
 # Version #
-UPSTREAM_VERSION=0.6.4
+UPSTREAM_VERSION=0.6.5
 
 
 # Colors For Prints
@@ -121,7 +121,7 @@ alias YPRINT="printf '\\033[0;33m%s\\n'"     # Yellow
 alias BPRINT="printf '\\033[0;34m%s'"        # Blue
 
 
-# Modified version of efixme originally designed by Jacob Hrbek <kreyren@rixotstudio.cz> under the terms of GPL-3
+# Modified version of efixme originally designed by Jacob Hrbek <kreyren@rixotstudio.cz> under the terms of GNU GPL-3.0
 efixme() {
 	if [ "$FUNCNAME" != "efixme" ]; then
 		FUNCNAME="efixme"
