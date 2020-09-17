@@ -12,6 +12,8 @@
   <img src="https://github.com/Uniminin/Ripple-Auto-Installer/blob/master/Miscellaneous/ripple.svg">
 </p>
 
+
+
 ## Attention
 <b>**FOR ADVANCED USERS!**</b><br>
 This project gives you a base and foundation if you're willing to setup your own Ripple instance. You’re to think for yourself. Ripple is not a stack system where Ripple/I document everything so you’ll need a basic understanding of how full stack web applications and unix or GNU/Linux systems work to be able to set up Ripple properly and work out with problems efficiently when necessary.<br>
@@ -19,11 +21,13 @@ This project gives you a base and foundation if you're willing to setup your own
 * You might want to look at Ripple's wiki(old): https://github.com/osuripple/ripple/wiki/How-to-setup-ripple
 * Note: The Script has not been fully tested (100%) properly. Bugs may be expected, Report it <a href="https://github.com/Uniminin/Ripple-Auto-Installer#contact">Contact</a>.
 
+
 ### Requirements
 * Knowledge on Computers, Softwares, Unix or GNU/Linux, Servers, Game Hosting, Database, Computer Networks, Computer Security & Encyption, SQL Injection, Virtual Private Server, Web hosting, Programming & Full stack web development. All of them are not 100% required but essential.
 * A Unix or GNU/Linux <a href=https://en.wikipedia.org/wiki/Virtual_private_server>Virtual Private Server</a>.
 * A Arch/Debian/Gentoo/Exherbo Based Linux Distro with APT, Pacman, Portage or paludis package manager.
 * Systemd or Openrc.
+
 
 ### Supported Systems
 * <a href=https://debian.org>Debian</a> Based distros.
@@ -31,11 +35,13 @@ This project gives you a base and foundation if you're willing to setup your own
 * <a href=https://gentoo.org>Gentoo Linux</a> Based distros.
 * <a href=https://exherbo.org>Exherbo Linux</a> Based distros.
 
+
 ### Supported Package Managers
 * <a href=https://wiki.debian.org/Apt>APT</a>
 * <a href=https://wiki.archlinux.org/index.php/pacman>Pacman</a>
 * <a href=https://wiki.gentoo.org/wiki/Portage>Portage</a>
 * <a href=https://paludis.exherbo.org/>Paludis</a>
+
 
 ### Supported Init Systems
 * <a href=https://wiki.archlinux.org/index.php/systemd>systemd</a>
@@ -51,6 +57,7 @@ This project gives you a base and foundation if you're willing to setup your own
 * Ability to Install specific stack software(s) chosen by a user
 * Higly Productive & Customizable
 
+
 ### Domain
 Make sure you set your DNS like this:
 ```
@@ -62,17 +69,20 @@ Make sure you set your DNS like this:
 * old.YOUR-DOMAIN
 ```
 
+
 ### VPS
 Make sure you configure your inbound-rules properly.
 <p align="center">
   <img src="https://github.com/Uniminin/Ripple-Auto-Installer/blob/master/Miscellaneous/inbound-rules.png"/>
 </p>
 
+
 ### Cloudflare
 Make sure you configure cloudflare properly.
 <p align="center">
   <img src="https://github.com/Uniminin/Ripple-Auto-Installer/blob/master/Miscellaneous/cloudflare.png"/>
 </p>
+
 
 ### Running the Script (instructions)
 With Git
@@ -99,16 +109,19 @@ $ sudo strat -r stratum ./ripple.sh -h  # stratum --> stratum name
 ```
 Note: Execute the script as superuser. For example: `sudo/doas -- ./ripple.sh --all` to install & setup full ripple stack with dependencies.
 
-### Configure/Start/connect The Server
+
+### Configuring/Starting/connecting (The Server)
 * For manual configuration, see all markdowns in <a href=https://github.com/Uniminin/Ripple-Auto-Installer/tree/master/Miscellaneous>Miscellaneous</a>.
 * To start the server: <a href=https://github.com/Uniminin/Ripple-Auto-Installer/blob/master/Miscellaneous/start.md>start.md</a>.
 * To connect to the server (with osu client): <a href=https://github.com/Uniminin/Ripple-Auto-Installer/blob/master/Miscellaneous/connect.md>connect.md</a>.
+
 
 ### Contact
 Questions? Need help? You may join the Discord server or ask me in Discord. 
 * Server: <a href=https://discord.gg/W2VSJnA>Developer I/O</a>
 * Discord: `uniminin#7522`
 * EMAIL: `uniminin@zoho.com` (Message me on Discord after sending me mail)
+
 
 ### Credits
 * Thanks to <a href=https://github.com/Kreyren>Kreyren</a> for their help regarding shell script and `efixme` function.
