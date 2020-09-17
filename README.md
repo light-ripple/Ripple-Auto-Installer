@@ -12,7 +12,12 @@
   <img src="https://github.com/Uniminin/Ripple-Auto-Installer/blob/master/Miscellaneous/ripple.svg">
 </p>
 
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FUniminin%2FRipple-Auto-Installer.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FUniminin%2FRipple-Auto-Installer?ref=badge_large)
+
 ## Attention
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FUniminin%2FRipple-Auto-Installer.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FUniminin%2FRipple-Auto-Installer?ref=badge_shield)
+
 <b>**FOR ADVANCED USERS!**</b><br>
 This project gives you a base and foundation if you're willing to setup your own Ripple instance. You’re to think for yourself. Ripple is not a stack system where Ripple/I document everything so you’ll need a basic understanding of how full stack web applications and unix or GNU/Linux systems work to be able to set up Ripple properly and work out with problems efficiently when necessary.<br>
 * Check out <a href="https://github.com/Uniminin/Light-Ripple-Windows/">Light-Ripple-Windows</a> if you want to host a local Ripple instance on your windows system.</a>
