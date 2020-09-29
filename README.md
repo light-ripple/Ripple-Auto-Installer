@@ -56,6 +56,7 @@ This project gives you a base and foundation if you're willing to setup your own
 * Integrated Error-logging system
 * Ability to Install specific stack software(s) chosen by a user
 * Higly Productive & Customizable
+* OS and Package manager detection
 * Posix compatible
 
 
