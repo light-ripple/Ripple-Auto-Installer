@@ -60,6 +60,35 @@ This project gives you a base and foundation if you're willing to setup your own
 * Posix compatible
 
 
+### Structure
+```
+.
+├── Database files
+│  └── ripple.sql
+├── LICENSE
+├── Main
+│  ├── gencert.sh
+│  ├── openssl.cnf
+│  ├── ripple.conf
+│  ├── ripple.sh
+│  └── ripple.sha1
+├── Miscellaneous
+│  ├── certificate.md
+│  ├── cloudflare.png
+│  ├── configs.md
+│  ├── connect.md
+│  ├── inbound-rules.png
+│  ├── old_ripple.svg
+│  ├── ripple.svg
+│  └── start.md
+├── Nginx
+│  ├── N1.conf
+│  ├── N2.conf
+│  └── old-frontend.conf
+└── README.md
+```
+
+
 ### Domain
 Make sure you set your DNS like this:
 ```
