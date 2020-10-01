@@ -60,7 +60,7 @@ This project gives you a base and foundation if you're willing to setup your own
 * Posix compatible
 
 
-### Structure
+### File Structure
 ```
 .
 ├── Database files
