@@ -8,7 +8,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|             Last Updated on Tuesday, September 17, 2020 at 06:15 PM (GMT+6)             |
+|              Last Updated on Thursday, October 1, 2020 at 10:30 PM (GMT+6)              |
 -------------------------------------------------------------------------------------------
 '
 
@@ -111,7 +111,7 @@
 
 
 # Version #
-UPSTREAM_VERSION=0.6.5
+UPSTREAM_VERSION=0.7.0
 
 
 # Colors For Prints
@@ -194,7 +194,7 @@ die() {
 	fi
 	
 	if [ -f "Error.log" ]; then
-		printf "[$Date]\\nFATAL: %s\\n\\n" "$3 $1" >> Error.log || die 1 "Couldn't write into 'Error.log'."
+		printf "[$Date]\\nFATAL: %s\\n\\n" "$3 $1" >> Error.log || exit 4
 		GPRINT "Successfully Written into 'Error.log'"
 	fi
 
