@@ -8,7 +8,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|              Last Updated on Thursday, October 1, 2020 at 10:30 PM (GMT+6)              |
+|              Last Updated on Saturday, October 3, 2020 at 10:55 PM (GMT+6)              |
 -------------------------------------------------------------------------------------------
 '
 
@@ -22,7 +22,7 @@
 ###! - oldfrontend (https://zxq.co/ripple/old-frontend) [ADMIN PANEL]
 ###! osu!fx's:
 ###! - secret   (https://github.com/osufx/secret) [AUTOMATED ANITCHEAT +-] . Note: Not used by Ripple
-###! - lets     (https://github.com/osufx/lets) [SCORE SERVER] . Note: osu!fx's lets is a fork of Ripple's lets
+###! - lets     (https://github.com/osufx/lets)   [SCORE SERVER] . Note: osu!fx's lets is a fork of Ripple's lets
 ###! Custom:
 ###! - avatar-server (https://github.com/Uniminin/avatar-server)
 ###! We need:
@@ -111,7 +111,7 @@
 
 
 # Version #
-UPSTREAM_VERSION=0.7.0
+UPSTREAM_VERSION=0.7.6
 
 
 # Colors For Prints
@@ -1329,11 +1329,22 @@ while [ "$#" -ge 0 ]; do case "$1" in
 
 	"--help" | "-h")
 		GPRINT \
-		"Note: 'sudo $0 --<arguments>'" \
-		"Upstream Version: $UPSTREAM_VERSION" \
+		"Version: $UPSTREAM_VERSION" \
 		"" \
-		"Usage:" \
+		"Usage: <superuser> $0 -/--<argument>" \
+		" arguments:" \
+		"    -[hAdepMPLHapiASOFNV]" \
+		"     help(1) | all(2) | dependencies(3) | mysql(4)" \
+		"     peppy(5) | lets(6) | hanayo(7) | rippleapi(8)" \
+		"     avatarserver(9) | oldfrontend(10) | nginx(11)" \
+		"     version(12)" \
+		"" \
+		"Script Specific:" \
 		"   --help, -h             Shows the list of all arguments including relevant informations." \
+		"   --version, -V          Prints the upstream version of the script." \
+		"" \
+		"With Dependencies:" \
+		"" \
 		"   --all, -A              To Setup Entire Ripple Stack with Dependencies!" \
 		"   --dependencies, -dep   To Install all the necessary dependencies required for Ripple Stack." \
 		"   --mysql, -M            To Install & Setup MySQL DB with Dependencies." \
@@ -1344,7 +1355,6 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		"   --avatarserver, -AS    To Clone & Setup avatar-server with Dependencies." \
 		"   --oldfrontend, -OF     To Clone & Setup oldfrontend with Dependencies." \
 		"   --nginx, -N            To Install & Configure Nginx with nginx Dependencies." \
-		"   --version, -V          Prints the upstream version of the script." \
 		"" \
 		"Without Dependencies:" \
 		"   --nodependencies, --nodep" \
