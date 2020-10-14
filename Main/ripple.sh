@@ -8,7 +8,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|             Last Updated on Wednesday, October 14, 2020 at 02:16 PM (GMT+6)             |
+|             Last Updated on Wednesday, October 14, 2020 at 02:20 PM (GMT+6)             |
 -------------------------------------------------------------------------------------------
 '
 
@@ -547,7 +547,6 @@ python3_6() {
 
 	if command -v python3.6 >/dev/null; then
 		GPRINT "Python3.6 has been found on this system. Skipping.."
-		
 	else
 		YPRINT "Setting up '$task'!"
 		
@@ -707,11 +706,10 @@ mysql_database() {
 
 	task="MySQL Database"
 
-	YPRINT "Setting up '$task'."
-
 	if command -v mysql 1>/dev/null; then
 		GPRINT "MySQL has been found on this system. Skipping.."
-	else
+	else	
+		YPRINT "Setting up '$task'."
 		# Dependencies
 		if [ "$package_manager" = "apt" ]; then
 			"$package_manager" install gnupg -y
