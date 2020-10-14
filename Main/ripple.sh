@@ -8,7 +8,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|             Last Updated on Wednesday, October 14, 2020 at 02:20 PM (GMT+6)             |
+|             Last Updated on Wednesday, October 14, 2020 at 03:10 PM (GMT+6)             |
 -------------------------------------------------------------------------------------------
 '
 
@@ -111,31 +111,52 @@
 
 
 # Version #
-UPSTREAM_VERSION=0.7.8
+UPSTREAM_VERSION=0.8.0
+
+
+# Repositories
+peppy_url="https://zxq.co/ripple/pep.py"
+lets_url="https://github.com/osufx/lets"
+secret_url="https://github.com/osufx/secret"
+avatar_server_url="https://github.com/Uniminin/avatar-server"
+old_frontend_url="https://zxq.co/ripple/old-frontend"
 
 
 # Colors For Prints
-alias RPRINT="printf '\\033[0;31m%s\\n'"     # Red
-alias GPRINT="printf '\\033[0;32m%s\\n'"     # Green
-alias YPRINT="printf '\\033[0;33m%s\\n'"     # Yellow
-alias BPRINT="printf '\\033[0;34m%s'"        # Blue
+alias RPRINT="printf '\\033[0;31m%s\\n'"	 # Red
+alias GPRINT="printf '\\033[0;32m%s\\n'"	 # Green
+alias YPRINT="printf '\\033[0;33m%s\\n'"	 # Yellow
+alias BPRINT="printf '\\033[0;34m%s'"		# Blue
+
+
+# Command Overwrites
+alias WGET="wget -O"
+alias GIT_CLONE="git clone"
+alias GO_CLONE="go get"
+alias PING="ping"
+alias CREATE_DIRECTORY="mkdir -v"
+alias CREATE_FILE="touch"
+alias REMOVE="rm -rfv"
+alias READ="read -r"
+alias EXIT="exit"
 
 
 # Modified version of efixme originally designed by Jacob Hrbek <kreyren@rixotstudio.cz> under the terms of GNU GPL-3.0
 efixme() {
+
 	if [ "$FUNCNAME" != "efixme" ]; then
 		FUNCNAME="efixme"
 	elif [ "$FUNCNAME" = "efixme" ]; then
 		true
 	else
-		if command -v die >/dev/null; then
-			die 255 "checking for efixme FUNCNAME"
-		elif ! command -v die >/dev/null; then
+		if command -v DIE >/dev/null; then
+			DIE 255 "checking for efixme FUNCNAME"
+		elif ! command -v DIE >/dev/null; then
 			RPRINT "FATAL: Unexpected happend while checking efixme FUNCNAME"
-			exit 255
+			EXIT 255
 		else
 			RPRINT "FATAL: Unexpected happend while processing unexpected in efixme"
-			exit 255
+			EXIT 255
 		fi
 	fi
 
@@ -147,20 +168,22 @@ efixme() {
 		RPRINT "FIXME: $1"
 		return 0
 	else
-		if command -v die >/dev/null; then
-			die 255 "Unexpected happend while exporting fixme message"
-		elif ! command -v die >/dev/null; then
+		if command -v DIE >/dev/null; then
+			DIE 255 "Unexpected happend while exporting fixme message"
+		elif ! command -v DIE >/dev/null; then
 			RPRINT "FATAL: Unexpected happend while exporting fixme message"
-			exit 255
+			EXIT 255
 		else
 			RPRINT "FATAL: Unexpected happend while processing unexpected in $FUNCNAME"
-			exit 255
+			EXIT 255
 		fi
 	fi
+
 }
 
 # prints line number
 lineno() {
+
 	if command -v bash 1>/dev/null; then
 		RPRINT "$LINENO"
 		return 0
@@ -169,6 +192,7 @@ lineno() {
 	else
 		efixme "ELSE"
 	fi
+
 }
 
 
@@ -178,7 +202,7 @@ set -e
 
 
 # Simplified Assersion by uniminin <uniminin@zoho.com> under the terms of AGPLv3
-# Usage: die "exitcode" "msg..."
+# Usage: DIE "EXIT-code" "msg..."
 die() {
 
 	# Current Date
@@ -190,45 +214,48 @@ die() {
 	esac
 	
 	if [ ! -f "ErrorLog.txt" ]; then
-		touch Error.log
+		CREATE_FILE Error.log
 	fi
 	
 	if [ -f "Error.log" ]; then
-		printf "[$Date]\\nFATAL: %s\\n\\n" "$3 $1" >> Error.log || exit 4
+		printf "[$Date]\\nFATAL: %s\\n\\n" "$3 $1" >> Error.log || EXIT 4
 		GPRINT "Successfully Written into 'Error.log'"
 	fi
 
 	BPRINT "Continue ? y/n "
-	read -r confirmation
+	READ confirmation
 	
 	if [ ! "$confirmation" = "y" ]; then
-		RPRINT "Exiting..."
-		exit 4
+		RPRINT "EXITING..."
+		EXIT 4
 	fi
+
 }
 
 
-# Die
-alias die="die \"[ line \$LINENO\"\\ ]"
+# DIE
+alias DIE="die \"[ line \$LINENO\"\\ ]"
 
 
 # Simplified Network Checker (IPv4 & DNS connectivity) 
 checkNetwork() {
-	if command -v ping 1>/dev/null; then
-		if ping -q -c 1 -W 1 8.8.8.8 >/dev/null; then
+
+	if command -v PING 1>/dev/null; then
+		if PING -q -c 1 -W 1 8.8.8.8 >/dev/null; then
 			GPRINT "IPv4 is up."
 		else
-			die 64 "IPv4 is down!"
+			DIE 64 "IPv4 is down!"
 		fi
 
-		if ping -q -c 1 -W 1 google.com >/dev/null; then
+		if PING -q -c 1 -W 1 google.com >/dev/null; then
 			GPRINT "The network is up."
 		else
-			die 64 "The network is down!"
+			DIE 64 "The network is down!"
 		fi
 	else
-		die 127 "ping is not executable on this system. Failed to check network connectivity."
+		DIE 127 "PING is not executable on this system. Failed to check network connectivity."
 	fi
+
 }
 
 
@@ -238,9 +265,10 @@ checkNetwork() {
 
 # Check for root
 checkRoot() {
+
 	if ! [ "$(id -u)" = 0 ]; then
 		RPRINT "The Script needs to be executed as Root/Superuser!"
-		exit 13
+		EXIT 13
 	fi
 
 }
@@ -248,291 +276,308 @@ checkRoot() {
 
 # Detect number of cpu threads for faster compilation/builds
 nproc_detector() {
+
 	case "$(nproc)" in
-		[1-9] | [1-9][0-9] | [1-9][0-9][0-9] | [1-9][0-9][0-9][0-9]) procNum="$(nproc)" export procNum exit ;;
+		[1-9] | [1-9][0-9] | [1-9][0-9][0-9] | [1-9][0-9][0-9][0-9]) procNum="$(nproc)" export procNum EXIT ;;
 		*)
 			case "$LANG" in
-				en-*|*) die 5 "Command 'nproc' does not return an expected value on this system, setting the processor count on '1' which will negatively affect performance on systems with more then one thread"
+				en-*|*) DIE 5 "Command 'nproc' does not return an expected value on this system, setting the processor count on '1' which will negatively affect performance on systems with more then one thread"
 			esac
 
 			export procNum="1"
 	esac
+
 }
 
 
 inputs() {
 
-	task="Inputs"
+	TASK="Inputs"
 
 	# Creating Master Directory (where all The Repositories will be cloned)
 	while [ -z "$targetDir" ]; do
 		BPRINT "Enter Master Directory [$(pwd)/?]: "
-		read -r targetDir
+		READ targetDir
 	done
 
 	if [ -n "$targetDir" ]; then
 		master_dir="$(pwd)/$targetDir"
 		if [ -d "$master_dir" ]; then
 			BPRINT "Master Directory: '$master_dir' exists. Continue ? y/n "
-			read -r confirmation
+			READ confirmation
 			if [ "$confirmation" = "y" ]; then
-				GPRINT "Using Directory '$master_dir'"
+				GPRINT "Using Directory '$master_dir'."
 			else
-				die 1 "Input Declined by the user!"
+				DIE 1 "Input Declined by the user!"
 			fi
 		else
 			BPRINT "Create Master Directory: '$master_dir' ? y/n "
-			read -r confirmation
+			READ confirmation
 			if [ "$confirmation" = "y" ]; then
-				mkdir -v "$master_dir"
+				CREATE_DIRECTORY "$master_dir"
 				if [ -d "$master_dir" ]; then
 					GPRINT "'$master_dir' has been created!"
 				else
-					die 1 "Failed to create '$master_dir'"
+					DIE 1 "Failed to create '$master_dir'!"
 				fi
 			fi
 		fi
 
 		if [ -d "$master_dir" ]; then
-			chmod -R a+rwx "$master_dir" || die 1 "Unable to change permission of the file '$master_dir'"
+			chmod -R a+rwx "$master_dir" || DIE 1 "Unable to change permission of the file '$master_dir'!"
 			export directory="$master_dir"
 		else
-			die 1 "Failed to create Directory '$master_dir'"
+			DIE 1 "Failed to create Directory '$master_dir'!"
 		fi
 	fi
 
 	# Domain
 	while [ -z "$domain" ]; do
 		BPRINT "Domain (example: ripple.moe): "
-		read -r domain
+		READ domain
 	done
 	BPRINT "Are you sure you want to use '$domain' ? y/n "
-	read -r confirmation
+	READ confirmation
 	if [ "$confirmation" = "y" ]; then
 		export domain
 	else
-		die 1 "Domain Not specified!"
+		DIE 1 "Domain Not specified!"
 	fi
 
 	# Cikey
 	while [ -z "$cikey" ]; do
 		BPRINT "cikey: "
-		read -r cikey
+		READ cikey
 	done
 	BPRINT "Are you sure you want to use '$cikey' ? y/n "
-	read -r confirmation
+	READ confirmation
 	if [ "$confirmation" = "y" ]; then
 		export cikey
 	else
-		die 1 "cikey Not specified!"
+		DIE 1 "cikey Not specified!"
 	fi
 
 	# OSU!API
 	BPRINT "Get OSU!API Key Here: https://old.ppy.sh/p/api"
 	while [ -z "$api" ]; do
 		BPRINT "OSU!API key: "
-		read -r api
+		READ api
 	done
 	BPRINT "Are you sure you want to use '$api' ? y/n "
-	read -r confirmation
+	READ confirmation
 	if [ "$confirmation" = "y" ]; then
 		export api
 	else
-		die 1 "OSU!API Key Not specified!"
+		DIE 1 "OSU!API Key Not specified!"
 	fi
 
 	# API-Secret
 	while [ -z "$api_secret" ]; do
 		BPRINT "API Secret: "
-		read -r api_secret
+		READ api_secret
 	done
 	BPRINT "Are you sure you want to use '$api_secret' ? y/n "
-	read -r confirmation
+	READ confirmation
 	if [ "$confirmation" = "y" ]; then
 		export api_secret
 	else
-		die 1 "API Secret Not specified!"
+		DIE 1 "API Secret Not specified!"
 	fi
 
 	# MySQL USERNAME
 	while [ -z "$mysql_user" ]; do
 		BPRINT "Enter MySQL Username: "
-		read -r mysql_user
+		READ mysql_user
 	done
 	BPRINT "Are you sure you want to use '$mysql_user' ? y/n "
-	read -r confirmation
+	READ confirmation
 	if [ "$confirmation" = "y" ]; then
 		export mysql_user
 	else
-		die 1 "MYSQL Username Not specified!"
+		DIE 1 "MYSQL Username Not specified!"
 	fi
 
 	# MySQL PASSWORD
 	while [ -z "$mysql_password" ]; do
 		BPRINT "Enter MySQL Password: "
-		read -r mysql_password
+		READ mysql_password
 	done
 	BPRINT "Are you sure you want to use '$mysql_password' ? y/n "
-	read -r confirmation
+	READ confirmation
 	if [ "$confirmation" = "y" ]; then
 		export mysql_password
 	else
-		die 1 "MYSQL Password Not specified!"
+		DIE 1 "MYSQL Password Not specified!"
 	fi
 
 	# MySQL DATABASE NAME
 	while [ -z "$database_name" ]; do
 		BPRINT "Enter MySQL Database Name For Ripple: "
-		read -r database_name
+		READ database_name
 	done
 	BPRINT "Are you sure you want to use '$database_name' ? y/n "
-	read -r confirmation
+	READ confirmation
 	if [ "$confirmation" = "y" ]; then
 		export database_name
 	else
-		die 1 "MYSQL Database Name Not specified!"
+		DIE 1 "MYSQL Database Name Not specified!"
 	fi
 
-	GPRINT "Done obtaining all the necessary '$task'."
+	GPRINT "All necessary '$TASK' obtained."
+
 }
 
 
-# FIXME: Add more support for other distros and package managers.
+# TODO: Add more support for other distros and package managers.
 # Supports: apt, pacman, portage and paludis.
 DetectPackageManager() {
+
 	if command -v apt >/dev/null; then
-		pm="apt"
-		GPRINT "Found Package Manager: '$pm'"
-		export package_manager="$pm"
-		YPRINT "Using Package Manager: '$package_manager'"
-
+		frontend="apt"
 	elif command -v pacman >/dev/null; then
-		pm="pacman"
-		GPRINT "Found Package Manager: '$pm'"
-		export package_manager="$pm"
-		YPRINT "Using Package Manager: '$package_manager'"
-
+		frontend="pacman"
 	elif command -v emerge >/dev/null; then
-		pm="portage"
-		GPRINT "Found Package Manager: '$pm'"
-		export package_manager="emerge"
-		YPRINT "Using Package Manager: 'portage [$package_manager]'"
-
+		frontend="emerge"
 	elif command -v cave >/dev/null; then
-		pm="paludis"
-		GPRINT "Found Package Manager: '$pm'"
-		export package_manager="cave"
-		YPRINT "Using Package Manager: 'paludis [$package_manager]'"
-
+		frontend="cave"
 	elif ! command -v apt >/dev/null || ! command -v pacman >/dev/null \
 	|| ! command -v emerge >/dev/null || ! command -v cave >/dev/null; then
-		die 8 "Any of apt, pacman, portage or paludis is not executable on this system! The script is programmed to work on APT, Pacman and Portage only."
-	else
-		die 14 "Unexpected Error!"
+		DIE 8 "Any of apt, pacman, portage or paludis is not executable on this system! The script is programmed to work on APT, Pacman and Portage only."
+  else
+		DIE 14 "Unexpected Error!"
 	fi
+
+  case "$frontend" in
+	"apt")
+	  GPRINT "Found Package Manager: 'APT [ $frontend ]'"
+		  export package_manager_frontend="$frontend"
+		  YPRINT "Using Package Manager Frontend: '$package_manager_frontend'"
+	;;
+	"pacman")
+	  GPRINT "Found Package Manager: 'Pacman [ $frontend ]'"
+		  export package_manager_frontend="$frontend"
+		  YPRINT "Using Package Manager Frontend: '$package_manager_frontend'"
+	;;
+	"emerge")
+	  GPRINT "Found Package Manager: 'Portage [ $frontend ]'"
+		  export package_manager_frontend="emerge"
+		  YPRINT "Using Package Manager Frontend: 'Portage'"
+	;;
+	"cave")
+	  GPRINT "Found Package Manager: 'Paludis [ $frontend ]'"
+		  export package_manager_frontend="cave"
+		  YPRINT "Using Package Manager Frontend: 'Paludis'"
+	;;
+	esac
+
 }
 
 
 packageManagerUpgrade() {
 
-	task="packages"
+	TASK="packages"
 
-	GPRINT "Upgrading/Updating system '$task'!"
-
-	if command -v apt >/dev/null; then
-		apt update ; apt upgrade -y ; apt update
-
-	elif command -v pacman >/dev/null; then
-		pacman --noconfirm -Syyu
+	GPRINT "Upgrading/Updating system '$TASK'!"
 	
-	elif command -v emerge >/dev/null; then
-		emerge --sync ; emerge -quDN @world
+	case "$package_manager_frontend" in
+		"apt")
+			apt update ; apt upgrade -y ; apt update
+		;;
+		"pacman")
+			pacman --noconfirm -Syyu
+		;;
+		"emerge")
+			emerge --sync ; emerge -qvuDN @world
+		;;
+		"cave")
+			cave sync ; cave resolve world -qx
+		;;
+		esac
 
-	elif command -v cave >/dev/null; then
-		cave sync ; cave resolve world -x
-	fi
 }
 
 
 # Dependencies Requires for Python3.5 & Python3.6
 python_dependencies() {
 
-	task="python"
+	TASK="python"
 
-	GPRINT "Installing Necessary Dependencies required for '$task'!"
+	YPRINT "Installing Necessary Dependencies required for '$TASK'!"
 
 	# Dependencies
-	if [ "$package_manager" = "apt" ]; then
-		"$package_manager" install build-essential libssl-dev zlib1g-dev openssl libbz2-dev libsqlite3-dev \
-		git wget python-dev default-libmysqlclient-dev tar make cython -y
-
-	elif [ "$package_manager" = "pacman" ]; then
-		"$package_manager" --noconfirm -S gcc git wget tar make cython
-
-	elif [ "$package_manager" = "emerge" ]; then
-		"$package_manager" -q sys-devel/gcc dev-vcs/git net-misc/wget \
-		sys-devel/make app-arch/tar dev-python/cython
-
-	elif [ "$package_manager" = "cave" ]; then
-		"$package_manager" resolve -x sys-devel/gcc dev-scm/git \
-		sys-devel/make app-arch/tar dev-python/shiboken2
-
-	fi
+	case "$package_manager_frontend" in
+		"apt")
+			"$package_manager_frontend" install build-essential libssl-dev zlib1g-dev openssl libbz2-dev libsqlite3-dev \
+			git wget python-dev default-libmysqlclient-dev tar make cython -y
+		;;
+		"pacman")
+			"$package_manager_frontend" --noconfirm -S gcc git wget tar make cython
+		;;
+		"emerge")
+			"$package_manager_frontend" -q sys-devel/gcc dev-vcs/git net-misc/wget \
+			sys-devel/make app-arch/tar dev-python/cython
+		;;
+		"cave")
+			"$package_manager_frontend" resolve -x sys-devel/gcc dev-scm/git sys-devel/make \
+			app-arch/tar dev-python/shiboken2
+		;;
+		esac
 
 	for packages in gcc make git wget cython; do
 		if command -v $packages >/dev/null; then
-			GPRINT "Done Installing necessary Dependencies required for '$task'"
+			GPRINT "Done Installing necessary Dependencies required for '$TASK'!"
 		else
-			die 123 "Failed to Install necessary Dependencies required for '$task'"
+			DIE 123 "Failed to Install necessary Dependencies required for '$TASK'"
 		fi
 	done
+
 }
 
 
 # Python 3.5 for pep.py
 python3_5() {
 
-	task="python3.5"
+	TASK="python3.5"
 
 	if command -v python3.5 >/dev/null; then
-		GPRINT "Python3.5 has been found on this system. Skipping.."
+		GPRINT "Python3.5 has been found on this system. SkipPING.."
 	else
-		YPRINT "Setting up '$task'!"
+		YPRINT "Setting up '$TASK'!"
 
-		if command -v ping 1>/dev/null; then
-			ping -i 0.5 -c 5 python.org || die 121 "Domain 'python.org' is not reachable from this environment."
+		if command -v PING 1>/dev/null; then
+			PING -i 0.5 -c 5 python.org || DIE 121 "Domain 'python.org' is not reachable from this environment."
 		else
-			die 61 "Unknown Error!"
+			DIE 61 "Unknown Error!"
 		fi
 
 		(
 			if [ -d "/usr/src" ]; then
-				cd /usr/src || die 1 "Failed to cd into '/usr/src'"
-				wget -O "Python-3.5.9.tar.xz" https://www.python.org/ftp/python/3.5.9/Python-3.5.9.tar.xz || die 1 "Could not download file 'Python-3.5.9.tar.xz'."
+				cd /usr/src || DIE 1 "Failed to cd into '/usr/src'"
+				WGET "Python-3.5.9.tar.xz" https://www.python.org/ftp/python/3.5.9/Python-3.5.9.tar.xz || DIE 1 "Could not download file 'Python-3.5.9.tar.xz'."
 			fi
 
 			if [ -f "Python-3.5.9.tar.xz" ]; then
 				tar -xvf Python-3.5.9.tar.xz
 				if [ -d "Python-3.5.9" ]; then
-					cd Python-3.5.9 || die 1 "Could not cd into 'Python-3.5.9'."
+					cd Python-3.5.9 || DIE 1 "Could not cd into 'Python-3.5.9'!"
 				else
-					die 1 "Failed to extract 'Python-3.5.9.tar.xz'."
+					DIE 1 "Failed to extract 'Python-3.5.9.tar.xz'!"
 				fi
 				./configure --enable-optimizations --with-ensurepip=install ; make --jobs "$procNum" build_all ; make install
 				if command -v python3.5 -m pip >/dev/null; then
 					python3.5 -m pip install --upgrade pip
 				else
-					die 1 "python3.5 pip not found."
+					DIE 1 "python3.5 pip not found!"
 				fi
 
 			if command -v python3.5 >/dev/null; then
 				GPRINT "Python3.5 has been installed on this system."
 			else
-				die 1 "Failed to install python3.5!"
+				DIE 1 "Failed to install python3.5!"
 			fi
 
 			else
-				die 1 "Python3.5.9 couldn't be installed because file 'Python-3.5.9.tar.xz' was not found!"
+				DIE 1 "Python3.5.9 couldn't be installed because file 'Python-3.5.9.tar.xz' was not found!"
 			fi
 		)
 	fi
@@ -543,97 +588,97 @@ python3_5() {
 # Python 3.6 for lets
 python3_6() {
 
-	task="python3.6"
+	TASK="python3.6"
 
 	if command -v python3.6 >/dev/null; then
-		GPRINT "Python3.6 has been found on this system. Skipping.."
+		GPRINT "Python3.6 has been found on this system. SkipPING.."
 	else
-		YPRINT "Setting up '$task'!"
+		YPRINT "Setting up '$TASK'!"
 		
 		# FIXME: detect distro version, add and pull proper repository and package respectively
 		if [ "$ID" = "Ubuntu" ]; then
 			add-apt-repository ppa:deadsnakes/ppa -y
-			"$package_manager" update
-			"$package_manager" install python3.6 python3-pip -y
+			"$package_manager_frontend" update
+			"$package_manager_frontend" install python3.6 python3-pip -y
 			
 		else
-			if command -v ping 1>/dev/null; then
-				ping -i 0.5 -c 5 python.org || die 121 "Domain 'python.org' is not reachable from this environment."
+			if command -v PING 1>/dev/null; then
+				PING -i 0.5 -c 5 python.org || DIE 121 "Domain 'python.org' is not reachable from this environment."
 			else
-				die 61 "Unknown Error!"
+				DIE 61 "Unknown Error!"
 			fi
 
 			(
 				if [ -d "/usr/src" ]; then
-					cd /usr/src || die 1 "Failed to cd into '/usr/src'"
-					wget -O "Python-3.6.8.tar.xz" https://www.python.org/ftp/python/3.6.8/Python-3.6.8.tar.xz || die 11 "Could not download file 'Python-3.6.8.tar.xz'."
+					cd /usr/src || DIE 1 "Failed to cd into '/usr/src'!"
+					WGET "Python-3.6.8.tar.xz" https://www.python.org/ftp/python/3.6.8/Python-3.6.8.tar.xz || DIE 11 "Could not download file 'Python-3.6.8.tar.xz'."
 				fi
 
 				if [ -f "Python-3.6.8.tar.xz" ]; then
 					tar -xvf Python-3.6.8.tar.xz
 					if [ -d "Python-3.6.8" ]; then
-						cd Python-3.6.8 || die 1 "Failed to cd into 'Python-3.6.8'."
+						cd Python-3.6.8 || DIE 1 "Failed to cd into 'Python-3.6.8'!"
 					else
-						die 1 "Failed to extract 'Python-3.6.8.tar.xz'."
+						DIE 1 "Failed to extract 'Python-3.6.8.tar.xz'!"
 					fi
 					./configure --enable-optimizations --with-ensurepip=install ; make --jobs "$procNum" build_all ; make install
 					if command -v python3.6 -m pip >/dev/null; then
 						python3.6 -m pip install --upgrade pip
 					else
-						die 1 "python3.6 pip not found."
+						DIE 1 "python3.6 pip not found!"
 					fi
 
 				if command -v python3.6 >/dev/null; then
 					GPRINT "Python3.6 has been installed on this system."
 				else
-					die 1 "Failed to install python3.6!"
+					DIE 1 "Failed to install python3.6!"
 				fi
 
 				else
-					die 1 "Python3.6.8 couldn't be installed because file 'Python-3.6.8.tar.xz' was not found."
+					DIE 1 "Python3.6.8 couldn't be installed because file 'Python-3.6.8.tar.xz' was not found!"
 				fi
 			)
 		fi
 	fi
 
-	
 }
 
 
 # Golang1.13+ for Hanayo & rippleapi
 golang() {
 
-	task="golang"
+	TASK="golang"
 
 	if command -v go 1>/dev/null; then
-		GPRINT "Golang has be found on this system. Skipping.."
+		GPRINT "Golang has be found on this system. SkipPING.."
 	else
-		YPRINT "Setting up '$task'!"
+		YPRINT "Setting up '$TASK'!"
 		
 		# FIXME: use apt to install golang1.14
 		if [ "$ID" = "Ubuntu" ]; then
 			add-apt-repository ppa:longsleep/golang-backports -y
-			"$package_manager" update
-			"$package_manager" install golang-go -y
+			"$package_manager_frontend" update
+			"$package_manager_frontend" install golang-go -y
 		
-		elif [ "$package_manager" = "apt" ]; then
+		elif [ "$package_manager_frontend" = "apt" ]; then
 			# FIXME: provide proper package name
-			"$package_manager" install wget golang-go -y
+			"$package_manager_frontend" install wget golang-go -y
 			
 			if ! command -v go 1>/dev/null; then
-				if command -v ping 1>/dev/null; then
-					ping -i 0.5 -c 5 dl.google.com || die 121 "Domain 'dl.google.com' is not reachable from this environment."
+				if command -v PING 1>/dev/null; then
+					PING -i 0.5 -c 5 dl.google.com || DIE 121 "Domain 'dl.google.com' is not reachable from this environment."
 				else
-					die 61 "Unknown Error!"
+					DIE 61 "Unknown Error!"
 				fi
 
 				(
 					if [ -d "/usr/src" ]; then
-						cd /usr/src || die 1 "Failed to cd into '/usr/src'."
-						wget https://golang.org/dl/go1.14.linux-amd64.tar.gz
+						cd /usr/src || DIE 1 "Failed to cd into '/usr/src'!"
+						WGET "go1.14.tar.gz" https://golang.org/dl/go1.14.linux-amd64.tar.gz
+			tar -xvf go1.14.tar.gz
+						chown -R root:root ./go
+
 						if [ -d "/usr/local" ]; then
-							tar -xvf go1.14.linux-amd64.tar.gz
-							chown -R root:root ./go
 							mv go /usr/local
 
 							echo export GOPATH=/root/go > ~/.bashrc
@@ -641,214 +686,225 @@ golang() {
 							. ~/.bashrc
 
 						else
-							die 1 "Directory: '/usr/local' doesn't exist."
+							DIE 1 "Directory: '/usr/local' doesn't exist!"
 						fi
 					fi
 				)
 			fi
 		
 		# FIXME: use pacman to install golang1.14
-		elif [ "$package_manager" = "pacman" ]; then
-			"$package_manager" --noconfirm -S go
+		elif [ "$package_manager_frontend" = "pacman" ]; then
+			"$package_manager_frontend" --noconfirm -S go
 
-		elif [ "$package_manager" = "emerge" ]; then
+		elif [ "$package_manager_frontend" = "emerge" ]; then
 			# Latest stable (Gentoo package database) [12:40 PM | 8/30/20 | Sun | GMT+6]
-			"$package_manager" -q =dev-lang/go-1.14.7
+			"$package_manager_frontend" -q =dev-lang/go-1.14.7
 
-		elif [ "$package_manager" = "cave" ]; then
+		elif [ "$package_manager_frontend" = "cave" ]; then
 			# Latest stable (Exherbo package database) [12:40 PM | 8/30/20 | Sun | GMT+6]
-			"$package_manager" resolve -x =dev-lang/go-1.14.7
+			"$package_manager_frontend" resolve -x =dev-lang/go-1.14.7
 		fi
 
 		if command -v go 1>/dev/null; then
-			GPRINT "Done Setting up '$task'."
+			GPRINT "Done Setting up '$TASK'!"
 		else
-			die 1 "Failed to Setup '$task'."
+			DIE 1 "Failed to Setup '$TASK'!"
 		fi
 	fi
+
 }
 
 
 # Extra Dependencies required to run stack softwares and get the server online.
 extra_dependencies() {
 
-	task="Extra Dependencies"
+	TASK="Extra Dependencies"
 
-	YPRINT "Installing '$task'!"
+	YPRINT "Installing '$TASK'!"
 
 	# Dependencies
-	if [ "$package_manager" = "apt" ]; then
-		"$package_manager" install tmux nginx redis-server socat -y
-
-	elif [ "$package_manager" = "pacman" ]; then
-		"$package_manager" --noconfirm -S tmux nginx redis socat
-
-	elif [ "$package_manager" = "emerge" ]; then
-		"$package_manager" -q app-misc/tmux www-servers/nginx dev-db/redis net-misc/socat
-
-	elif [ "$package_manager" = "cave" ]; then
-		"$package_manager" resolve -x app-terminal/tmux www-servers/nginx \
-		dev-db/redis net-misc/socat
-	fi
+	case "$package_manager_frontend" in
+		"apt")
+			"$package_manager_frontend" install tmux nginx redis-server socat -y
+		;;
+		"pacman")
+			"$package_manager_frontend" --noconfirm -S tmux nginx redis socat
+		;;
+		"emerge")
+			"$package_manager_frontend" -q app-misc/tmux www-servers/nginx dev-db/redis net-misc/soca
+		;;
+		"cave")
+			"$package_manager_frontend" resolve -x app-terminal/tmux www-servers/nginx \
+			dev-db/redis net-misc/socat
+		;;
+		esac
 
 	for packages in tmux nginx redis-cli; do
 		if command -v $packages >/dev/null; then
-			GPRINT "Done Installing necessary Dependencies required for '$task'"
+			GPRINT "Done Installing necessary Dependencies required for '$TASK'!"
 		else
-			die 1 "Failed to Install necessary Dependencies required for '$task'"
+			DIE 1 "Failed to Install necessary Dependencies required for '$TASK'!"
 		fi
 	done
+
 }
 
 
 # Database is required to access, read, write & manage all the user's data. (Required for all Ripple's Softwares i.e lets, peppy..)
 mysql_database() {
 
-	task="MySQL Database"
+	TASK="MySQL Database"
 
 	if command -v mysql 1>/dev/null; then
-		GPRINT "MySQL has been found on this system. Skipping.."
+		GPRINT "MySQL has been found on this system. SkipPING.."
 	else	
-		YPRINT "Setting up '$task'."
+		YPRINT "Setting up '$TASK'!"
+
 		# Dependencies
-		if [ "$package_manager" = "apt" ]; then
-			"$package_manager" install gnupg -y
+	case "$package_manager_frontend" in
+		"apt")
+			"$package_manager_frontend" install gnupg -y
 			if command -v wget >/dev/null; then
-				wget -O "mysql.deb" https://repo.mysql.com//mysql-apt-config_0.8.15-1_all.deb
+				WGET "mysql.deb" https://repo.mysql.com//mysql-apt-config_0.8.15-1_all.deb
 				# Choose MySQL 8.0+
 				dpkg -i mysql.deb
 
 				if [ -f "mysql.deb" ]; then
-					rm -rfv mysql.deb
+					REMOVE mysql.deb
 				fi
 			else
-				die 1 "wget not found on this system!"
+				DIE 1 "wget not found on this system!"
 			fi
 
 			packageManagerUpgrade
-			"$package_manager" install mysql-community-server -y
+			"$package_manager_frontend" install mysql-community-server -y
 			service mysql start
 
 			if command -v systemctl >/dev/null; then
 				systemctl restart mysql
 			fi
-
-		elif [ "$package_manager" = "pacman" ]; then
-			"$package_manager" --noconfirm -S mariadb
+		;;
+		"pacman")
+				"$package_manager_frontend" --noconfirm -S mariadb
 			mariadb-install-db --user=mysql --basedir=/usr --datadir=/var/lib/mysql
 			systemctl start mariadb.service
-
-		elif [ "$package_manager" = "emerge" ]; then
-			"$package_manager" -q dev-db/mysql
+		;;
+		"emerge")
+			"$package_manager_frontend" -q dev-db/mysql
 			if command -v rc >/dev/null; then
 				rc-update add mysql default ; rc-service mysql start
 			elif command -v service >/dev/null; then
 				service mysql start
 			else
-				die 1 "Unable to Detect init system and start Mysql service!"
+				DIE 1 "Unable to Detect init system and start Mysql service!"
 			fi
-
-		elif [ "$package_manager" = "cave" ]; then
-			"$package_manager" resolve -x virtual/mysql
+		;;
+		"cave")
+			"$package_manager_frontend" resolve -x virtual/mysql
 			if command -v rc >/dev/null; then
 				rc-update add mysql default ; rc-service mysql start
 			elif command -v service >/dev/null; then
 				service mysql start
 			else
-				die 1 "Unable to Detect init system and start Mysql service!"
+				DIE 1 "Unable to Detect init system and start Mysql service!"
 			fi
-		fi
+		;;
+		esac
 
 
 		if command -v mysql >/dev/null; then
-			GPRINT "Done Installing necessary Dependencies required for '$task'"
+			GPRINT "Done Installing necessary Dependencies required for '$TASK'!"
 		else
-			die 1 "Failed to Install necessary Dependencies required for '$task'"
+			DIE 1 "Failed to Install '$TASK'!"
 		fi
 	fi
 
-	if command -v ping 1>/dev/null; then
-		ping -i 0.5 -c 5 raw.githubusercontent.com || die 121 "Domain 'raw.githubusercontent.com' is not reachable from this environment."
+	if command -v PING 1>/dev/null; then
+		PING -i 0.5 -c 5 raw.githubusercontent.com || DIE 121 "Domain 'raw.githubusercontent.com' is not reachable from this environment."
 	else
-		die 61 "Unknown Error!"
+		DIE 61 "Unknown Error!"
 	fi
 
 	(
 		if [ -d "$directory" ]; then
-			cd "$directory" || die 1 "Failed to cd into '$directory'"
+			cd "$directory" || DIE 1 "Failed to cd into '$directory'!"
 			mysql_dir="mysql_db"
-			mkdir -v $mysql_dir ; cd $mysql_dir || die 1 "Failed to cd into '$mysql_dir'."
-			wget -O "ripple.sql" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Database%20files/ripple.sql || die 11 "Could not download file 'ripple.sql'."
+			CREATE_DIRECTORY $mysql_dir ; cd $mysql_dir || DIE 1 "Failed to cd into '$mysql_dir'!"
+			WGET "ripple.sql" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Database%20files/ripple.sql || DIE 11 "Could not download file 'ripple.sql'!"
 			if [ -f "ripple.sql" ]; then
 				YPRINT "Note: Enter MySql Password. Same for each prompt"
 				mysql -u "$mysql_user" -p -e 'CREATE DATABASE '"$database_name"'';
 				mysql -p -u "$mysql_user" "$database_name" < ripple.sql
-				GPRINT "Done Setting Up '$task'."
+				GPRINT "Done Setting Up '$TASK'!"
 			else
-				die 1 "Failed to Setup '$task'."
+				DIE 1 "Failed to Setup '$TASK'!"
 			fi
 		else
-			die 1 "Directory '$directory' doesn't exist."
+			DIE 1 "Directory '$directory' doesn't exist!"
 		fi
 	)
+
 }
 
 
 # For Interacting with Database online.
 phpmyadmin(){
 
-	task="phpmyadmin"
+	TASK="phpmyadmin"
 
-	YPRINT "Setting up '$task'!"
+	YPRINT "Setting up '$TASK'!"
 
 	# Dependencies
-	if [ "$package_manager" = "apt" ]; then
-		"$package_manager" install phpmyadmin php-mbstring php-gettext -y
-
-	elif [ "$package_manager" = "pacman" ]; then
-		"$package_manager" --noconfirm -S phpmyadmin
-
-	elif [ "$package_manager" = "emerge" ]; then
-		"$package_manager" -q dev-db/phpmyadmin
-
-	elif [ "$package_manager" = "cave" ]; then
-		"$package_manager" resolve -x dev-lang/php
-	fi
+  case "$package_manager_frontend" in
+		"apt")
+			"$package_manager_frontend" install phpmyadmin php-mbstring php-gettext -y
+		;;
+		"pacman")
+			"$package_manager_frontend" --noconfirm -S phpmyadmin
+		;;
+		"emerge")
+			"$package_manager_frontend" -q dev-db/phpmyadmin
+		;;
+		"cave")
+			"$package_manager_frontend" resolve -x dev-lang/php
+		;;
+		esac
 
 	if [ -d "/var/www/osu.ppy.sh" ]; then
 		(
-			cd /var/www/osu.ppy.sh || die 1 "Failed to cd into '/var/www/osu.ppy.sh'."
+			cd /var/www/osu.ppy.sh || DIE 1 "Failed to cd into '/var/www/osu.ppy.sh'!"
 			ln -s /usr/share/phpmyadmin phpmyadmin
 		)
-		GPRINT "Done setting up '$task'."
+		GPRINT "Done setting up '$TASK'!"
 	else
-		die 1 "Directory '/var/www/osu.ppy.sh' does not exist."
+		DIE 1 "Directory '/var/www/osu.ppy.sh' does not exist!"
 	fi
+
 }
 
 
 # peppy is the backend of osu/bancho, starting from client login, it handles most of the stuff.
 peppy () {
 
-	task="pep.py"
+	TASK="pep.py"
 
-	YPRINT "Cloning and Setting up '$task'!"
+	YPRINT "Cloning and Setting up '$TASK'!"
 
-	if command -v ping 1>/dev/null; then
-		ping -i 0.5 -c 5 zxq.co || die 121 "Domain: zxq.co is not reachable from this environment."
+	if command -v PING 1>/dev/null; then
+		PING -i 0.5 -c 5 zxq.co || DIE 121 "Domain: zxq.co is not reachable from this environment!"
 	else
-		die 61 "Unknown Error!"
+		DIE 61 "Unknown Error!"
 	fi
 
 	if [ -d "$directory" ]; then
 		(
-			cd "$directory" || die 1 "Failed to cd into '$directory'."
+			cd "$directory" || DIE 1 "Failed to cd into '$directory'!"
 
 			if command -v git 1>/dev/null; then
-				git clone https://zxq.co/ripple/pep.py ; cd pep.py || die 1 "Failed to cd into '$task'"
+				GIT_CLONE "$peppy_url" ; cd pep.py || DIE 1 "Failed to cd into '$TASK'!"
 				git submodule init ; git submodule update
 			else
-				die 1 "git not found on this system!"
+				DIE 1 "git not found on this system!"
 			fi
 
 			if command -v python3.5 >/dev/null; then
@@ -857,72 +913,74 @@ peppy () {
 				if [ -f "pep.py" ]; then
 					python3.5 pep.py
 					if [ -f "config.ini" ]; then
-						sed -Ei "s:^username =.*$:username = $mysql_user:g" config.ini || die 74 "Failed to Setup Config file. [$task/config.ini -> mysql_user]"
-						sed -Ei "s:^password =.*$:password = $mysql_password:g" config.ini || die 74 "Failed to Setup Config file. [$task/config.ini -> mysql_password]"
-						sed -Ei "s:^database =.*$:database = $database_name:g" config.ini || die 74 "Failed to Setup Config file. [$task/config.ini -> database_name]"
-						sed -Ei "s:^cikey =.*$:cikey = $cikey:g" config.ini || die 74 "Failed to Setup Config file. [$task/config.ini -> cikey]"
-						sed -Ei "s:^apikey =.*$:apikey = $api:g" config.ini || die 74 "Failed to Setup Config file. [$task/config.ini -> api]"
+						sed -Ei "s:^username =.*$:username = $mysql_user:g" config.ini || DIE 74 "Failed to Setup Config file! [$TASK/config.ini -> mysql_user]"
+						sed -Ei "s:^password =.*$:password = $mysql_password:g" config.ini || DIE 74 "Failed to Setup Config file! [$TASK/config.ini -> mysql_password]"
+						sed -Ei "s:^database =.*$:database = $database_name:g" config.ini || DIE 74 "Failed to Setup Config file! [$TASK/config.ini -> database_name]"
+						sed -Ei "s:^cikey =.*$:cikey = $cikey:g" config.ini || DIE 74 "Failed to Setup Config file! [$TASK/config.ini -> cikey]"
+						sed -Ei "s:^apikey =.*$:apikey = $api:g" config.ini || DIE 74 "Failed to Setup Config file! [$TASK/config.ini -> api]"
 					fi
 				fi
-				GPRINT "Done Setting Up '$task'."
+				GPRINT "Done Setting Up '$TASK'!"
 			else
-				die 1 "Could not setup '$task' because python3.5 wasn't found on this system."
+				DIE 1 "Could not setup '$TASK' because python3.5 wasn't found on this system!"
 			fi
 		)
 	else
-		die 1 "Directory '$directory' doesn't exist."
+		DIE 1 "Directory '$directory' doesn't exist!"
 	fi
+
 }
 
 
 secret() {
 
-	task="secret"
+	TASK="secret"
 
-	YPRINT "Cloning and Setting up '$task'!"
+	YPRINT "Cloning and Setting up '$TASK'!"
 
-	if command -v ping 1>/dev/null; then
-		ping -i 0.5 -c 5 github.com || die 121 "Domain 'github.com' is not reachable from this environment."
+	if command -v PING 1>/dev/null; then
+		PING -i 0.5 -c 5 github.com || DIE 121 "Domain 'github.com' is not reachable from this environmen!"
 	else
-		die 61 "Unknown Error!"
+		DIE 61 "Unknown Error!"
 	fi
 
 	if [ -d "secret" ]; then
-		rm -rfv secret
+		REMOVE secret
 
 		if command -v git 1>/dev/null; then
-			git clone https://github.com/osufx/secret
+			GIT_CLONE "$secret_url"
 		(
-			cd secret || die 1 "Failed to cd into 'secret'"
+			cd secret || DIE 1 "Failed to cd into 'secret'!"
 			git submodule init ; git submodule update
 		)
 		else
-			die 1 "git not found on this system!"
+			DIE 1 "git not found on this system!"
 		fi
 	fi
-	GPRINT "Done Setting Up '$task'."
+	GPRINT "Done Setting Up '$TASK'!"
+
 }
 
 
 # LETS is the Ripple's score server. It manages scores, osu!direct etc.
 lets() {
 
-	task="lets"
+	TASK="lets"
 
-	YPRINT "Cloning & Setting Up '$task'!"
+	YPRINT "Cloning & Setting Up '$TASK'!"
 
-	if command -v ping 1>/dev/null; then
-		ping -i 0.5 -c 5 github.com || die 121 "Domain 'github.com' is not reachable from this environment."
+	if command -v PING 1>/dev/null; then
+		PING -i 0.5 -c 5 github.com || DIE 121 "Domain 'github.com' is not reachable from this environment!"
 	else
-		die 61 "Unknown Error!"
+		DIE 61 "Unknown Error!"
 	fi
 
 	if [ -d "$directory" ]; then
 		(
-			cd "$directory" || die 1 "Failed to cd into '$directory'."
+			cd "$directory" || DIE 1 "Failed to cd into '$directory'!"
 
 			if command -v git 1>/dev/null; then
-				git clone https://github.com/osufx/lets ; cd lets || die 1 "Failed to cd into '$task'."
+				GIT_CLONE "$lets_url" ; cd lets || DIE 1 "Failed to cd into '$TASK'!"
 			else
 				 1 "git not found on this system!"
 			fi
@@ -935,30 +993,30 @@ lets() {
 				if [ -f "lets.py" ]; then
 					python3.6 lets.py
 					if [ -f "config.ini" ]; then
-						sed -Ei "s:^username =.*$:username = $mysql_user:g" config.ini || die 74 "Failed to Setup Config file. [$task/config.ini -> mysql_user]"
-						sed -Ei "s:^password =.*$:password = $mysql_password:g" config.ini || die 74 "Failed to Setup Config file. [$task/config.ini -> mysql_password]"
-						sed -Ei "s:^database =.*$:database = $database_name:g" config.ini || die 74 "Failed to Setup Config file. [$task/config.ini -> database_name]"
-						sed -Ei "s/changeme/$cikey/g" config.ini || die 74 "Failed to Setup Config file. [$task/config.ini -> cikey]"
-						sed -Ei "s:^apikey =.*$:apikey = $api:g" config.ini || die 74 "Failed to Setup Config file. [$task/config.ini -> apikey]"
+						sed -Ei "s:^username =.*$:username = $mysql_user:g" config.ini || DIE 74 "Failed to Setup Config file! [$TASK/config.ini -> mysql_user]"
+						sed -Ei "s:^password =.*$:password = $mysql_password:g" config.ini || DIE 74 "Failed to Setup Config file! [$TASK/config.ini -> mysql_password]"
+						sed -Ei "s:^database =.*$:database = $database_name:g" config.ini || DIE 74 "Failed to Setup Config file! [$TASK/config.ini -> database_name]"
+						sed -Ei "s/changeme/$cikey/g" config.ini || DIE 74 "Failed to Setup Config file! [$TASK/config.ini -> cikey]"
+						sed -Ei "s:^apikey =.*$:apikey = $api:g" config.ini || DIE 74 "Failed to Setup Config file! [$TASK/config.ini -> apikey]"
 					fi
 				fi
-				GPRINT "Done Setting Up 'lets'."
+				GPRINT "Done Setting Up '$TASK'!"
 			else
-				die 1 "Could not install 'lets' because python3.6 wasn't found on this system."
+				DIE 1 "Could not install '$TASK' because python3.6 wasn't found on this system!"
 			fi
 			# compile oppai-ng to make pp calculation working
 			if [ -d "pp/oppai-ng" ]; then
 				(
-					cd pp/oppai-ng || die 1 "Failed to cd into 'pp/oppai-ng'."
+					cd pp/oppai-ng || DIE 1 "Failed to cd into 'pp/oppai-ng'!"
 					if [ -f "build" ]; then
 						chmod +x build ; ./build
 					fi
 				)
 			fi
-			GPRINT "Done Setting Up 'lets'."
+			GPRINT "Done Setting Up 'lets'!"
 		)
 	else
-		die 1 "Directory '$directory' doesn't exist."
+		DIE 1 "Directory '$directory' doesn't exist!"
 	fi
 }
 
@@ -966,37 +1024,37 @@ lets() {
 # Hanayo: The Ripple's Frontend.
 hanayo() {
 
-	task="hanayo"
+	TASK="hanayo"
 
-	YPRINT "Cloning & Setting up '$task'!"
+	YPRINT "Cloning & Setting up '$TASK'!"
 
-	if command -v ping 1>/dev/null; then
-		ping -i 0.5 -c 5 zxq.co || die 121 "Domain 'zxq.co' is not reachable from this environment."
+	if command -v PING 1>/dev/null; then
+		PING -i 0.5 -c 5 zxq.co || DIE 121 "Domain 'zxq.co' is not reachable from this environment!"
 	else
-		die 61 "Unknown Error!"
+		DIE 61 "Unknown Error!"
 	fi
 
 	if [ -d "$directory" ]; then
 		(
 			if command -v go 1>/dev/null; then
-				go get zxq.co/ripple/hanayo
+				GO_CLONE zxq.co/ripple/hanayo
 				if [ -d "/root/go/src/zxq.co/ripple/hanayo" ]; then
-					cd /root/go/src/zxq.co/ripple/hanayo || die 1 "Failed to cd into '$task'."
+					cd /root/go/src/zxq.co/ripple/hanayo || DIE 1 "Failed to cd into '$TASK'!"
 					go build ; ./hanayo
 			else
-				die 1 "Could not install '$task' because golang wasn't found on this system."
+				DIE 1 "Could not install '$TASK' because golang wasn't found on this system!"
 			fi
 				if [ -f "hanayo.conf" ]; then
-					sed -Ei "s/ListenTo=:45221/ListenTo=127.0.0.1:45221/g" hanayo.conf || die 74 "Failed to Setup Config file. [$task/hanayo.conf -> ListenTo]"
-					sed -E -i -e 'H;1h;$!d;x' hanayo.conf -e 's#DSN=#DSN='"$mysql_user"':'"$mysql_password"'@/'"$database_name"'#' || die 1 "Failed to Setup Config file. [$task/hanayo.conf -> mysql-user, pass, db]"
-					sed -Ei "s:^RedisEnable=.*$:RedisEnable=true:g" hanayo.conf || die 74 "Failed to Setup Config file. [$task/hanayo.conf -> Redis]"
-					sed -Ei "s/ripple.moe/$domain/g" hanayo.conf || die 74 "Failed to Setup Config file. [$task/hanayo.conf -> domain]"
-					sed -Ei "s:^APISecret=.*$:APISecret=$api_secret:g" hanayo.conf || die 74 "Failed to Setup Config file. [$task/hanayo.conf -> api_secret]"
-					sed -Ei "s:^MainRippleFolder=.*$:MainRippleFolder=$directory:g" hanayo.conf || die 74 "Failed to Setup Config file. [$task/hanayo.conf -> directory]"
-					sed -Ei "s:^AvatarsFolder=.*$:AvatarsFolder=$directory/nginx/avatar-server/Avatars:g" hanayo.conf || die 74 "Failed to Setup Config file. [$task/hanayo.conf -> avatar-folder]"
-					sed -Ei "s#https://storage.$domain/api#'https://storage.ripple.moe/api'#g" hanayo.conf || die 74 "Failed to Setup Config file. [$task/hanayo.conf -> cheesegull]"
+					sed -Ei "s/ListenTo=:45221/ListenTo=127.0.0.1:45221/g" hanayo.conf || DIE 74 "Failed to Setup Config file! [$TASK/hanayo.conf -> ListenTo]"
+					sed -E -i -e 'H;1h;$!d;x' hanayo.conf -e 's#DSN=#DSN='"$mysql_user"':'"$mysql_password"'@/'"$database_name"'#' || DIE 1 "Failed to Setup Config file! [$TASK/hanayo.conf -> mysql-user, pass, db]"
+					sed -Ei "s:^RedisEnable=.*$:RedisEnable=true:g" hanayo.conf || DIE 74 "Failed to Setup Config file! [$TASK/hanayo.conf -> Redis]"
+					sed -Ei "s/ripple.moe/$domain/g" hanayo.conf || DIE 74 "Failed to Setup Config file! [$TASK/hanayo.conf -> domain]"
+					sed -Ei "s:^APISecret=.*$:APISecret=$api_secret:g" hanayo.conf || DIE 74 "Failed to Setup Config file! [$TASK/hanayo.conf -> api_secret]"
+					sed -Ei "s:^MainRippleFolder=.*$:MainRippleFolder=$directory:g" hanayo.conf || DIE 74 "Failed to Setup Config file! [$TASK/hanayo.conf -> directory]"
+					sed -Ei "s:^AvatarsFolder=.*$:AvatarsFolder=$directory/nginx/avatar-server/Avatars:g" hanayo.conf || DIE 74 "Failed to Setup Config file! [$TASK/hanayo.conf -> avatar-folder]"
+					sed -Ei "s#https://storage.$domain/api#'https://storage.ripple.moe/api'#g" hanayo.conf || DIE 74 "Failed to Setup Config file! [$TASK/hanayo.conf -> cheesegull]"
 				else
-					die 1 "Failed To Configure '$task'."
+					DIE 1 "Failed To Configure '$TASK'!"
 				fi
 
 				if [ -f "templates/navbar.html" ]; then
@@ -1005,96 +1063,98 @@ hanayo() {
 
 				if [ ! -d "$directory/hanayo" ]; then
 					mv -v go/src/zxq.co/ripple/hanayo "$directory"
-					GPRINT "Done Setting Up '$task'."
+					GPRINT "Done Setting Up '$TASK'!"
 				else
-					die 12 "Unexpected Error!"
+					DIE 12 "Unexpected Error!"
 				fi
 			else
-				die 1 "Failed to Setup '$task'."
+				DIE 1 "Failed to Setup '$TASK'!"
 			fi
 		)
 
 	else
-		die 1 "$directory doesn't exist."
+		DIE 1 "$directory doesn't exist!"
 	fi
+
 }
 
 
 # Ripple API is required to talk with the frontend (hanayo), and all other Ripple's Software (lets, peppy..)
 rippleapi() {
 
-	task="rippleapi"
+	TASK="rippleapi"
 
-	YPRINT "Cloning & Setting up '$task'."
+	YPRINT "Cloning & Setting up '$TASK'!"
 
-	if command -v ping 1>/dev/null; then
-		ping -i 0.5 -c 5 zxq.co || die 121 "Domain 'zxq.co' is not reachable from this environment."
+	if command -v PING 1>/dev/null; then
+		PING -i 0.5 -c 5 zxq.co || DIE 121 "Domain 'zxq.co' is not reachable from this environment!"
 	else
-		die 61 "Unknown Error!"
+		DIE 61 "Unknown Error!"
 	fi
 
 	if [ -d "$directory" ]; then
 		(
 			if command -v go 1>/dev/null; then
-				go get zxq.co/ripple/rippleapi
-				cd go/src/zxq.co/ripple/rippleapi || die 1 "Failed to cd into '$task'."
+				GO_CLONE zxq.co/ripple/rippleapi
+				cd go/src/zxq.co/ripple/rippleapi || DIE 1 "Failed to cd into '$TASK'!"
 				go build ; ./rippleapi
 			else
-				die 1 "Could not install '$task' because golang wasn't found on this system."
+				DIE 1 "Could not install '$TASK' because golang wasn't found on this system!"
 			fi
 
 			if [ ! -f "api.conf" ]; then
-				sed -E -i -e 'H;1h;$!d;x' api.conf -e 's#DSN=#DSN='"$mysql_user"':'"$mysql_password"'@/'"$database_name"'#' || die 1 "Failed to Setup Config file. [$task/api.conf -> mysql-user, pass, db]"
-				sed -Ei "s:^HanayoKey=.*$:HanayoKey=$api_secret:g" api.conf || die 74 "Failed to Setup Config file. [$task/api.conf -> api_secret]"
-				sed -Ei "s:^OsuAPIKey=.*$:OsuAPIKey=$cikey:g" api.conf || die 74 "Failed to Setup Config file. [$task/api.conf -> cikey]"
+				sed -E -i -e 'H;1h;$!d;x' api.conf -e 's#DSN=#DSN='"$mysql_user"':'"$mysql_password"'@/'"$database_name"'#' || DIE 1 "Failed to Setup Config file! [$TASK/api.conf -> mysql-user, pass, db]"
+				sed -Ei "s:^HanayoKey=.*$:HanayoKey=$api_secret:g" api.conf || DIE 74 "Failed to Setup Config file! [$TASK/api.conf -> api_secret]"
+				sed -Ei "s:^OsuAPIKey=.*$:OsuAPIKey=$cikey:g" api.conf || DIE 74 "Failed to Setup Config file! [$TASK/api.conf -> cikey]"
 			fi
 
 			if [ ! -d "$directory/rippleapi" ]; then
 				mv -v go/src/zxq.co/ripple/rippleapi "$directory"
-				GPRINT "Done setting up '$task'."
+				GPRINT "Done setting up '$TASK'!"
 			else
-				die 12 "Unexpected Error!"
+				DIE 12 "Unexpected Error!"
 			fi
 		)
 	else
-		die 1 "Directory '$directory' doesn't exist."
+		DIE 1 "Directory '$directory' doesn't exist!"
 	fi
+
 }
 
 
 # Avatar-Server handles/manages ingame & frontend's avatars of all users.
 avatar_server() {
 
-	task="avatar-server"
+	TASK="avatar-server"
 
-	YPRINT "Cloning & Setting up '$task'!"
+	YPRINT "Cloning & Setting up '$TASK'!"
 
-	if command -v ping 1>/dev/null; then
-		ping -i 0.5 -c 5 github.com || die 121 "Domain 'github.com' is not reachable from this environment."
+	if command -v PING 1>/dev/null; then
+		PING -i 0.5 -c 5 github.com || DIE 121 "Domain 'github.com' is not reachable from this environment!"
 	else
-		die 61 "Unknown Error!"
+		DIE 61 "Unknown Error!"
 	fi
 
 	if [ -d "$directory" ]; then
 		(
-			cd "$directory" || die 1 "Failed to cd into '$directory'"
+			cd "$directory" || DIE 1 "Failed to cd into '$directory'!"
 
 			if command -v git 1>/dev/null; then
-				git clone https://github.com/Uniminin/avatar-server
+				GIT_CLONE "$avatar_server_url"
 			else
-				die 1 "git not found on this system!"
+				DIE 1 "git not found on this system!"
 			fi
 
 			if [ -d "avatar-server" ]; then
-				cd avatar-server || die 1 "Failed to cd into '$task'."
+				cd avatar-server || DIE 1 "Failed to cd into '$TASK'!"
 				python3.6 -m pip install -r requirements.txt
-				GPRINT "Done setting up '$task'."
+				GPRINT "Done setting up '$TASK'!"
 			else
-				die 1 "Failed to Setup '$task'."
+				DIE 1 "Failed to Setup '$TASK'!"
 			fi
 		)
 	else
-		die 1 "Directory '$directory' doesn't exist."
+		DIE 1 "Directory '$directory' doesn't exist!"
 	fi
 }
 
@@ -1102,188 +1162,194 @@ avatar_server() {
 # Nginx to balance loads & for proxies
 nginx() {
 
-	task="nginx"
+	TASK="nginx"
 
-	YPRINT "Setting up '$task'."
+	YPRINT "Setting up '$TASK'!"
 
-	if command -v ping 1>/dev/null; then
-		ping -i 0.5 -c 5 raw.githubusercontent.com || die 121 "Domain 'raw.githubusercontent.com' is not reachable from this environment."
+	if command -v PING 1>/dev/null; then
+		PING -i 0.5 -c 5 raw.githubusercontent.com || DIE 121 "Domain 'raw.githubusercontent.com' is not reachable from this environment!"
 	else
-		die 61 "Unknown Error!"
+		DIE 61 "Unknown Error!"
 	fi
 
 	if [ -d "/etc/nginx" ]; then
-		pkill -f nginx || die 1 "Failed to kill process '$task'."
+		pkill -f nginx || DIE 1 "Failed to kill process '$TASK'!"
 		(
-			cd /etc/nginx || die 1 "Failed to cd into '/etc/nginx'."
+			cd /etc/nginx || DIE 1 "Failed to cd into '/etc/nginx'!"
 			if [ -f "nginx.conf" ]; then
-				rm -rfv nginx.conf
+				REMOVE nginx.conf
 			fi
-			wget -O "nginx.conf" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Nginx/N1.conf || die 11 "Could not download file 'nginx.conf'."
-			sed -i 's#include /root/ripple/nginx/*.conf\*#include '"$directory"'/nginx/*.conf#' /etc/nginx/nginx.conf || die 1 "Failed to Setup Config file."
+			WGET "nginx.conf" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Nginx/N1.conf || DIE 11 "Could not download file 'nginx.conf'!"
+			sed -i 's#include /root/ripple/nginx/*.conf\*#include '"$directory"'/nginx/*.conf#' /etc/nginx/nginx.conf || DIE 1 "Failed to Setup Config file!"
 		)
 	else
-		die 1 "Directory '/etc/nginx' does not exist!"
+		DIE 1 "Directory '/etc/nginx' does not exist!"
 	fi
 
 	if [ -d "$directory" ]; then
 		(
-			cd "$directory" || die 1 "Failed to cd into '$directory'"
-			mkdir -v nginx ; cd nginx || die 1 "Failed to cd into 'nginx'"
+			cd "$directory" || DIE 1 "Failed to cd into '$directory'!"
+			CREATE_DIRECTORY nginx ; cd nginx || DIE 1 "Failed to cd into 'nginx'!"
 
-			wget -O "nginx.conf" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Nginx/N2.conf || die 11 "Could not download file 'nginx.conf'."
+			WGET "nginx.conf" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Nginx/N2.conf || DIE 11 "Could not download file 'nginx.conf'!"
 			if [ -f "nginx.conf" ]; then
-				sed -Ei 's#DOMAIN#'"$domain"'#g; s#DIRECTORY#'"$directory"'#g' nginx.conf || die 1 "Failed to Setup Config file."
+				sed -Ei 's#DOMAIN#'"$domain"'#g; s#DIRECTORY#'"$directory"'#g' nginx.conf || DIE 1 "Failed to Setup Config file!"
 			fi
 
-			wget -O "old-frontend.conf" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Nginx/old-frontend.conf || die 11 "Could not download file 'old-frontend.conf'."
+			WGET "old-frontend.conf" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Nginx/old-frontend.conf || DIE 11 "Could not download file 'old-frontend.conf'!"
 			if [ -f "old-frontend.conf" ]; then
-				sed -Ei 's#DOMAIN#'"$domain"'#g; s#DIRECTORY#'"$directory"'#g' old-frontend.conf || die 1 "Failed to Setup Config file."
+				sed -Ei 's#DOMAIN#'"$domain"'#g; s#DIRECTORY#'"$directory"'#g' old-frontend.conf || DIE 1 "Failed to Setup Config file!"
 			fi
 
 			# Using osuthailand certificate. (since plebs)
-			YPRINT "Downloading Certificates. (ainu-certificate)"
-			wget -O "cert.pem" https://raw.githubusercontent.com/osuthailand/ainu-certificate/master/cert.pem || die 11 "Could not download file 'cert.pem'."
-			wget -O "key.pem" https://raw.githubusercontent.com/osuthailand/ainu-certificate/master/key.key || die 11 "Could not download file 'key.pem'."
+			YPRINT "Downloading Certificates! (ainu-certificate)"
+			WGET "cert.pem" https://raw.githubusercontent.com/osuthailand/ainu-certificate/master/cert.pem || DIE 11 "Could not download file 'cert.pem'!"
+			WGET "key.pem" https://raw.githubusercontent.com/osuthailand/ainu-certificate/master/key.key || DIE 11 "Could not download file 'key.pem'!"
 			if [ -f "cert.pem" ] && [ -f "key.pem" ]; then
 				GPRINT "Done downloading Certificates."
 			else
-				die 1 "Failed to download certificates."
+				DIE 1 "Failed to download certificates!"
 			fi
 		)
 
-		nginx || die 1 "Nginx: BAD CONFIG!"
-		GPRINT "Done setting up '$task'."
+		nginx || DIE 1 "Nginx: BAD CONFIG!"
+		GPRINT "Done setting up '$TASK'!"
 	fi
+
 }
 
 
 SSL() {
 
-	task="acme.sh"
+	TASK="acme.sh"
 
-	YPRINT "Cloning and Setting up '$task'!"
+	YPRINT "Cloning and Setting up '$TASK'!"
 
-	if command -v ping 1>/dev/null; then
-		ping -i 0.5 -c 5 github.com || die 121 "Domain 'github.com' is not reachable from this environment."
+	if command -v PING 1>/dev/null; then
+		PING -i 0.5 -c 5 github.com || DIE 121 "Domain 'github.com' is not reachable from this environment!"
 	else
-		die 61 "Unknown Error!"
+		DIE 61 "Unknown Error!"
 	fi
 
 	if [ -d "$directory" ]; then
 		(
-			cd "$directory" || die 1 "Failed to cd into '$directory'."
+			cd "$directory" || DIE 1 "Failed to cd into '$directory'!"
 			if command -v git 1>/dev/null; then
-				git clone https://github.com/Neilpang/acme.sh
+				GIT_CLONE https://github.com/Neilpang/acme.sh
 			else
-				die 1 "git not found on this system!"
+				DIE 1 "git not found on this system!"
 			fi
 
 			if [ -d "acme.sh" ]; then
-				cd acme.sh || die 1 "Failed to cd into acme.sh"
+				cd acme.sh || DIE 1 "Failed to cd into acme.sh"
 				if [ -f "acme.sh" ]; then
 					./acme.sh --install
 					./acme.sh --issue --standalone -d "$domain" -d c."$domain" -d i."$domain" -d a."$domain" -d s."$domain" -d old."$domain"
 
-					GPRINT "Done setting up '$task'"
+					GPRINT "Done setting up '$TASK'!"
 				else
-					die 1 "'$task' not found."
+					DIE 1 "'$TASK' not found!"
 				fi
 			else
-				die 1 "Failed to clone '$task'"
+				DIE 1 "Failed to clone '$TASK'!"
 			fi
 		)
 	else
-			die 1 "Directory '$directory' doesn't exist."
+			DIE 1 "Directory '$directory' doesn't exist!"
 	fi
+
 }
 
 
 # OLD-FRONTEND is the Ripple's Admin Panel. Which can be accessed at old.domain
 old_frontend() {
 
-	task="old-frontend"
+	TASK="old-frontend"
 
-	YPRINT "Cloning & Setting up '$task'!"
+	YPRINT "Cloning & Setting up '$TASK'!"
 
-	if command -v ping 1>/dev/null; then
-		ping -i 0.5 -c 5 zxq.co || die 121 "Domain 'zxq.co' is not reachable from this environment."
-		ping -i 0.5 -c 5 getcomposer.org || die 121 "Domain 'getcomposer.org' is not reachable from this environment."
+	if command -v PING 1>/dev/null; then
+		PING -i 0.5 -c 5 zxq.co || DIE 121 "Domain 'zxq.co' is not reachable from this environment!"
+		PING -i 0.5 -c 5 getcomposer.org || DIE 121 "Domain 'getcomposer.org' is not reachable from this environment!"
 	else
-		die 61 "Unknown Error!"
+		DIE 61 "Unknown Error!"
 	fi
 
+  YPRINT "Installing Necessary Dependencies required for '$TASK'!"
 	# Dependencies
-	if [ "$package_manager" = "apt" ]; then
-		"$package_manager" install build-essential \
-		apt install apt-transport-https lsb-release ca-certificates -y
-		wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
-		echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list
-		"$package_manager" update
-		"$package_manager" install php7.2 php7.2-cli php7.2-common php7.2-json \
-		php7.2-opcache php7.2-mysql php7.2-zip php7.2-fpm php7.2-mbstring -y
-		curl -sS https://getcomposer.org/installer -o composer-setup.php
-		php -r "if (hash_file('SHA384', 'composer-setup.php') === '$HASH') \
-		{ echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
-		php composer-setup.php --install-dir=/usr/local/bin --filename=composer
-
-	elif [ "$package_manager" = "pacman" ]; then
-		"$package_manager" --noconfirm -S php composer
-
-	elif [ "$package_manager" = "emerge" ]; then
-		"$package_manager" -q dev-lang/php dev-lang/composer
-
-	elif [ "$package_manager" = "cave" ]; then
-		"$package_manager" resolve -x dev-lang/php dev-php/composer
-	fi
+  case "$package_manager_frontend" in
+		"apt")
+	  "$package_manager_frontend" install build-essential \
+	  apt install apt-transport-https lsb-release ca-certificates -y
+	  WGET /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
+	  echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list
+	  "$package_manager_frontend" update
+	  "$package_manager_frontend" install php7.2 php7.2-cli php7.2-common php7.2-json \
+	  php7.2-opcache php7.2-mysql php7.2-zip php7.2-fpm php7.2-mbstring -y
+	  curl -sS https://getcomposer.org/installer -o composer-setup.php
+	  php -r "if (hash_file('SHA384', 'composer-setup.php') === '$HASH') \
+	  { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+	  php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+		;;
+		"pacman")
+	  "$package_manager_frontend" --noconfirm -S php composer
+		;;
+		"emerge")
+	  "$package_manager_frontend" -q dev-lang/php dev-lang/composer
+		;;
+		"cave")
+			"$package_manager_frontend" resolve -x dev-lang/php dev-php/composer
+		;;
+		esac
 
 	for packages in php composer; do
 		if command -v $packages >/dev/null; then
-			GPRINT "Done Installing necessary Dependencies required for '$task'"
+			GPRINT "Done Installing necessary Dependencies required for '$TASK'!"
 		else
-			die 1 "Failed to Install necessary Dependencies required for '$task'"
+			DIE 1 "Failed to Install necessary Dependencies required for '$TASK'!"
 		fi
 	done
 
 	(
 		if [ ! -d "/var/www/" ]; then
-			mkdir -v /var/www/ ; cd /var/www/ || die 1 "Could not cd into '/var/www/'"
+			CREATE_DIRECTORY /var/www/ ; cd /var/www/ || DIE 1 "Could not cd into '/var/www/'!"
 
 			if command -v git 1>/dev/null; then
-				git clone https://zxq.co/ripple/old-frontend osu.ppy.sh
+				GIT_CLONE "$old_frontend_url" osu.ppy.sh
 			else
 				 1 "git not found on this system!"
 			fi
 
 			if [ -d "osu.ppy.sh" ]; then
-				cd osu.ppy.sh || die 1 "Failed to cd into 'osu.ppy.sh'"
+				cd osu.ppy.sh || DIE 1 "Failed to cd into 'osu.ppy.sh'!"
 				curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 				(
-					cd inc || die 1 "Failed to cd into 'inc'"
+					cd inc || DIE 1 "Failed to cd into 'inc'!"
 					cp -v config.sample.php config.php
 
 					if [ -f "config.php" ]; then
-						sed -Ei "s/root/$mysql_user/g" config.php || die 1 "Failed to Setup Config file. [$task/config.php -> mysql_user]"
-						sed -Ei "s/meme/$mysql_password/g" config.php || die 1 "Failed to Setup Config file. [$task/config.php -> mysql_password]"
-						sed -Ei "s/allora/$database_name/g" config.php || die 1 "Failed to Setup Config file. [$task/config.php -> database_name]"
-						sed -Ei "s/ripple.moe/$domain/g" config.php || die 1 "Failed to Setup Config file. [$task/config.php -> domain]"
+						sed -Ei "s/root/$mysql_user/g" config.php || DIE 1 "Failed to Setup Config file! [$TASK/config.php -> mysql_user]"
+						sed -Ei "s/meme/$mysql_password/g" config.php || DIE 1 "Failed to Setup Config file! [$TASK/config.php -> mysql_password]"
+						sed -Ei "s/allora/$database_name/g" config.php || DIE 1 "Failed to Setup Config file! [$TASK/config.php -> database_name]"
+						sed -Ei "s/ripple.moe/$domain/g" config.php || DIE 1 "Failed to Setup Config file! [$TASK/config.php -> domain]"
 					fi
 				)
 
 				if command -v composer 1>/dev/null; then
 					composer install
 				else
-					die 1 "composer not found."
+					DIE 1 "composer not found!"
 				fi
 
 				secret
 
-				GPRINT "Done setting up 'old-frontend'."
+				GPRINT "Done setting up '$TASK'!"
 			fi
 		else
-			die 61 "Unknown Error!"
+			DIE 61 "Unknown Error!"
 		fi
 	)
+
 }
 
 
@@ -1307,7 +1373,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				phpmyadmin
 				nginx
 				SSL
-				exit 0 ;;
+				EXIT 0 ;;
 
 			"")	
 				GPRINT "[Dependencies MODE]"
@@ -1332,14 +1398,14 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				phpmyadmin
 				nginx
 				SSL
-				exit 0 ;;
+				EXIT 0 ;;
 
 			*)
 				RPRINT "Fatal: Unknown argument | Try: $0 --help"
-				exit 74 ;;
+				EXIT 74 ;;
 		esac
 
-		exit 0 ;;
+		EXIT 0 ;;
 
 	"--help" | "-h")
 		GPRINT \
@@ -1382,7 +1448,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		"GNU AGPLv3 Licence: <https://www.gnu.org/licenses/agpl-3.0.en.html/>" \
 		"General help using GNU software: <https://www.gnu.org/gethelp/>"
 
-		exit 0 ;;
+		EXIT 0 ;;
 
 	"--dependencies" | "-dep")
 		GPRINT "[Dependencies MODE]"
@@ -1398,7 +1464,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		phpmyadmin
 		extra_dependencies
 
-		exit 0 ;;
+		EXIT 0 ;;
 
 	"--mysql" | "-M")
 		GPRINT "[Dependencies MODE]"
@@ -1409,7 +1475,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		packageManagerUpgrade
 		mysql_database
 
-		exit 0 ;;
+		EXIT 0 ;;
 
 	"--peppy" | "-P")
 		case "$2" in
@@ -1418,7 +1484,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				inputs
 				checkNetwork
 				peppy
-				exit 0 ;;
+				EXIT 0 ;;
 
 			"")
 				GPRINT "[Dependencies MODE]"
@@ -1431,14 +1497,14 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				nproc_detector
 				python3_5
 				peppy
-				exit 0 ;;
+				EXIT 0 ;;
 
 			*)
 				RPRINT "Fatal: Unknown argument | Try: $0 --help"
-				exit 74 ;;
+				EXIT 74 ;;
 		esac
 
-		exit 0 ;;
+		EXIT 0 ;;
 
 	"--lets" | "-L")
 		case "$2" in
@@ -1447,7 +1513,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				inputs
 				checkNetwork
 				lets
-				exit 0 ;;
+				EXIT 0 ;;
 
 			"")
 				GPRINT "[Dependencies MODE]"
@@ -1460,14 +1526,14 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				nproc_detector
 				python3_6
 				lets
-				exit 0 ;;
+				EXIT 0 ;;
 
 			*)
 				RPRINT "Fatal: Unknown argument | Try: $0 --help"
-				exit 74 ;;
+				EXIT 74 ;;
 		esac
 
-		exit 0 ;;
+		EXIT 0 ;;
 
 	"--avatarserver" | "-AS")
 		case "$2" in
@@ -1476,7 +1542,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				inputs
 				checkNetwork
 				avatar_server
-				exit 0 ;;
+				EXIT 0 ;;
 
 			"")
 				GPRINT "[Dependencies MODE]"
@@ -1489,14 +1555,14 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				nproc_detector
 				python3_6
 				avatar_server
-				exit 0 ;;
+				EXIT 0 ;;
 
 			*)
 				RPRINT "Fatal: Unknown argument | Try: $0 --help"
-				exit 74 ;;
+				EXIT 74 ;;
 		esac
 
-		exit 0 ;;
+		EXIT 0 ;;
 
 	"--hanayo" | "-H")
 		case "$2" in
@@ -1505,7 +1571,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				inputs
 				checkNetwork
 				hanayo
-				exit 0 ;;
+				EXIT 0 ;;
 
 			"")
 				GPRINT "[Dependencies MODE]"
@@ -1516,14 +1582,14 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				packageManagerUpgrade
 				golang
 				hanayo
-				exit 0 ;;
+				EXIT 0 ;;
 
 			*)
 				RPRINT "Fatal: Unknown argument | Try: $0 --help"
-				exit 74 ;;
+				EXIT 74 ;;
 		esac
 
-		exit 0 ;;
+		EXIT 0 ;;
 
 	"--rippleapi" | "-api")
 		case "$2" in
@@ -1532,7 +1598,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				inputs
 				checkNetwork
 				rippleapi
-				exit 0 ;;
+				EXIT 0 ;;
 
 			"")
 				GPRINT "[Dependencies MODE]"
@@ -1543,14 +1609,14 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				packageManagerUpgrade
 				golang
 				rippleapi
-				exit 0 ;;
+				EXIT 0 ;;
 
 			*)
 				RPRINT "Fatal: Unknown argument | Try: $0 --help"
-				exit 74 ;;
+				EXIT 74 ;;
 		esac
 
-		exit 0 ;;
+		EXIT 0 ;;
 
 	"--oldfrontend" | "-OF")
 		case "$2" in
@@ -1561,7 +1627,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				inputs
 				checkNetwork
 				old_frontend
-				exit 0 ;;
+				EXIT 0 ;;
 
 			"")
 				GPRINT "[Dependencies MODE]"
@@ -1572,14 +1638,14 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				packageManagerUpgrade
 				php
 				old_frontend
-				exit 0 ;;
+				EXIT 0 ;;
 
 			*)
 				RPRINT "Fatal: Unknown argument | Try: $0 --help"
-				exit 74 ;;
+				EXIT 74 ;;
 		esac
 
-		exit 0 ;;
+		EXIT 0 ;;
 
 	"--nginx" | "-N")
 		case "$2" in
@@ -1589,7 +1655,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				DetectPackageManager
 				checkNetwork
 				nginx
-				exit 0 ;;
+				EXIT 0 ;;
 
 			"")
 				GPRINT "[Dependencies MODE]"
@@ -1599,25 +1665,25 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				packageManagerUpgrade
 				extra_dependencies
 				nginx
-				exit 0 ;;
+				EXIT 0 ;;
 
 			*)
 				RPRINT "Fatal: Unknown argument | Try: $0 --help"
-				exit 74 ;;
+				EXIT 74 ;;
 		esac
 
-		exit 0 ;;
+		EXIT 0 ;;
 
 	"--version" | "-V")
 		YPRINT "Version: $UPSTREAM_VERSION"
-		exit 0 ;;
+		EXIT 0 ;;
 
 	"")
 		RPRINT "Fatal: No argument were provided | Try: $0 --help"
-		exit 74 ;;
+		EXIT 74 ;;
 
 	*)
 		RPRINT "Fatal: Unknown argument | Try: $0 --help"
-		exit 74 ;;
+		EXIT 74 ;;
 
 esac; shift; done
