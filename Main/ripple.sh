@@ -8,7 +8,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|             Last Updated on Wednesday, October 14, 2020 at 04:10 PM (GMT+6)             |
+|             Last Updated on Wednesday, October 14, 2020 at 04:15 PM (GMT+6)             |
 -------------------------------------------------------------------------------------------
 '
 
@@ -111,7 +111,7 @@
 
 
 # Version #
-UPSTREAM_VERSION=0.8.1
+UPSTREAM_VERSION=0.8.4
 
 
 # Repositories
@@ -120,6 +120,10 @@ lets_url="https://github.com/osufx/lets"
 secret_url="https://github.com/osufx/secret"
 avatar_server_url="https://github.com/Uniminin/avatar-server"
 old_frontend_url="https://zxq.co/ripple/old-frontend"
+
+# Note: Do not include 'http/https://' in go repos
+hanayo_url="zxq.co/ripple/hanayo"
+rippleapi_url="zxq.co/ripple/rippleapi"
 
 
 # Colors For Prints
@@ -1037,7 +1041,7 @@ hanayo() {
 	if [ -d "$directory" ]; then
 		(
 			if command -v go 1>/dev/null; then
-				GO_CLONE zxq.co/ripple/hanayo
+				GO_CLONE "$hanayo_url"
 				if [ -d "/root/go/src/zxq.co/ripple/hanayo" ]; then
 					cd /root/go/src/zxq.co/ripple/hanayo || DIE 1 "Failed to cd into '$TASK'!"
 					go build ; ./hanayo
@@ -1095,7 +1099,7 @@ rippleapi() {
 	if [ -d "$directory" ]; then
 		(
 			if command -v go 1>/dev/null; then
-				GO_CLONE zxq.co/ripple/rippleapi
+				GO_CLONE "$rippleapi_url"
 				cd go/src/zxq.co/ripple/rippleapi || DIE 1 "Failed to cd into '$TASK'!"
 				go build ; ./rippleapi
 			else
