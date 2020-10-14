@@ -8,7 +8,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|             Last Updated on Wednesday, October 14, 2020 at 01:45 PM (GMT+6)             |
+|             Last Updated on Wednesday, October 14, 2020 at 02:16 PM (GMT+6)             |
 -------------------------------------------------------------------------------------------
 '
 
@@ -111,7 +111,7 @@
 
 
 # Version #
-UPSTREAM_VERSION=0.7.6
+UPSTREAM_VERSION=0.7.8
 
 
 # Colors For Prints
@@ -710,65 +710,63 @@ mysql_database() {
 	YPRINT "Setting up '$task'."
 
 	if command -v mysql 1>/dev/null; then
-		GPRINT "MySQL Found on this system."
+		GPRINT "MySQL has been found on this system. Skipping.."
 	else
-		die 1 "Could not find mysql package on this system."
-	fi
+		# Dependencies
+		if [ "$package_manager" = "apt" ]; then
+			"$package_manager" install gnupg -y
+			if command -v wget >/dev/null; then
+				wget -O "mysql.deb" https://repo.mysql.com//mysql-apt-config_0.8.15-1_all.deb
+				# Choose MySQL 8.0+
+				dpkg -i mysql.deb
 
-	# Dependencies
-	if [ "$package_manager" = "apt" ]; then
-		"$package_manager" install gnupg -y
-		if command -v wget >/dev/null; then
-			wget -O "mysql.deb" https://repo.mysql.com//mysql-apt-config_0.8.15-1_all.deb
-			# Choose MySQL 8.0+
-			dpkg -i mysql.deb
-			
-			if [ -f "mysql.deb" ]; then
-				rm -rfv mysql.deb
+				if [ -f "mysql.deb" ]; then
+					rm -rfv mysql.deb
+				fi
+			else
+				die 1 "wget not found on this system!"
 			fi
-		else
-			die 1 "wget not found on this system!"
-		fi
-		
-		packageManagerUpgrade
-		"$package_manager" install mysql-community-server -y
-		service mysql start
-		
-		if command -v systemctl >/dev/null; then
-			systemctl restart mysql
-		fi
-		
-	elif [ "$package_manager" = "pacman" ]; then
-		"$package_manager" --noconfirm -S mariadb
-		mariadb-install-db --user=mysql --basedir=/usr --datadir=/var/lib/mysql
-		systemctl start mariadb.service
 
-	elif [ "$package_manager" = "emerge" ]; then
-		"$package_manager" -q dev-db/mysql
-		if command -v rc >/dev/null; then
-			rc-update add mysql default ; rc-service mysql start
-		elif command -v service >/dev/null; then
+			packageManagerUpgrade
+			"$package_manager" install mysql-community-server -y
 			service mysql start
-		else
-			die 1 "Unable to Detect init system and start Mysql service!"
+
+			if command -v systemctl >/dev/null; then
+				systemctl restart mysql
+			fi
+
+		elif [ "$package_manager" = "pacman" ]; then
+			"$package_manager" --noconfirm -S mariadb
+			mariadb-install-db --user=mysql --basedir=/usr --datadir=/var/lib/mysql
+			systemctl start mariadb.service
+
+		elif [ "$package_manager" = "emerge" ]; then
+			"$package_manager" -q dev-db/mysql
+			if command -v rc >/dev/null; then
+				rc-update add mysql default ; rc-service mysql start
+			elif command -v service >/dev/null; then
+				service mysql start
+			else
+				die 1 "Unable to Detect init system and start Mysql service!"
+			fi
+
+		elif [ "$package_manager" = "cave" ]; then
+			"$package_manager" resolve -x virtual/mysql
+			if command -v rc >/dev/null; then
+				rc-update add mysql default ; rc-service mysql start
+			elif command -v service >/dev/null; then
+				service mysql start
+			else
+				die 1 "Unable to Detect init system and start Mysql service!"
+			fi
 		fi
 
-	elif [ "$package_manager" = "cave" ]; then
-		"$package_manager" resolve -x virtual/mysql
-		if command -v rc >/dev/null; then
-			rc-update add mysql default ; rc-service mysql start
-		elif command -v service >/dev/null; then
-			service mysql start
+
+		if command -v mysql >/dev/null; then
+			GPRINT "Done Installing necessary Dependencies required for '$task'"
 		else
-			die 1 "Unable to Detect init system and start Mysql service!"
+			die 1 "Failed to Install necessary Dependencies required for '$task'"
 		fi
-	fi
-
-
-	if command -v mysql >/dev/null; then
-		GPRINT "Done Installing necessary Dependencies required for '$task'"
-	else
-		die 1 "Failed to Install necessary Dependencies required for '$task'"
 	fi
 
 	if command -v ping 1>/dev/null; then
