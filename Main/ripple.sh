@@ -8,7 +8,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|             Last Updated on Wednesday, October 14, 2020 at 03:10 PM (GMT+6)             |
+|             Last Updated on Wednesday, October 14, 2020 at 04:10 PM (GMT+6)             |
 -------------------------------------------------------------------------------------------
 '
 
@@ -111,7 +111,7 @@
 
 
 # Version #
-UPSTREAM_VERSION=0.8.0
+UPSTREAM_VERSION=0.8.1
 
 
 # Repositories
@@ -126,7 +126,7 @@ old_frontend_url="https://zxq.co/ripple/old-frontend"
 alias RPRINT="printf '\\033[0;31m%s\\n'"	 # Red
 alias GPRINT="printf '\\033[0;32m%s\\n'"	 # Green
 alias YPRINT="printf '\\033[0;33m%s\\n'"	 # Yellow
-alias BPRINT="printf '\\033[0;34m%s'"		# Blue
+alias BPRINT="printf '\\033[0;34m%s'"		 # Blue
 
 
 # Command Overwrites
