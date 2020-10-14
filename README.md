@@ -13,7 +13,6 @@
 </p>
 
 
-
 ## Attention
 <b>**FOR ADVANCED USERS!**</b><br>
 This project gives you a base and foundation if you're willing to setup your own Ripple instance. You’re to think for yourself. Ripple is not a stack system where Ripple/I document everything so you’ll need a basic understanding of how full stack web applications and unix or GNU/Linux systems work to be able to set up Ripple properly and work out with problems efficiently when necessary.<br>
