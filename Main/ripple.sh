@@ -8,7 +8,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|             Last Updated on Wednesday, October 14, 2020 at 04:15 PM (GMT+6)             |
+|             Last Updated on Thursday, October 15, 2020 at 12:00 PM (GMT+6)              |
 -------------------------------------------------------------------------------------------
 '
 
@@ -16,13 +16,13 @@
 ###! Ripple is Licensed under the Terms of GNU AGPL-3.0
 ###! Main Ripple Git: (https://zxq.co/ripple) | Mirror: (https://github.com/osuripple)
 ###! Using Ripple's:
-###! - peppy       (https://zxq.co/ripple/pep.py)       [BACKEND]
-###! - hanayo      (https://zxq.co/ripple/hanayo)       [FRONTEND]
-###! - rippleapi   (https://zxq.co/ripple/rippleapi)    [API SERVER]
-###! - oldfrontend (https://zxq.co/ripple/old-frontend) [ADMIN PANEL]
+###! - peppy         (https://zxq.co/ripple/pep.py)       [BACKEND]
+###! - hanayo        (https://zxq.co/ripple/hanayo)       [FRONTEND]
+###! - rippleapi     (https://zxq.co/ripple/rippleapi)    [API SERVER]
+###! - oldfrontend   (https://zxq.co/ripple/old-frontend) [ADMIN PANEL]
 ###! osu!fx's:
-###! - secret   (https://github.com/osufx/secret) [AUTOMATED ANITCHEAT +-] . Note: Not used by Ripple
-###! - lets     (https://github.com/osufx/lets)   [SCORE SERVER] . Note: osu!fx's lets is a fork of Ripple's lets
+###! - secret        (https://github.com/osufx/secret)    [AUTOMATED ANITCHEAT +-] . Note: Not used by Ripple
+###! - lets          (https://github.com/osufx/lets)      [SCORE SERVER]           . Note: fork of Ripple's lets
 ###! Custom:
 ###! - avatar-server (https://github.com/Uniminin/avatar-server)
 ###! We need:
@@ -31,7 +31,7 @@
 ###! Requires:
 ###! - FIXME
 ###! Exit code:
-###! - FIXME-DOCS: Defined in die()
+###! - FIXME-DOCS: Defined in die() :?:
 ###! - Error Log [*]
 ###! Platform:
 ###!  - [*] Linux
@@ -111,7 +111,7 @@
 
 
 # Version #
-UPSTREAM_VERSION=0.8.4
+UPSTREAM_VERSION=0.8.8
 
 
 # Repositories
@@ -124,6 +124,24 @@ old_frontend_url="https://zxq.co/ripple/old-frontend"
 # Note: Do not include 'http/https://' in go repos
 hanayo_url="zxq.co/ripple/hanayo"
 rippleapi_url="zxq.co/ripple/rippleapi"
+
+
+# Database File(s)
+sql_schema_url="https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Database%20files/ripple.sql"
+
+# Nginx File(s)
+nginx_config1_url="https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Nginx/N1.conf"
+nginx_config2_url="https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Nginx/N2.conf"
+
+# Old-frontend File(s)
+old_frontend_config_url="https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Nginx/old-frontend.conf"
+
+
+# SSL File(s)
+# Using osuthailand certificate
+certificate_url="https://raw.githubusercontent.com/osuthailand/ainu-certificate/master/cert.pem"
+key_url="https://raw.githubusercontent.com/osuthailand/ainu-certificate/master/key.key"
+
 
 
 # Colors For Prints
@@ -445,33 +463,40 @@ DetectPackageManager() {
 	elif command -v cave >/dev/null; then
 		frontend="cave"
 	elif ! command -v apt >/dev/null || ! command -v pacman >/dev/null \
-	|| ! command -v emerge >/dev/null || ! command -v cave >/dev/null; then
+	  || ! command -v emerge >/dev/null || ! command -v cave >/dev/null; then
 		DIE 8 "Any of apt, pacman, portage or paludis is not executable on this system! The script is programmed to work on APT, Pacman and Portage only."
-  else
+	else
 		DIE 14 "Unexpected Error!"
 	fi
 
-  case "$frontend" in
-	"apt")
-	  GPRINT "Found Package Manager: 'APT [ $frontend ]'"
-		  export package_manager_frontend="$frontend"
-		  YPRINT "Using Package Manager Frontend: '$package_manager_frontend'"
-	;;
-	"pacman")
-	  GPRINT "Found Package Manager: 'Pacman [ $frontend ]'"
-		  export package_manager_frontend="$frontend"
-		  YPRINT "Using Package Manager Frontend: '$package_manager_frontend'"
-	;;
-	"emerge")
-	  GPRINT "Found Package Manager: 'Portage [ $frontend ]'"
-		  export package_manager_frontend="emerge"
-		  YPRINT "Using Package Manager Frontend: 'Portage'"
-	;;
-	"cave")
-	  GPRINT "Found Package Manager: 'Paludis [ $frontend ]'"
-		  export package_manager_frontend="cave"
-		  YPRINT "Using Package Manager Frontend: 'Paludis'"
-	;;
+	case "$frontend" in
+		"apt")
+			GPRINT "Found Package Manager: 'APT [ $frontend ]'"
+			export package_manager_frontend="$frontend"
+			YPRINT "Using Package Manager Frontend: '$package_manager_frontend'"
+			
+			EXIT 0 ;;
+
+		"pacman")
+			GPRINT "Found Package Manager: 'Pacman [ $frontend ]'"
+			export package_manager_frontend="$frontend"
+			YPRINT "Using Package Manager Frontend: '$package_manager_frontend'"
+
+			EXIT 0 ;;
+
+		"emerge")
+			GPRINT "Found Package Manager: 'Portage [ $frontend ]'"
+			export package_manager_frontend="emerge"
+			YPRINT "Using Package Manager Frontend: 'Portage'"
+
+			EXIT 0 ;;
+
+		"cave")
+			GPRINT "Found Package Manager: 'Paludis [ $frontend ]'"
+			export package_manager_frontend="cave"
+			YPRINT "Using Package Manager Frontend: 'Paludis'"
+
+			EXIT 0 ;;
 	esac
 
 }
@@ -486,17 +511,24 @@ packageManagerUpgrade() {
 	case "$package_manager_frontend" in
 		"apt")
 			apt update ; apt upgrade -y ; apt update
-		;;
+			
+			EXIT 0 ;;
+			
 		"pacman")
 			pacman --noconfirm -Syyu
-		;;
+			
+			EXIT 0 ;;
+			
 		"emerge")
 			emerge --sync ; emerge -qvuDN @world
-		;;
+			
+			EXIT 0 ;;
+			
 		"cave")
 			cave sync ; cave resolve world -qx
-		;;
-		esac
+			
+			EXIT 0 ;;
+	esac
 
 }
 
@@ -513,19 +545,26 @@ python_dependencies() {
 		"apt")
 			"$package_manager_frontend" install build-essential libssl-dev zlib1g-dev openssl libbz2-dev libsqlite3-dev \
 			git wget python-dev default-libmysqlclient-dev tar make cython -y
-		;;
+			
+			EXIT 0 ;;
+			
 		"pacman")
 			"$package_manager_frontend" --noconfirm -S gcc git wget tar make cython
-		;;
+			
+			EXIT 0 ;;
+			
 		"emerge")
 			"$package_manager_frontend" -q sys-devel/gcc dev-vcs/git net-misc/wget \
 			sys-devel/make app-arch/tar dev-python/cython
-		;;
+			
+			EXIT 0 ;;
+			
 		"cave")
 			"$package_manager_frontend" resolve -x sys-devel/gcc dev-scm/git sys-devel/make \
 			app-arch/tar dev-python/shiboken2
-		;;
-		esac
+			
+			EXIT 0 ;;
+	esac
 
 	for packages in gcc make git wget cython; do
 		if command -v $packages >/dev/null; then
@@ -648,7 +687,7 @@ python3_6() {
 }
 
 
-# Golang1.13+ for Hanayo & rippleapi
+# Golang1.14+ for Hanayo & rippleapi
 golang() {
 
 	TASK="golang"
@@ -679,7 +718,7 @@ golang() {
 					if [ -d "/usr/src" ]; then
 						cd /usr/src || DIE 1 "Failed to cd into '/usr/src'!"
 						WGET "go1.14.tar.gz" https://golang.org/dl/go1.14.linux-amd64.tar.gz
-			tar -xvf go1.14.tar.gz
+						tar -xvf go1.14.tar.gz
 						chown -R root:root ./go
 
 						if [ -d "/usr/local" ]; then
@@ -730,18 +769,25 @@ extra_dependencies() {
 	case "$package_manager_frontend" in
 		"apt")
 			"$package_manager_frontend" install tmux nginx redis-server socat -y
-		;;
+			
+			EXIT 0 ;;
+			
 		"pacman")
 			"$package_manager_frontend" --noconfirm -S tmux nginx redis socat
-		;;
+			
+			EXIT 0 ;;
+			
 		"emerge")
 			"$package_manager_frontend" -q app-misc/tmux www-servers/nginx dev-db/redis net-misc/soca
-		;;
+			
+			EXIT 0 ;;
+			
 		"cave")
 			"$package_manager_frontend" resolve -x app-terminal/tmux www-servers/nginx \
 			dev-db/redis net-misc/socat
-		;;
-		esac
+			
+			EXIT 0 ;;
+	esac
 
 	for packages in tmux nginx redis-cli; do
 		if command -v $packages >/dev/null; then
@@ -764,7 +810,7 @@ mysql_database() {
 	else	
 		YPRINT "Setting up '$TASK'!"
 
-		# Dependencies
+	# Dependencies
 	case "$package_manager_frontend" in
 		"apt")
 			"$package_manager_frontend" install gnupg -y
@@ -787,12 +833,16 @@ mysql_database() {
 			if command -v systemctl >/dev/null; then
 				systemctl restart mysql
 			fi
-		;;
+			
+			EXIT 0 ;;
+			
 		"pacman")
-				"$package_manager_frontend" --noconfirm -S mariadb
+			"$package_manager_frontend" --noconfirm -S mariadb
 			mariadb-install-db --user=mysql --basedir=/usr --datadir=/var/lib/mysql
 			systemctl start mariadb.service
-		;;
+			
+			EXIT 0 ;;
+			
 		"emerge")
 			"$package_manager_frontend" -q dev-db/mysql
 			if command -v rc >/dev/null; then
@@ -802,7 +852,9 @@ mysql_database() {
 			else
 				DIE 1 "Unable to Detect init system and start Mysql service!"
 			fi
-		;;
+			
+			EXIT 0 ;;
+			
 		"cave")
 			"$package_manager_frontend" resolve -x virtual/mysql
 			if command -v rc >/dev/null; then
@@ -812,8 +864,9 @@ mysql_database() {
 			else
 				DIE 1 "Unable to Detect init system and start Mysql service!"
 			fi
-		;;
-		esac
+			
+			EXIT 0 ;;
+	esac
 
 
 		if command -v mysql >/dev/null; then
@@ -834,7 +887,7 @@ mysql_database() {
 			cd "$directory" || DIE 1 "Failed to cd into '$directory'!"
 			mysql_dir="mysql_db"
 			CREATE_DIRECTORY $mysql_dir ; cd $mysql_dir || DIE 1 "Failed to cd into '$mysql_dir'!"
-			WGET "ripple.sql" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Database%20files/ripple.sql || DIE 11 "Could not download file 'ripple.sql'!"
+			WGET "ripple.sql" "$sql_schema_url" || DIE 11 "Could not download file 'ripple.sql'!"
 			if [ -f "ripple.sql" ]; then
 				YPRINT "Note: Enter MySql Password. Same for each prompt"
 				mysql -u "$mysql_user" -p -e 'CREATE DATABASE '"$database_name"'';
@@ -859,20 +912,28 @@ phpmyadmin(){
 	YPRINT "Setting up '$TASK'!"
 
 	# Dependencies
-  case "$package_manager_frontend" in
+	case "$package_manager_frontend" in
 		"apt")
 			"$package_manager_frontend" install phpmyadmin php-mbstring php-gettext -y
-		;;
+			
+			EXIT 0 ;;
+			
 		"pacman")
+		
 			"$package_manager_frontend" --noconfirm -S phpmyadmin
-		;;
+			
+			EXIT 0 ;;
+			
 		"emerge")
 			"$package_manager_frontend" -q dev-db/phpmyadmin
-		;;
+			
+			EXIT 0 ;;
+			
 		"cave")
 			"$package_manager_frontend" resolve -x dev-lang/php
-		;;
-		esac
+			
+			EXIT 0 ;;	
+	esac
 
 	if [ -d "/var/www/osu.ppy.sh" ]; then
 		(
@@ -1183,7 +1244,7 @@ nginx() {
 			if [ -f "nginx.conf" ]; then
 				REMOVE nginx.conf
 			fi
-			WGET "nginx.conf" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Nginx/N1.conf || DIE 11 "Could not download file 'nginx.conf'!"
+			WGET "nginx.conf" "$nginx_config1_url" || DIE 11 "Could not download file 'nginx.conf'!"
 			sed -i 's#include /root/ripple/nginx/*.conf\*#include '"$directory"'/nginx/*.conf#' /etc/nginx/nginx.conf || DIE 1 "Failed to Setup Config file!"
 		)
 	else
@@ -1195,20 +1256,19 @@ nginx() {
 			cd "$directory" || DIE 1 "Failed to cd into '$directory'!"
 			CREATE_DIRECTORY nginx ; cd nginx || DIE 1 "Failed to cd into 'nginx'!"
 
-			WGET "nginx.conf" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Nginx/N2.conf || DIE 11 "Could not download file 'nginx.conf'!"
+			WGET "nginx.conf" "$nginx_config2_url" || DIE 11 "Could not download file 'nginx.conf'!"
 			if [ -f "nginx.conf" ]; then
 				sed -Ei 's#DOMAIN#'"$domain"'#g; s#DIRECTORY#'"$directory"'#g' nginx.conf || DIE 1 "Failed to Setup Config file!"
 			fi
 
-			WGET "old-frontend.conf" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Nginx/old-frontend.conf || DIE 11 "Could not download file 'old-frontend.conf'!"
+			WGET "old-frontend.conf" "$old_frontend_config_url" || DIE 11 "Could not download file 'old-frontend.conf'!"
 			if [ -f "old-frontend.conf" ]; then
 				sed -Ei 's#DOMAIN#'"$domain"'#g; s#DIRECTORY#'"$directory"'#g' old-frontend.conf || DIE 1 "Failed to Setup Config file!"
 			fi
 
-			# Using osuthailand certificate. (since plebs)
 			YPRINT "Downloading Certificates! (ainu-certificate)"
-			WGET "cert.pem" https://raw.githubusercontent.com/osuthailand/ainu-certificate/master/cert.pem || DIE 11 "Could not download file 'cert.pem'!"
-			WGET "key.pem" https://raw.githubusercontent.com/osuthailand/ainu-certificate/master/key.key || DIE 11 "Could not download file 'key.pem'!"
+			WGET "cert.pem" "$certificate_url" || DIE 11 "Could not download file 'cert.pem'!"
+			WGET "key.pem" "$key_url" || DIE 11 "Could not download file 'key.pem'!"
 			if [ -f "cert.pem" ] && [ -f "key.pem" ]; then
 				GPRINT "Done downloading Certificates."
 			else
@@ -1279,32 +1339,40 @@ old_frontend() {
 		DIE 61 "Unknown Error!"
 	fi
 
-  YPRINT "Installing Necessary Dependencies required for '$TASK'!"
+	YPRINT "Installing Necessary Dependencies required for '$TASK'!"
+	
 	# Dependencies
-  case "$package_manager_frontend" in
+	case "$package_manager_frontend" in
 		"apt")
-	  "$package_manager_frontend" install build-essential \
-	  apt install apt-transport-https lsb-release ca-certificates -y
-	  WGET /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
-	  echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list
-	  "$package_manager_frontend" update
-	  "$package_manager_frontend" install php7.2 php7.2-cli php7.2-common php7.2-json \
-	  php7.2-opcache php7.2-mysql php7.2-zip php7.2-fpm php7.2-mbstring -y
-	  curl -sS https://getcomposer.org/installer -o composer-setup.php
-	  php -r "if (hash_file('SHA384', 'composer-setup.php') === '$HASH') \
-	  { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
-	  php composer-setup.php --install-dir=/usr/local/bin --filename=composer
-		;;
+			"$package_manager_frontend" install build-essential \
+			apt install apt-transport-https lsb-release ca-certificates -y
+			WGET /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
+			echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list
+			"$package_manager_frontend" update
+			"$package_manager_frontend" install php7.2 php7.2-cli php7.2-common php7.2-json \
+			php7.2-opcache php7.2-mysql php7.2-zip php7.2-fpm php7.2-mbstring -y
+			curl -sS https://getcomposer.org/installer -o composer-setup.php
+			php -r "if (hash_file('SHA384', 'composer-setup.php') === '$HASH') \
+			{ echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+			php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+			
+			EXIT 0 ;;
+			  
 		"pacman")
-	  "$package_manager_frontend" --noconfirm -S php composer
-		;;
+			"$package_manager_frontend" --noconfirm -S php composer
+			
+			EXIT 0 ;;
+			
 		"emerge")
-	  "$package_manager_frontend" -q dev-lang/php dev-lang/composer
-		;;
+	  		"$package_manager_frontend" -q dev-lang/php dev-lang/composer
+			
+			EXIT 0 ;;
+			
 		"cave")
 			"$package_manager_frontend" resolve -x dev-lang/php dev-php/composer
-		;;
-		esac
+			
+			EXIT 0 ;;
+	esac
 
 	for packages in php composer; do
 		if command -v $packages >/dev/null; then
