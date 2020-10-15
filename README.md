@@ -121,7 +121,7 @@ git clone https://github.com/Uniminin/Ripple-Auto-Installer ; cd Ripple-Auto-Ins
 cd Main
 sha1sum -c ripple.sha1  # Check file integrity
 # Make the script readable, writable, and executable to root and your user:
-<superuser> chmod 770 ripple.sh
+chmod 770 ripple.sh
 ./ripple.sh --help
 ```
 With wget (Recommended)
@@ -130,14 +130,14 @@ wget -O "ripple.sh" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Insta
 wget -O "ripple.sha1" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/ripple.sha1
 sha1sum -c ripple.sha1  # Check file integrity
 # Make the script readable, writable, and executable to root and your user:
-<superuser> chmod 770 ripple.sh
+chmod 770 ripple.sh
 ./ripple.sh --help
 ```
 Bedrock How To:
 ```bash
 $ sudo strat -r stratum ./ripple.sh -h  # stratum --> stratum name
 ```
-Note: Execute the script as superuser. For example: `sudo/doas -- ./ripple.sh --all` to install & setup full ripple stack with dependencies.
+Note: Execute the script as superuser. For example: `sudo/X/doas -- ./ripple.sh ...`.
 
 
 ### Configuring/Starting/connecting (The Server)
