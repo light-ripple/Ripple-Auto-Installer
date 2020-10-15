@@ -8,7 +8,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|             Last Updated on Thursday, October 15, 2020 at 12:00 PM (GMT+6)              |
+|             Last Updated on Thursday, October 15, 2020 at 12:30 PM (GMT+6)              |
 -------------------------------------------------------------------------------------------
 '
 
@@ -111,7 +111,7 @@
 
 
 # Version #
-UPSTREAM_VERSION=0.8.8
+UPSTREAM_VERSION=0.9.0
 
 
 # Repositories
@@ -475,28 +475,28 @@ DetectPackageManager() {
 			export package_manager_frontend="$frontend"
 			YPRINT "Using Package Manager Frontend: '$package_manager_frontend'"
 			
-			EXIT 0 ;;
+			;;
 
 		"pacman")
 			GPRINT "Found Package Manager: 'Pacman [ $frontend ]'"
 			export package_manager_frontend="$frontend"
 			YPRINT "Using Package Manager Frontend: '$package_manager_frontend'"
 
-			EXIT 0 ;;
+			;;
 
 		"emerge")
 			GPRINT "Found Package Manager: 'Portage [ $frontend ]'"
 			export package_manager_frontend="emerge"
 			YPRINT "Using Package Manager Frontend: 'Portage'"
 
-			EXIT 0 ;;
+			;;
 
 		"cave")
 			GPRINT "Found Package Manager: 'Paludis [ $frontend ]'"
 			export package_manager_frontend="cave"
 			YPRINT "Using Package Manager Frontend: 'Paludis'"
 
-			EXIT 0 ;;
+			;;
 	esac
 
 }
@@ -512,22 +512,22 @@ packageManagerUpgrade() {
 		"apt")
 			apt update ; apt upgrade -y ; apt update
 			
-			EXIT 0 ;;
+			;;
 			
 		"pacman")
 			pacman --noconfirm -Syyu
 			
-			EXIT 0 ;;
+			;;
 			
 		"emerge")
 			emerge --sync ; emerge -qvuDN @world
 			
-			EXIT 0 ;;
+			;;
 			
 		"cave")
 			cave sync ; cave resolve world -qx
 			
-			EXIT 0 ;;
+			;;
 	esac
 
 }
@@ -546,24 +546,24 @@ python_dependencies() {
 			"$package_manager_frontend" install build-essential libssl-dev zlib1g-dev openssl libbz2-dev libsqlite3-dev \
 			git wget python-dev default-libmysqlclient-dev tar make cython -y
 			
-			EXIT 0 ;;
+			;;
 			
 		"pacman")
 			"$package_manager_frontend" --noconfirm -S gcc git wget tar make cython
 			
-			EXIT 0 ;;
+			;;
 			
 		"emerge")
 			"$package_manager_frontend" -q sys-devel/gcc dev-vcs/git net-misc/wget \
 			sys-devel/make app-arch/tar dev-python/cython
 			
-			EXIT 0 ;;
+			;;
 			
 		"cave")
 			"$package_manager_frontend" resolve -x sys-devel/gcc dev-scm/git sys-devel/make \
 			app-arch/tar dev-python/shiboken2
 			
-			EXIT 0 ;;
+			;;
 	esac
 
 	for packages in gcc make git wget cython; do
@@ -770,23 +770,23 @@ extra_dependencies() {
 		"apt")
 			"$package_manager_frontend" install tmux nginx redis-server socat -y
 			
-			EXIT 0 ;;
+			;;
 			
 		"pacman")
 			"$package_manager_frontend" --noconfirm -S tmux nginx redis socat
 			
-			EXIT 0 ;;
+			;;
 			
 		"emerge")
 			"$package_manager_frontend" -q app-misc/tmux www-servers/nginx dev-db/redis net-misc/soca
 			
-			EXIT 0 ;;
+			;;
 			
 		"cave")
 			"$package_manager_frontend" resolve -x app-terminal/tmux www-servers/nginx \
 			dev-db/redis net-misc/socat
 			
-			EXIT 0 ;;
+			;;
 	esac
 
 	for packages in tmux nginx redis-cli; do
@@ -834,14 +834,14 @@ mysql_database() {
 				systemctl restart mysql
 			fi
 			
-			EXIT 0 ;;
+			;;
 			
 		"pacman")
 			"$package_manager_frontend" --noconfirm -S mariadb
 			mariadb-install-db --user=mysql --basedir=/usr --datadir=/var/lib/mysql
 			systemctl start mariadb.service
 			
-			EXIT 0 ;;
+			;;
 			
 		"emerge")
 			"$package_manager_frontend" -q dev-db/mysql
@@ -853,7 +853,7 @@ mysql_database() {
 				DIE 1 "Unable to Detect init system and start Mysql service!"
 			fi
 			
-			EXIT 0 ;;
+			;;
 			
 		"cave")
 			"$package_manager_frontend" resolve -x virtual/mysql
@@ -865,7 +865,7 @@ mysql_database() {
 				DIE 1 "Unable to Detect init system and start Mysql service!"
 			fi
 			
-			EXIT 0 ;;
+			;;
 	esac
 
 
@@ -916,23 +916,23 @@ phpmyadmin(){
 		"apt")
 			"$package_manager_frontend" install phpmyadmin php-mbstring php-gettext -y
 			
-			EXIT 0 ;;
+			;;
 			
 		"pacman")
 		
 			"$package_manager_frontend" --noconfirm -S phpmyadmin
 			
-			EXIT 0 ;;
+			;;
 			
 		"emerge")
 			"$package_manager_frontend" -q dev-db/phpmyadmin
 			
-			EXIT 0 ;;
+			;;
 			
 		"cave")
 			"$package_manager_frontend" resolve -x dev-lang/php
 			
-			EXIT 0 ;;	
+			;;	
 	esac
 
 	if [ -d "/var/www/osu.ppy.sh" ]; then
@@ -1356,22 +1356,22 @@ old_frontend() {
 			{ echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
 			php composer-setup.php --install-dir=/usr/local/bin --filename=composer
 			
-			EXIT 0 ;;
+			;;
 			  
 		"pacman")
 			"$package_manager_frontend" --noconfirm -S php composer
 			
-			EXIT 0 ;;
+			;;
 			
 		"emerge")
 	  		"$package_manager_frontend" -q dev-lang/php dev-lang/composer
 			
-			EXIT 0 ;;
+			;;
 			
 		"cave")
 			"$package_manager_frontend" resolve -x dev-lang/php dev-php/composer
 			
-			EXIT 0 ;;
+			;;
 	esac
 
 	for packages in php composer; do
