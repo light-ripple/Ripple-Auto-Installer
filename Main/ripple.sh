@@ -8,7 +8,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|             Last Updated on Thursday, October 15, 2020 at 12:30 PM (GMT+6)              |
+|             Last Updated on Thursday, October 15, 2020 at 6:50 PM (GMT+6)              |
 -------------------------------------------------------------------------------------------
 '
 
@@ -111,15 +111,15 @@
 
 
 # Version #
-UPSTREAM_VERSION=0.9.0
+UPSTREAM_VERSION=0.9.1
 
 
 # Repositories
-peppy_url="https://zxq.co/ripple/pep.py"
-lets_url="https://github.com/osufx/lets"
-secret_url="https://github.com/osufx/secret"
-avatar_server_url="https://github.com/Uniminin/avatar-server"
-old_frontend_url="https://zxq.co/ripple/old-frontend"
+peppy_url="https://github.com/light-ripple/pep.py"
+lets_url="https://github.com/light-ripple/lets"
+secret_url="https://github.com/light-ripple/secret"
+avatar_server_url="https://github.com/light-ripple/avatar-server"
+old_frontend_url="https://github.com/light-ripple/old-frontend"
 
 # Note: Do not include 'http/https://' in go repos
 hanayo_url="zxq.co/ripple/hanayo"
