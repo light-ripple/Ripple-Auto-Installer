@@ -18,13 +18,14 @@
 This project gives you a base and foundation if you're willing to setup your own Ripple instance. You’re to think for yourself. Ripple is not a stack system where Ripple/I document everything so you’ll need a basic understanding of how full stack web applications and unix or GNU/Linux systems work to be able to set up Ripple properly and work out with problems efficiently when necessary.<br>
 * Check out <a href="https://github.com/Uniminin/Light-Ripple-Windows/">Light-Ripple-Windows</a> if you want to host a local Ripple instance on your windows system.</a>
 * You might want to look at Ripple's wiki(old): https://github.com/osuripple/ripple/wiki/How-to-setup-ripple
+* Ripple Too Hard? aka "I am incompetent" then Try Gulag (dev-friendly osu! server): https://github.com/cmyui/gulag
 * Note: The Script has not been fully tested (100%) properly. Bugs may be expected, Report it <a href="https://github.com/Uniminin/Ripple-Auto-Installer#contact">Contact</a>.
 
 
 ### Requirements
-* Knowledge on Computers, Softwares, Unix or GNU/Linux, Servers, Game Hosting, Database, Computer Networks, Computer Security & Encyption, SQL Injection, Virtual Private Server, Web hosting, Programming & Full stack web development. All of them are not 100% required but essential.
-* A Unix or GNU/Linux <a href=https://en.wikipedia.org/wiki/Virtual_private_server>Virtual Private Server</a>.
-* A Arch/Debian/Gentoo/Exherbo Based Linux Distro with APT, Pacman, Portage or paludis package manager.
+* Knowledge on Computers, Softwares, Unix or GNU/Linux, Servers, Game Hosting, Database, Computer Networks, Computer Security & Encyption, Virtual Private Server, Web hosting, Programming & Full stack web development. All of them are not 100% required but essential.
+* <a href=https://en.wikipedia.org/wiki/Virtual_private_server>Virtual Private Server</a>.
+* A Arch/Debian/Gentoo/Exherbo GNU/Linux Based Distro with APT, Pacman, Portage or paludis package manager.
 * Systemd or Openrc.
 
 
@@ -147,7 +148,8 @@ Note: Execute the script as superuser. For example: `sudo/X/doas -- ./ripple.sh 
 
 
 ### Contact
-Questions? Need help? You may join the Discord server or ask me in Discord. 
+Found Bug(s)? Want to contribute? You may join the Discord server or ask me in Discord. 
+- **Note**: **NO HELP WILL BE PROVIDED TO INSTALL RIPPLE**. 
 * Server: <a href=https://discord.gg/W2VSJnA>Developer I/O</a>
 * Discord: `uniminin#7522`
 * EMAIL: `uniminin@zoho.com` (Message me on Discord after sending me mail)
