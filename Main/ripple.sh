@@ -1,6 +1,7 @@
 #!/bin/sh
 # shellcheck shell=sh # Written to be posix compatible
-# shellcheck disable=SC2128,SC2178 # False Trigger
+# shellcheck disable=SC1009,SC1019,SC1020,SC1072 # False Trigger
+# shellcheck disable=SC2128,SC2178,SC1073 # False Trigger
 # shellcheck disable=SC2039,SC1090,SC1091 # Non-Acute Trigger
 # USING: APT, Pacman, Portage, Paludis, UNIX or GNU/Linux, Mysql/Mariadb Database.
 # SUPPORTS INIT SYSTEMS: systemd and openrc.
@@ -8,7 +9,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|             Last Updated on Thursday, October 15, 2020 at 6:50 PM (GMT+6)              |
+|             Last Updated on Thursday, October 17, 2020 at 11:22 PM (GMT+6)              |
 -------------------------------------------------------------------------------------------
 '
 
@@ -111,7 +112,7 @@
 
 
 # Version #
-UPSTREAM_VERSION=0.9.1
+UPSTREAM_VERSION=0.10-rc1
 
 
 # Repositories
@@ -235,21 +236,28 @@ die() {
 		*) RPRINT "FATAL ""$2"": $3 $1"
 	esac
 	
-	if [ ! -f "ErrorLog.txt" ]; then
-		CREATE_FILE Error.log
+	log_file="ErrorLog.txt"
+	
+	if [ ! -f "$log_file" ]; then
+		CREATE_FILE "$log_file"
 	fi
 	
-	if [ -f "Error.log" ]; then
-		printf "[$Date]\\nFATAL: %s\\n\\n" "$3 $1" >> Error.log || EXIT 4
-		GPRINT "Successfully Written into 'Error.log'"
+	if [ -f "$log_file"]; then
+		printf "[$Date]\\nFATAL: %s\\n\\n" "$3 $1" >> "$log_file" || EXIT 4
+		GPRINT "Successfully Written into '$log_file'"
 	fi
-
-	BPRINT "Continue ? y/n "
-	READ confirmation
+	
+	# Confirm :DIE: -> Die :?:
+	while [ -z "$confirmation" ]; do
+		BPRINT "Continue ? y/n "
+		READ confirmation
+	done
 	
 	if [ ! "$confirmation" = "y" ]; then
 		RPRINT "EXITING..."
 		EXIT 4
+	else
+		DIE 1 "MYSQL Username Not specified!"
 	fi
 
 }
