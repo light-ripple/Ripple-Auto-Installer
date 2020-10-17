@@ -209,6 +209,7 @@ die() {
 		GPRINT "Successfully Written into '$log_file'"
 	fi
 	
+	# TODO: Change confirmation (variable) names -> UNIQUE
 	# Confirm :DIE: -> Die :?:
 	while [ -z "$confirmation" ]; do
 		BPRINT "Continue ? y/n "
