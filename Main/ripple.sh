@@ -1,15 +1,14 @@
 #!/bin/sh
 # shellcheck shell=sh # Written to be posix compatible
-# shellcheck disable=SC1009,SC1019,SC1020,SC1072 # False Trigger
-# shellcheck disable=SC2128,SC2178,SC1073 # False Trigger
-# shellcheck disable=SC2039,SC1090,SC1091 # Non-Acute Trigger
+# shellcheck source=/home/"$USER"/.bashrc
+# shellcheck disable=SC1091 # Don't have access to the file
 # USING: APT, Pacman, Portage, Paludis, UNIX or GNU/Linux, Mysql/Mariadb Database.
 # SUPPORTS INIT SYSTEMS: systemd and openrc.
 
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|             Last Updated on Thursday, October 17, 2020 at 11:22 PM (GMT+6)              |
+|             Last Updated on Thursday, October 17, 2020 at 11:40 PM (GMT+6)              |
 -------------------------------------------------------------------------------------------
 '
 
@@ -164,45 +163,6 @@ alias READ="read -r"
 alias EXIT="exit"
 
 
-# Modified version of efixme originally designed by Jacob Hrbek <kreyren@rixotstudio.cz> under the terms of GNU GPL-3.0
-efixme() {
-
-	if [ "$FUNCNAME" != "efixme" ]; then
-		FUNCNAME="efixme"
-	elif [ "$FUNCNAME" = "efixme" ]; then
-		true
-	else
-		if command -v DIE >/dev/null; then
-			DIE 255 "checking for efixme FUNCNAME"
-		elif ! command -v DIE >/dev/null; then
-			RPRINT "FATAL: Unexpected happend while checking efixme FUNCNAME"
-			EXIT 255
-		else
-			RPRINT "FATAL: Unexpected happend while processing unexpected in efixme"
-			EXIT 255
-		fi
-	fi
-
-	# NOTICE: Ugly, but this way it doesn't have to process following if statement on runtime #
-	[ -z "$IGNORE_FIXME" ] && if [ -z "$EFIXME_PREFIX" ]; then
-		RPRINT "$EFIXME_PREFIX: $1"
-		return 0
-	elif [ -z "$EFIXME_PREFIX" ]; then
-		RPRINT "FIXME: $1"
-		return 0
-	else
-		if command -v DIE >/dev/null; then
-			DIE 255 "Unexpected happend while exporting fixme message"
-		elif ! command -v DIE >/dev/null; then
-			RPRINT "FATAL: Unexpected happend while exporting fixme message"
-			EXIT 255
-		else
-			RPRINT "FATAL: Unexpected happend while processing unexpected in $FUNCNAME"
-			EXIT 255
-		fi
-	fi
-
-}
 
 # prints line number
 lineno() {
@@ -213,7 +173,8 @@ lineno() {
 	elif ! command -v bash 1>/dev/null; then
 		return 1
 	else
-		efixme "ELSE"
+		RPRINT "Fatal: Unexpected!"
+		EXIT 1
 	fi
 
 }
@@ -242,7 +203,7 @@ die() {
 		CREATE_FILE "$log_file"
 	fi
 	
-	if [ -f "$log_file"]; then
+	if [ -f "$log_file" ]; then
 		printf "[$Date]\\nFATAL: %s\\n\\n" "$3 $1" >> "$log_file" || EXIT 4
 		GPRINT "Successfully Written into '$log_file'"
 	fi
@@ -734,7 +695,8 @@ golang() {
 
 							echo export GOPATH=/root/go > ~/.bashrc
 							echo export PATH="$PATH":/usr/local/go/bin:"$GOPATH"/bin > ~/.bashrc
-							. ~/.bashrc
+							
+							. /home/"$USER"/.bashrc
 
 						else
 							DIE 1 "Directory: '/usr/local' doesn't exist!"
