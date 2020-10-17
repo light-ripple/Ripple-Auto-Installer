@@ -8,7 +8,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|             Last Updated on Thursday, October 17, 2020 at 11:40 PM (GMT+6)              |
+|             Last Updated on Thursday, October 17, 2020 at 11:48 PM (GMT+6)              |
 -------------------------------------------------------------------------------------------
 '
 
@@ -111,7 +111,7 @@
 
 
 # Version #
-UPSTREAM_VERSION=0.10-rc1
+UPSTREAM_VERSION=0.10-rc2
 
 
 # Repositories
@@ -182,7 +182,8 @@ lineno() {
 
 # For capturing Bugs
 # kills the script if anything returns false
-set -e
+# Temporarily Disable #
+# set -e
 
 
 # Simplified Assersion by uniminin <uniminin@zoho.com> under the terms of AGPLv3
@@ -442,28 +443,28 @@ DetectPackageManager() {
 		"apt")
 			GPRINT "Found Package Manager: 'APT [ $frontend ]'"
 			export package_manager_frontend="$frontend"
-			YPRINT "Using Package Manager Frontend: '$package_manager_frontend'"
+			YPRINT "Using Package Manager Frontend: '$package_manager_frontend'."
 			
 			;;
 
 		"pacman")
 			GPRINT "Found Package Manager: 'Pacman [ $frontend ]'"
 			export package_manager_frontend="$frontend"
-			YPRINT "Using Package Manager Frontend: '$package_manager_frontend'"
+			YPRINT "Using Package Manager Frontend: '$package_manager_frontend'."
 
 			;;
 
 		"emerge")
 			GPRINT "Found Package Manager: 'Portage [ $frontend ]'"
 			export package_manager_frontend="emerge"
-			YPRINT "Using Package Manager Frontend: 'Portage'"
+			YPRINT "Using Package Manager Frontend: 'Portage'."
 
 			;;
 
 		"cave")
 			GPRINT "Found Package Manager: 'Paludis [ $frontend ]'"
 			export package_manager_frontend="cave"
-			YPRINT "Using Package Manager Frontend: 'Paludis'"
+			YPRINT "Using Package Manager Frontend: 'Paludis'."
 
 			;;
 	esac
@@ -529,7 +530,7 @@ python_dependencies() {
 			;;
 			
 		"cave")
-			"$package_manager_frontend" resolve -x sys-devel/gcc dev-scm/git sys-devel/make \
+			"$package_manager_frontend" resolve -qx sys-devel/gcc dev-scm/git sys-devel/make \
 			app-arch/tar dev-python/shiboken2
 			
 			;;
@@ -552,7 +553,7 @@ python3_5() {
 	TASK="python3.5"
 
 	if command -v python3.5 >/dev/null; then
-		GPRINT "Python3.5 has been found on this system. SkipPING.."
+		GPRINT "Python3.5 has been found on this system. Skipping.."
 	else
 		YPRINT "Setting up '$TASK'!"
 
@@ -603,54 +604,48 @@ python3_6() {
 	TASK="python3.6"
 
 	if command -v python3.6 >/dev/null; then
-		GPRINT "Python3.6 has been found on this system. SkipPING.."
+		GPRINT "Python3.6 has been found on this system. Skipping.."
 	else
 		YPRINT "Setting up '$TASK'!"
 		
-		# FIXME: detect distro version, add and pull proper repository and package respectively
-		if [ "$ID" = "Ubuntu" ]; then
-			add-apt-repository ppa:deadsnakes/ppa -y
-			"$package_manager_frontend" update
-			"$package_manager_frontend" install python3.6 python3-pip -y
-			
-		else
-			if command -v PING 1>/dev/null; then
-				PING -i 0.5 -c 5 python.org || DIE 121 "Domain 'python.org' is not reachable from this environment."
+		
+	if command -v PING 1>/dev/null; then
+		PING -i 0.5 -c 5 python.org || DIE 121 "Domain 'python.org' is not reachable from this environment."
+	else
+		DIE 61 "Unknown Error!"
+	fi
+
+	(
+		if [ -d "/usr/src" ]; then
+			cd /usr/src || DIE 1 "Failed to cd into '/usr/src'!"
+			WGET "Python-3.6.8.tar.xz" https://www.python.org/ftp/python/3.6.8/Python-3.6.8.tar.xz || DIE 11 "Could not download file 'Python-3.6.8.tar.xz'."
+		fi
+
+		if [ -f "Python-3.6.8.tar.xz" ]; then
+			tar -xvf Python-3.6.8.tar.xz
+			if [ -d "Python-3.6.8" ]; then
+				cd Python-3.6.8 || DIE 1 "Failed to cd into 'Python-3.6.8'!"
 			else
-				DIE 61 "Unknown Error!"
+				DIE 1 "Failed to extract 'Python-3.6.8.tar.xz'!"
+			fi
+			./configure --enable-optimizations --with-ensurepip=install ; make --jobs "$procNum" build_all ; make install
+			if command -v python3.6 -m pip >/dev/null; then
+				python3.6 -m pip install --upgrade pip
+			else
+				DIE 1 "python3.6 pip not found!"
 			fi
 
-			(
-				if [ -d "/usr/src" ]; then
-					cd /usr/src || DIE 1 "Failed to cd into '/usr/src'!"
-					WGET "Python-3.6.8.tar.xz" https://www.python.org/ftp/python/3.6.8/Python-3.6.8.tar.xz || DIE 11 "Could not download file 'Python-3.6.8.tar.xz'."
-				fi
-
-				if [ -f "Python-3.6.8.tar.xz" ]; then
-					tar -xvf Python-3.6.8.tar.xz
-					if [ -d "Python-3.6.8" ]; then
-						cd Python-3.6.8 || DIE 1 "Failed to cd into 'Python-3.6.8'!"
-					else
-						DIE 1 "Failed to extract 'Python-3.6.8.tar.xz'!"
-					fi
-					./configure --enable-optimizations --with-ensurepip=install ; make --jobs "$procNum" build_all ; make install
-					if command -v python3.6 -m pip >/dev/null; then
-						python3.6 -m pip install --upgrade pip
-					else
-						DIE 1 "python3.6 pip not found!"
-					fi
-
-				if command -v python3.6 >/dev/null; then
-					GPRINT "Python3.6 has been installed on this system."
-				else
-					DIE 1 "Failed to install python3.6!"
-				fi
-
-				else
-					DIE 1 "Python3.6.8 couldn't be installed because file 'Python-3.6.8.tar.xz' was not found!"
-				fi
-			)
+		if command -v python3.6 >/dev/null; then
+			GPRINT "Python3.6 has been installed on this system."
+		else
+			DIE 1 "Failed to install python3.6!"
 		fi
+
+		else
+			DIE 1 "Python3.6.8 couldn't be installed because file 'Python-3.6.8.tar.xz' was not found!"
+		fi
+	)
+
 	fi
 
 }
@@ -662,7 +657,7 @@ golang() {
 	TASK="golang"
 
 	if command -v go 1>/dev/null; then
-		GPRINT "Golang has be found on this system. SkipPING.."
+		GPRINT "Golang has be found on this system. Skipping.."
 	else
 		YPRINT "Setting up '$TASK'!"
 		
@@ -776,7 +771,7 @@ mysql_database() {
 	TASK="MySQL Database"
 
 	if command -v mysql 1>/dev/null; then
-		GPRINT "MySQL has been found on this system. SkipPING.."
+		GPRINT "MySQL has been found on this system. Skipping.."
 	else	
 		YPRINT "Setting up '$TASK'!"
 
