@@ -1,0 +1,7 @@
+version = 1
+
+test_patterns = ["Main/ripple.sh"]
+
+[[analyzers]]
+name = "shell"
+enabled = true
