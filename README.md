@@ -60,9 +60,15 @@ This project gives you a base and foundation if you're willing to setup your own
 * Posix compatible
 
 
-### File Structure
+### File Structure [![CodeFactor](https://www.codefactor.io/repository/github/uniminin/ripple-auto-installer/badge/master)](https://www.codefactor.io/repository/github/uniminin/ripple-auto-installer/overview/master)
 ```
 .
+├── .github
+│  └── workflows
+│     ├── ripple-test.yml
+│     └── shell.yml
+├── .gitpod.yml
+├── .travis.yml
 ├── Database files
 │  └── ripple.sql
 ├── LICENSE
