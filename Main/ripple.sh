@@ -378,7 +378,8 @@ inputs() {
 	fi
 
 	# OSU!API
-	BPRINT "Get OSU!API Key Here: https://old.ppy.sh/p/api"
+	GPRINT "Get OSU!API Key Here: https://old.ppy.sh/p/api"
+	BPRINT "OSU!API Key: "
 	while [ -z "$api" ]; do
 		BPRINT "OSU!API key: "
 		READ api
