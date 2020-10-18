@@ -234,8 +234,12 @@ if [ ! -f "ripple.sha1" ]; then
 fi
 
 if [ -f "ripple.sha1" ]; then
-	sha1sum -c ripple.sha1 || RPRINT "Checksum did not match. Fetching the latest script, please try again..." ; \
-	wget -O "ripple.sh" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/ripple.sh & EXIT 1
+	sha1sum -c ripple.sha1 || match="false"
+	if [ "$match" = "false" ]; then
+		GPRINT "Fetching the latest script, please try again..."
+		wget -O "ripple.sh" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/ripple.sh
+		EXIT 1
+	fi
 else
 	RPRINT "file integrity data not found" ; EXIT 1
 fi
