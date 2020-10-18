@@ -121,7 +121,7 @@ Make sure you configure cloudflare properly.
 </p>
 
 
-### Running the Script (instructions)
+### RUNNING THE SCRIPT [![Build Status](https://travis-ci.com/Uniminin/Ripple-Auto-Installer.svg?branch=master)](https://travis-ci.com/Uniminin/Ripple-Auto-Installer)
 With Git
 ```bash
 git clone https://github.com/Uniminin/Ripple-Auto-Installer ; cd Ripple-Auto-Installer
