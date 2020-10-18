@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|              Last Updated on Sunday, October 18, 2020 at 02:22 PM (GMT+6)               |
+|              Last Updated on Sunday, October 18, 2020 at 04:00 PM (GMT+6)               |
 -------------------------------------------------------------------------------------------
 '
 
@@ -108,7 +108,7 @@
 
 
 # Version #
-UPSTREAM_VERSION=0.10-rc10
+UPSTREAM_VERSION=0.10-rc11
 
 
 # Repositories
@@ -1250,7 +1250,10 @@ nginx() {
 	fi
 
 	if [ -d "/etc/nginx" ]; then
-		pkill -f nginx || DIE 1 "Failed to kill process '$TASK'!"
+		if command -v pkill 1>/dev/null; then
+			pkill -f nginx
+		fi
+		
 		(
 			cd /etc/nginx || DIE 1 "Failed to cd into '/etc/nginx'!"
 			if [ -f "nginx.conf" ]; then
