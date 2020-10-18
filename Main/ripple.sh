@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|              Last Updated on Sunday, October 18, 2020 at 01:30 PM (GMT+6)               |
+|              Last Updated on Sunday, October 18, 2020 at 01:35 PM (GMT+6)               |
 -------------------------------------------------------------------------------------------
 '
 
@@ -32,7 +32,9 @@
 ###! - FIXME
 ###! Exit code:
 ###! - FIXME-DOCS: Defined in die() :?:
-###! - Error Log [*]
+###! Integrated:
+###! - [*] Error Log
+###! - [*] File Integrity Checker
 ###! Platform:
 ###!  - [*] Linux
 ###!    - [*] Archlinux
@@ -52,7 +54,7 @@
 ###!    - [ ] Solus
 ###!    - [ ] Venom
 ###!    - [ ] Void
-###!  - [ ] BSD
+###!  - [?] BSD
 ###!    - [ ] FreeBSD
 ###!    - [ ] GhostBSD
 ###!    - [ ] DragonFly BSD
@@ -67,8 +69,8 @@
 ###!  - [*] AMD64/x86_64
 ###!  - [-] x86
 ###!  - [ ] arm
-###!  - [ ] arm64
-###!  - [ ] ia64
+###!  - [?] arm64
+###!  - [x] ia64
 ###! Package Manager:
 ###!  - [ ] Apk
 ###!  - [*] Apt
@@ -106,7 +108,7 @@
 
 
 # Version #
-UPSTREAM_VERSION=0.10-rc6
+UPSTREAM_VERSION=0.10-rc7
 
 
 # Repositories
