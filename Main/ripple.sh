@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|              Last Updated on Sunday, October 18, 2020 at 02:10 PM (GMT+6)               |
+|              Last Updated on Sunday, October 18, 2020 at 02:22 PM (GMT+6)               |
 -------------------------------------------------------------------------------------------
 '
 
@@ -108,7 +108,7 @@
 
 
 # Version #
-UPSTREAM_VERSION=0.10-rc9
+UPSTREAM_VERSION=0.10-rc10
 
 
 # Repositories
@@ -309,23 +309,23 @@ inputs() {
 	if [ -n "$targetDir" ]; then
 		master_dir="$(pwd)/$targetDir"
 		if [ -d "$master_dir" ]; then
-			while [ -z "$confirmation" ]; do
+			while [ -z "$confirmation0" ]; do
 				BPRINT "Master Directory: '$master_dir' exists. Continue ? y/n "
-				READ confirmation
+				READ confirmation0
 			done
 
-			if [ "$confirmation" = "y" ]; then
+			if [ "$confirmation0" = "y" ]; then
 				GPRINT "Using Directory '$master_dir'."
 			else
 				DIE 1 "Input Declined by the user!"
 			fi
 		else
-			while [ -z "$confirmation" ]; do
+			while [ -z "$confirmation1" ]; do
 				BPRINT "Create Master Directory: '$master_dir' ? y/n "
-				READ confirmation
+				READ confirmation1
 			done
 
-			if [ "$confirmation" = "y" ]; then
+			if [ "$confirmation1" = "y" ]; then
 				CREATE_DIRECTORY "$master_dir"
 				if [ -d "$master_dir" ]; then
 					GPRINT "'$master_dir' has been created!"
@@ -349,12 +349,12 @@ inputs() {
 		READ domain
 	done
 
-	while [ -z "$confirmation" ]; do
+	while [ -z "$confirmation2" ]; do
 		BPRINT "Are you sure you want to use '$domain' ? y/n "
-		READ confirmation
+		READ confirmation2
 	done
 
-	if [ "$confirmation" = "y" ]; then
+	if [ "$confirmation2" = "y" ]; then
 		export domain
 	else
 		DIE 1 "Domain Not specified!"
@@ -366,30 +366,31 @@ inputs() {
 		READ cikey
 	done
 
-	while [ -z "$confirmation" ]; do
+	while [ -z "$confirmation3" ]; do
 		BPRINT "Are you sure you want to use '$cikey' ? y/n "
-		READ confirmation
+		READ confirmation3
 	done
 
-	if [ "$confirmation" = "y" ]; then
+	if [ "$confirmation3" = "y" ]; then
 		export cikey
 	else
 		DIE 1 "cikey Not specified!"
 	fi
 
 	# OSU!API
-	BPRINT "Get OSU!API Key Here: https://old.ppy.sh/p/api"
+	GPRINT "Get OSU!API Key Here: https://old.ppy.sh/p/api"
+	BPRINT "OSU!API Key: "
 	while [ -z "$api" ]; do
 		BPRINT "OSU!API key: "
 		READ api
 	done
 
-	while [ -z "$confirmation" ]; do
+	while [ -z "$confirmation4" ]; do
 		BPRINT "Are you sure you want to use '$api' ? y/n "
-		READ confirmation
+		READ confirmation4
 	done
 
-	if [ "$confirmation" = "y" ]; then
+	if [ "$confirmation4" = "y" ]; then
 		export api
 	else
 		DIE 1 "OSU!API Key Not specified!"
@@ -401,12 +402,12 @@ inputs() {
 		READ api_secret
 	done
 
-	while [ -z "$confirmation" ]; do
+	while [ -z "$confirmation5" ]; do
 		BPRINT "Are you sure you want to use '$api_secret' ? y/n "
-		READ confirmation
+		READ confirmation5
 	done
 
-	if [ "$confirmation" = "y" ]; then
+	if [ "$confirmation5" = "y" ]; then
 		export api_secret
 	else
 		DIE 1 "API Secret Not specified!"
@@ -418,12 +419,12 @@ inputs() {
 		READ mysql_user
 	done
 
-	while [ -z "$confirmation" ]; do
+	while [ -z "$confirmation6" ]; do
 		BPRINT "Are you sure you want to use '$mysql_user' ? y/n "
-		READ confirmation
+		READ confirmation6
 	done
 
-	if [ "$confirmation" = "y" ]; then
+	if [ "$confirmation6" = "y" ]; then
 		export mysql_user
 	else
 		DIE 1 "MYSQL Username Not specified!"
@@ -435,12 +436,12 @@ inputs() {
 		READ mysql_password
 	done
 
-	while [ -z "$confirmation" ]; do
+	while [ -z "$confirmation7" ]; do
 		BPRINT "Are you sure you want to use '$mysql_password' ? y/n "
-		READ confirmation
+		READ confirmation7
 	done
 
-	if [ "$confirmation" = "y" ]; then
+	if [ "$confirmation7" = "y" ]; then
 		export mysql_password
 	else
 		DIE 1 "MYSQL Password Not specified!"
@@ -452,12 +453,12 @@ inputs() {
 		READ database_name
 	done
 
-	while [ -z "$confirmation" ]; do
+	while [ -z "$confirmation8" ]; do
 		BPRINT "Are you sure you want to use '$database_name' ? y/n "
-		READ confirmation
+		READ confirmation8
 	done
 
-	if [ "$confirmation" = "y" ]; then
+	if [ "$confirmation8" = "y" ]; then
 		export database_name
 	else
 		DIE 1 "MYSQL Database Name Not specified!"
