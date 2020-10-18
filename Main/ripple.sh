@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|              Last Updated on Sunday, October 18, 2020 at 02:22 PM (GMT+6)               |
+|              Last Updated on Sunday, October 18, 2020 at 04:10 PM (GMT+6)               |
 -------------------------------------------------------------------------------------------
 '
 
@@ -108,7 +108,7 @@
 
 
 # Version #
-UPSTREAM_VERSION=0.10-rc10
+UPSTREAM_VERSION=0.10-rc12
 
 
 # Repositories
@@ -197,7 +197,7 @@ die() {
 		*) RPRINT "FATAL ""$2"": $3 $1"
 	esac
 	
-	log_file="ErrorLog.txt"
+	log_file="$(pwd)/ErrorLog.txt"
 	
 	if [ ! -f "$log_file" ]; then
 		CREATE_FILE "$log_file"
@@ -1175,7 +1175,7 @@ rippleapi() {
 					DIE 1 "Could not install '$TASK' because api directory not found!"
 				fi
 
-				if [ ! -f "api.conf" ]; then
+				if [ -f "api.conf" ]; then
 					sed -E -i -e 'H;1h;$!d;x' api.conf -e 's#DSN=#DSN='"$mysql_user"':'"$mysql_password"'@/'"$database_name"'#' || DIE 1 "Failed to Setup Config file! [$TASK/api.conf -> mysql-user, pass, db]"
 					sed -Ei "s:^HanayoKey=.*$:HanayoKey=$api_secret:g" api.conf || DIE 74 "Failed to Setup Config file! [$TASK/api.conf -> api_secret]"
 					sed -Ei "s:^OsuAPIKey=.*$:OsuAPIKey=$cikey:g" api.conf || DIE 74 "Failed to Setup Config file! [$TASK/api.conf -> cikey]"
@@ -1250,7 +1250,10 @@ nginx() {
 	fi
 
 	if [ -d "/etc/nginx" ]; then
-		pkill -f nginx || DIE 1 "Failed to kill process '$TASK'!"
+		if command -v pkill 1>/dev/null; then
+			pkill -f nginx
+		fi
+		
 		(
 			cd /etc/nginx || DIE 1 "Failed to cd into '/etc/nginx'!"
 			if [ -f "nginx.conf" ]; then
