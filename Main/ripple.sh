@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|              Last Updated on Sunday, October 18, 2020 at 01:00 PM (GMT+6)               |
+|              Last Updated on Sunday, October 18, 2020 at 01:30 PM (GMT+6)               |
 -------------------------------------------------------------------------------------------
 '
 
@@ -106,7 +106,7 @@
 
 
 # Version #
-UPSTREAM_VERSION=0.10-rc5
+UPSTREAM_VERSION=0.10-rc6
 
 
 # Repositories
@@ -234,8 +234,12 @@ if [ ! -f "ripple.sha1" ]; then
 fi
 
 if [ -f "ripple.sha1" ]; then
-	sha1sum -c ripple.sha1 || RPRINT "Checksum did not match. Fetching the latest script, please try again..." ; \
-	wget -O "ripple.sh" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/ripple.sh & EXIT 1
+	sha1sum -c ripple.sha1 || match="false"
+	if [ "$match" = "false" ]; then
+		GPRINT "Fetching the latest script, please try again..."
+		wget -O "ripple.sh" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/ripple.sh
+		EXIT 1
+	fi
 else
 	RPRINT "file integrity data not found" ; EXIT 1
 fi
