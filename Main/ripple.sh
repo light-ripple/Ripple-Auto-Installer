@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|              Last Updated on Sunday, October 18, 2020 at 04:00 PM (GMT+6)               |
+|              Last Updated on Sunday, October 18, 2020 at 04:10 PM (GMT+6)               |
 -------------------------------------------------------------------------------------------
 '
 
@@ -108,7 +108,7 @@
 
 
 # Version #
-UPSTREAM_VERSION=0.10-rc11
+UPSTREAM_VERSION=0.10-rc12
 
 
 # Repositories
@@ -197,7 +197,7 @@ die() {
 		*) RPRINT "FATAL ""$2"": $3 $1"
 	esac
 	
-	log_file="ErrorLog.txt"
+	log_file="$(pwd)/ErrorLog.txt"
 	
 	if [ ! -f "$log_file" ]; then
 		CREATE_FILE "$log_file"
