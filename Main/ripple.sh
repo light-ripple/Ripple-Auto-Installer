@@ -215,8 +215,6 @@ die() {
 	if [ ! "$CONFIRMATION" = "y" ]; then
 		RPRINT "EXITING..."
 		EXIT 4
-	else
-		DIE 1 "MYSQL Username Not specified!"
 	fi
 
 }
