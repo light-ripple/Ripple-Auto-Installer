@@ -4,7 +4,7 @@ os: linux
 dist: xenial
 
 # Relevant to events - https://help.github.com/en/actions/automating-your-workflow-with-github-actions/events-that-trigger-workflows
-on: 
+on:
   pull_request:
     types: [synchronize, opened, reopened, ready_for_review]
     paths:
@@ -36,7 +36,7 @@ jobs:
             true
           else
             exit 255
-          fi 
+          fi
           # Check for shellcheck
           if ! apt list --installed 2>/dev/null | grep -qP "^shellcheck\s{1}-.*"; then
             # Check if we can install shellcheck
@@ -53,7 +53,7 @@ jobs:
             true
           else
             exit 255
-          fi 
+          fi
       - name: Pulling git dir..
         uses: actions/checkout@v2
       - name: Processing files..
