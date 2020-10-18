@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|              Last Updated on Sunday, October 18, 2020 at 02:00 PM (GMT+6)               |
+|              Last Updated on Sunday, October 18, 2020 at 02:10 PM (GMT+6)               |
 -------------------------------------------------------------------------------------------
 '
 
@@ -108,7 +108,7 @@
 
 
 # Version #
-UPSTREAM_VERSION=0.10-rc8
+UPSTREAM_VERSION=0.10-rc9
 
 
 # Repositories
@@ -309,16 +309,22 @@ inputs() {
 	if [ -n "$targetDir" ]; then
 		master_dir="$(pwd)/$targetDir"
 		if [ -d "$master_dir" ]; then
-			BPRINT "Master Directory: '$master_dir' exists. Continue ? y/n "
-			READ confirmation
+			while [ -z "$confirmation" ]; do
+				BPRINT "Master Directory: '$master_dir' exists. Continue ? y/n "
+				READ confirmation
+			done
+
 			if [ "$confirmation" = "y" ]; then
 				GPRINT "Using Directory '$master_dir'."
 			else
 				DIE 1 "Input Declined by the user!"
 			fi
 		else
-			BPRINT "Create Master Directory: '$master_dir' ? y/n "
-			READ confirmation
+			while [ -z "$confirmation" ]; do
+				BPRINT "Create Master Directory: '$master_dir' ? y/n "
+				READ confirmation
+			done
+
 			if [ "$confirmation" = "y" ]; then
 				CREATE_DIRECTORY "$master_dir"
 				if [ -d "$master_dir" ]; then
@@ -342,8 +348,12 @@ inputs() {
 		BPRINT "Domain (example: ripple.moe): "
 		READ domain
 	done
-	BPRINT "Are you sure you want to use '$domain' ? y/n "
-	READ confirmation
+
+	while [ -z "$confirmation" ]; do
+		BPRINT "Are you sure you want to use '$domain' ? y/n "
+		READ confirmation
+	done
+
 	if [ "$confirmation" = "y" ]; then
 		export domain
 	else
@@ -355,8 +365,12 @@ inputs() {
 		BPRINT "cikey: "
 		READ cikey
 	done
-	BPRINT "Are you sure you want to use '$cikey' ? y/n "
-	READ confirmation
+
+	while [ -z "$confirmation" ]; do
+		BPRINT "Are you sure you want to use '$cikey' ? y/n "
+		READ confirmation
+	done
+
 	if [ "$confirmation" = "y" ]; then
 		export cikey
 	else
@@ -369,8 +383,12 @@ inputs() {
 		BPRINT "OSU!API key: "
 		READ api
 	done
-	BPRINT "Are you sure you want to use '$api' ? y/n "
-	READ confirmation
+
+	while [ -z "$confirmation" ]; do
+		BPRINT "Are you sure you want to use '$api' ? y/n "
+		READ confirmation
+	done
+
 	if [ "$confirmation" = "y" ]; then
 		export api
 	else
@@ -382,8 +400,12 @@ inputs() {
 		BPRINT "API Secret: "
 		READ api_secret
 	done
-	BPRINT "Are you sure you want to use '$api_secret' ? y/n "
-	READ confirmation
+
+	while [ -z "$confirmation" ]; do
+		BPRINT "Are you sure you want to use '$api_secret' ? y/n "
+		READ confirmation
+	done
+
 	if [ "$confirmation" = "y" ]; then
 		export api_secret
 	else
@@ -395,8 +417,12 @@ inputs() {
 		BPRINT "Enter MySQL Username: "
 		READ mysql_user
 	done
-	BPRINT "Are you sure you want to use '$mysql_user' ? y/n "
-	READ confirmation
+
+	while [ -z "$confirmation" ]; do
+		BPRINT "Are you sure you want to use '$mysql_user' ? y/n "
+		READ confirmation
+	done
+
 	if [ "$confirmation" = "y" ]; then
 		export mysql_user
 	else
@@ -408,8 +434,12 @@ inputs() {
 		BPRINT "Enter MySQL Password: "
 		READ mysql_password
 	done
-	BPRINT "Are you sure you want to use '$mysql_password' ? y/n "
-	READ confirmation
+
+	while [ -z "$confirmation" ]; do
+		BPRINT "Are you sure you want to use '$mysql_password' ? y/n "
+		READ confirmation
+	done
+
 	if [ "$confirmation" = "y" ]; then
 		export mysql_password
 	else
@@ -421,8 +451,12 @@ inputs() {
 		BPRINT "Enter MySQL Database Name For Ripple: "
 		READ database_name
 	done
-	BPRINT "Are you sure you want to use '$database_name' ? y/n "
-	READ confirmation
+
+	while [ -z "$confirmation" ]; do
+		BPRINT "Are you sure you want to use '$database_name' ? y/n "
+		READ confirmation
+	done
+
 	if [ "$confirmation" = "y" ]; then
 		export database_name
 	else
