@@ -226,6 +226,23 @@ die() {
 alias DIE="die \"[ line \$LINENO\"\\ ]"
 
 
+# CHECK FILE INTEGRITY
+if [ ! -f "ripple.sha1" ]; then
+	RPRINT "file integrity data not found" ; GPRINT "Fetching the latest file integrity data"
+	wget -O "ripple.sha1" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/ripple.sha1
+	if [ ! -f "ripple.sha1" ]; then
+		DIE 1 "Failed to fetch the latest file integrity data"
+	fi
+fi
+
+if [ -f "ripple.sha1" ]; then
+	sha1sum -c ripple.sha1 || DIE 1 "Checksum did not match. Fetching the latest script, please try again..." ; \
+	wget -O "ripple.sh" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/ripple.sh &
+else
+	DIE 1 "file integrity data not found"
+fi
+
+
 # Simplified Network Checker (IPv4 & DNS connectivity) 
 checkNetwork() {
 
