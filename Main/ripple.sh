@@ -1,7 +1,6 @@
 #!/bin/sh
 # shellcheck shell=sh # Written to be posix compatible
-# shellcheck disable=SC2154
-# shellcheck disable=SC1090,SC1091 # Don't have access to the file
+# shellcheck disable=SC2154,SC1090 # False Trigger
 # USING: APT, Pacman, Portage, Paludis, UNIX or GNU/Linux, Mysql/Mariadb Database.
 # SUPPORTS INIT SYSTEMS: systemd and openrc.
 
