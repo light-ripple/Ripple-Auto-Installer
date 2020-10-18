@@ -1,14 +1,14 @@
 #!/bin/sh
 # shellcheck shell=sh # Written to be posix compatible
-# shellcheck source=/home/"$USER"/.bashrc
-# shellcheck disable=SC1091 # Don't have access to the file
+# shellcheck disable=SC2154
+# shellcheck disable=SC1090,SC1091 # Don't have access to the file
 # USING: APT, Pacman, Portage, Paludis, UNIX or GNU/Linux, Mysql/Mariadb Database.
 # SUPPORTS INIT SYSTEMS: systemd and openrc.
 
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|             Last Updated on Thursday, October 17, 2020 at 11:48 PM (GMT+6)              |
+|              Last Updated on Sunday, October 18, 2020 at 11:00 PM (GMT+6)               |
 -------------------------------------------------------------------------------------------
 '
 
@@ -20,6 +20,7 @@
 ###! - hanayo        (https://zxq.co/ripple/hanayo)       [FRONTEND]
 ###! - rippleapi     (https://zxq.co/ripple/rippleapi)    [API SERVER]
 ###! - oldfrontend   (https://zxq.co/ripple/old-frontend) [ADMIN PANEL]
+###! - lets          (https://zxq.co/ripple/lets)         [SCORE SERVER]
 ###! osu!fx's:
 ###! - secret        (https://github.com/osufx/secret)    [AUTOMATED ANITCHEAT +-] . Note: Not used by Ripple
 ###! - lets          (https://github.com/osufx/lets)      [SCORE SERVER]           . Note: fork of Ripple's lets
@@ -46,7 +47,7 @@
 ###!    - [-] Exherbo-musl
 ###!    - [ ] Fedora
 ###!    - [*] Gentoo
-###!    - [*] Ubuntu
+###!    - [?] Ubuntu
 ###!    - [ ] NixOS
 ###!    - [ ] Slackware
 ###!    - [ ] Solus
@@ -89,16 +90,11 @@
 ###!  - [ ] runit
 ###!  - [ ] s6
 ###! System Detection:
-###!  - [*] Ubuntu
-###!    - [*] Ubuntu 20.04
-###!    - [*] Ubuntu 18.04
-###!    - [ ] Ubuntu 16.10
-###!    - [*] Ubuntu 16.04
-###!    - [*] Ubuntu 14.04
-###!    - [ ] Ubuntu 12.04
+###!  TODO:
+###!  	- [] IMPLEMENT
 
 
-# TODO: Detect Operating System/Kernel/Distro and pull proper packages.
+# TODO: Detect Operating Operating-System/Kernel and pull proper packages.
 # KNOWN ISSUES: UNABLE TO DETECT GOPATH AS A RESULT "hanayo" & "rippleapi" Fails to setup.
 
 # WARNING: Script Untested. Use at your own risk.
@@ -111,7 +107,7 @@
 
 
 # Version #
-UPSTREAM_VERSION=0.10-rc2
+UPSTREAM_VERSION=0.10-rc4
 
 
 # Repositories
@@ -122,8 +118,8 @@ avatar_server_url="https://github.com/light-ripple/avatar-server"
 old_frontend_url="https://github.com/light-ripple/old-frontend"
 
 # Note: Do not include 'http/https://' in go repos
-hanayo_url="zxq.co/ripple/hanayo"
-rippleapi_url="zxq.co/ripple/rippleapi"
+hanayo_url="github.com/light-ripple/hanayo"
+rippleapi_url="github.com/light-ripple/api"
 
 
 # Database File(s)
@@ -152,6 +148,7 @@ alias BPRINT="printf '\\033[0;34m%s'"		 # Blue
 
 
 # Command Overwrites
+alias PRINT="printf '%s\n'"
 alias WGET="wget -O"
 alias GIT_CLONE="git clone"
 alias GO_CLONE="go get"
@@ -161,6 +158,7 @@ alias CREATE_FILE="touch"
 alias REMOVE="rm -rfv"
 alias READ="read -r"
 alias EXIT="exit"
+alias SUBMODULE="git submodule init ; git submodule update"
 
 
 
@@ -187,7 +185,7 @@ lineno() {
 
 
 # Simplified Assersion by uniminin <uniminin@zoho.com> under the terms of AGPLv3
-# Usage: DIE "EXIT-code" "msg..."
+# Usage: DIE "EXIT-CODE" "msg..."
 die() {
 
 	# Current Date
@@ -209,14 +207,13 @@ die() {
 		GPRINT "Successfully Written into '$log_file'"
 	fi
 	
-	# TODO: Change confirmation (variable) names -> UNIQUE
 	# Confirm :DIE: -> Die :?:
-	while [ -z "$confirmation" ]; do
+	while [ -z "$CONFIRMATION" ]; do
 		BPRINT "Continue ? y/n "
-		READ confirmation
+		READ CONFIRMATION
 	done
 	
-	if [ ! "$confirmation" = "y" ]; then
+	if [ ! "$CONFIRMATION" = "y" ]; then
 		RPRINT "EXITING..."
 		EXIT 4
 	else
@@ -246,14 +243,10 @@ checkNetwork() {
 			DIE 64 "The network is down!"
 		fi
 	else
-		DIE 127 "PING is not executable on this system. Failed to check network connectivity."
+		DIE 127 "ping is not executable on this system. Failed to check network connectivity."
 	fi
 
 }
-
-
-# Detect Operating System
-. /etc/os-release
 
 
 # Check for root
@@ -561,7 +554,7 @@ python3_5() {
 		if command -v PING 1>/dev/null; then
 			PING -i 0.5 -c 5 python.org || DIE 121 "Domain 'python.org' is not reachable from this environment."
 		else
-			DIE 61 "Unknown Error!"
+			DIE 127 "ping is not executable on this system."
 		fi
 
 		(
@@ -613,7 +606,7 @@ python3_6() {
 	if command -v PING 1>/dev/null; then
 		PING -i 0.5 -c 5 python.org || DIE 121 "Domain 'python.org' is not reachable from this environment."
 	else
-		DIE 61 "Unknown Error!"
+		DIE 127 "ping is not executable on this system."
 	fi
 
 	(
@@ -662,44 +655,34 @@ golang() {
 	else
 		YPRINT "Setting up '$TASK'!"
 		
-		# FIXME: use apt to install golang1.14
-		if [ "$ID" = "Ubuntu" ]; then
-			add-apt-repository ppa:longsleep/golang-backports -y
-			"$package_manager_frontend" update
-			"$package_manager_frontend" install golang-go -y
-		
-		elif [ "$package_manager_frontend" = "apt" ]; then
-			# FIXME: provide proper package name
-			"$package_manager_frontend" install wget golang-go -y
-			
-			if ! command -v go 1>/dev/null; then
-				if command -v PING 1>/dev/null; then
-					PING -i 0.5 -c 5 dl.google.com || DIE 121 "Domain 'dl.google.com' is not reachable from this environment."
-				else
-					DIE 61 "Unknown Error!"
-				fi
-
-				(
-					if [ -d "/usr/src" ]; then
-						cd /usr/src || DIE 1 "Failed to cd into '/usr/src'!"
-						WGET "go1.14.tar.gz" https://golang.org/dl/go1.14.linux-amd64.tar.gz
-						tar -xvf go1.14.tar.gz
-						chown -R root:root ./go
-
-						if [ -d "/usr/local" ]; then
-							mv go /usr/local
-
-							echo export GOPATH=/root/go > ~/.bashrc
-							echo export PATH="$PATH":/usr/local/go/bin:"$GOPATH"/bin > ~/.bashrc
-							
-							. /home/"$USER"/.bashrc
-
-						else
-							DIE 1 "Directory: '/usr/local' doesn't exist!"
-						fi
-					fi
-				)
+		if [ "$package_manager_frontend" = "apt" ]; then
+			if command -v PING 1>/dev/null; then
+				PING -i 0.5 -c 5 golang.org || DIE 121 "Domain 'golang.org' is not reachable from this environment."
+				PING -i 0.5 -c 5 dl.google.com || DIE 121 "Domain 'dl.google.com' is not reachable from this environment."
+			else
+				DIE 127 "ping & go are not executable on this system."
 			fi
+
+			(
+				if [ -d "/usr/src" ]; then
+					cd /usr/src || DIE 1 "Failed to cd into '/usr/src'!"
+					WGET "go1.14.tar.gz" https://golang.org/dl/go1.14.linux-amd64.tar.gz
+					tar -xvf go1.14.tar.gz
+					chown -R root:root ./go
+
+					if [ -d "/usr/local" ]; then
+						mv go /usr/local
+
+						PRINT export GOPATH=/root/go > ~/.bashrc
+						PRINT export PATH="$PATH":/usr/local/go/bin:"$GOPATH"/bin > ~/.bashrc
+						
+						. /home/"$USER"/.bashrc
+
+					else
+						DIE 1 "Directory: '/usr/local' doesn't exist!"
+					fi
+				fi
+			)
 		
 		# FIXME: use pacman to install golang1.14
 		elif [ "$package_manager_frontend" = "pacman" ]; then
@@ -707,11 +690,11 @@ golang() {
 
 		elif [ "$package_manager_frontend" = "emerge" ]; then
 			# Latest stable (Gentoo package database) [12:40 PM | 8/30/20 | Sun | GMT+6]
-			"$package_manager_frontend" -q =dev-lang/go-1.14.7
+			"$package_manager_frontend" -q =dev-lang/go-1.14.10
 
 		elif [ "$package_manager_frontend" = "cave" ]; then
 			# Latest stable (Exherbo package database) [12:40 PM | 8/30/20 | Sun | GMT+6]
-			"$package_manager_frontend" resolve -x =dev-lang/go-1.14.7
+			"$package_manager_frontend" resolve -x =dev-lang/go-1.14.10
 		fi
 
 		if command -v go 1>/dev/null; then
@@ -845,7 +828,7 @@ mysql_database() {
 	if command -v PING 1>/dev/null; then
 		PING -i 0.5 -c 5 raw.githubusercontent.com || DIE 121 "Domain 'raw.githubusercontent.com' is not reachable from this environment."
 	else
-		DIE 61 "Unknown Error!"
+		DIE 127 "ping is not executable on this system."
 	fi
 
 	(
@@ -924,7 +907,7 @@ peppy () {
 	if command -v PING 1>/dev/null; then
 		PING -i 0.5 -c 5 zxq.co || DIE 121 "Domain: zxq.co is not reachable from this environment!"
 	else
-		DIE 61 "Unknown Error!"
+		DIE 127 "ping is not executable on this system."
 	fi
 
 	if [ -d "$directory" ]; then
@@ -933,7 +916,7 @@ peppy () {
 
 			if command -v git 1>/dev/null; then
 				GIT_CLONE "$peppy_url" ; cd pep.py || DIE 1 "Failed to cd into '$TASK'!"
-				git submodule init ; git submodule update
+				SUBMODULE
 			else
 				DIE 1 "git not found on this system!"
 			fi
@@ -972,7 +955,7 @@ secret() {
 	if command -v PING 1>/dev/null; then
 		PING -i 0.5 -c 5 github.com || DIE 121 "Domain 'github.com' is not reachable from this environmen!"
 	else
-		DIE 61 "Unknown Error!"
+		DIE 127 "ping is not executable on this system."
 	fi
 
 	if [ -d "secret" ]; then
@@ -982,7 +965,7 @@ secret() {
 			GIT_CLONE "$secret_url"
 		(
 			cd secret || DIE 1 "Failed to cd into 'secret'!"
-			git submodule init ; git submodule update
+			SUBMODULE
 		)
 		else
 			DIE 1 "git not found on this system!"
@@ -1003,7 +986,7 @@ lets() {
 	if command -v PING 1>/dev/null; then
 		PING -i 0.5 -c 5 github.com || DIE 121 "Domain 'github.com' is not reachable from this environment!"
 	else
-		DIE 61 "Unknown Error!"
+		DIE 127 "ping is not executable on this system."
 	fi
 
 	if [ -d "$directory" ]; then
@@ -1018,7 +1001,7 @@ lets() {
 
 			if command -v python3.6 >/dev/null; then
 				secret
-				git submodule init ; git submodule update
+				SUBMODULE
 				python3.6 -m pip install -r requirements.txt
 				python3.6 setup.py build_ext --inplace
 				if [ -f "lets.py" ]; then
@@ -1060,21 +1043,22 @@ hanayo() {
 	YPRINT "Cloning & Setting up '$TASK'!"
 
 	if command -v PING 1>/dev/null; then
-		PING -i 0.5 -c 5 zxq.co || DIE 121 "Domain 'zxq.co' is not reachable from this environment!"
+		PING -i 0.5 -c 5 github.com || DIE 121 "Domain 'github.com' is not reachable from this environment!"
 	else
-		DIE 61 "Unknown Error!"
+		DIE 127 "ping is not executable on this system."
 	fi
 
 	if [ -d "$directory" ]; then
 		(
 			if command -v go 1>/dev/null; then
 				GO_CLONE "$hanayo_url"
-				if [ -d "/root/go/src/zxq.co/ripple/hanayo" ]; then
-					cd /root/go/src/zxq.co/ripple/hanayo || DIE 1 "Failed to cd into '$TASK'!"
+				if [ -d "$HOME/go/src/github.com/light-ripple/hanayo" ]; then
+					cd ~/go/src/github.com/light-ripple/hanayo || DIE 1 "Failed to cd into '$TASK'!"
 					go build ; ./hanayo
-			else
-				DIE 1 "Could not install '$TASK' because golang wasn't found on this system!"
-			fi
+				else
+					DIE 1 "Could not install '$TASK' because hanayo directory not found!"
+				fi
+
 				if [ -f "hanayo.conf" ]; then
 					sed -Ei "s/ListenTo=:45221/ListenTo=127.0.0.1:45221/g" hanayo.conf || DIE 74 "Failed to Setup Config file! [$TASK/hanayo.conf -> ListenTo]"
 					sed -E -i -e 'H;1h;$!d;x' hanayo.conf -e 's#DSN=#DSN='"$mysql_user"':'"$mysql_password"'@/'"$database_name"'#' || DIE 1 "Failed to Setup Config file! [$TASK/hanayo.conf -> mysql-user, pass, db]"
@@ -1093,13 +1077,14 @@ hanayo() {
 				fi
 
 				if [ ! -d "$directory/hanayo" ]; then
-					mv -v go/src/zxq.co/ripple/hanayo "$directory"
+					mv -v ~/go/src/github.com/light-ripple/hanayo "$directory"
 					GPRINT "Done Setting Up '$TASK'!"
 				else
 					DIE 12 "Unexpected Error!"
 				fi
+
 			else
-				DIE 1 "Failed to Setup '$TASK'!"
+				DIE 1 "Could not install '$TASK' because golang wasn't found on this system!"
 			fi
 		)
 
@@ -1113,37 +1098,43 @@ hanayo() {
 # Ripple API is required to talk with the frontend (hanayo), and all other Ripple's Software (lets, peppy..)
 rippleapi() {
 
-	TASK="rippleapi"
+	TASK="api"
 
 	YPRINT "Cloning & Setting up '$TASK'!"
 
 	if command -v PING 1>/dev/null; then
-		PING -i 0.5 -c 5 zxq.co || DIE 121 "Domain 'zxq.co' is not reachable from this environment!"
+		PING -i 0.5 -c 5 github.com || DIE 121 "Domain 'github.com' is not reachable from this environment!"
 	else
-		DIE 61 "Unknown Error!"
+		DIE 127 "ping is not executable on this system."
 	fi
 
 	if [ -d "$directory" ]; then
 		(
 			if command -v go 1>/dev/null; then
 				GO_CLONE "$rippleapi_url"
-				cd go/src/zxq.co/ripple/rippleapi || DIE 1 "Failed to cd into '$TASK'!"
-				go build ; ./rippleapi
+
+				if [ -d "$HOME/go/src/github.com/light-ripple/api" ]; then
+					cd ~/go/src/github.com/light-ripple/api || DIE 1 "Failed to cd into '$TASK'!"
+					go build ; ./rippleapi
+				else
+					DIE 1 "Could not install '$TASK' because api directory not found!"
+				fi
+
+				if [ ! -f "api.conf" ]; then
+					sed -E -i -e 'H;1h;$!d;x' api.conf -e 's#DSN=#DSN='"$mysql_user"':'"$mysql_password"'@/'"$database_name"'#' || DIE 1 "Failed to Setup Config file! [$TASK/api.conf -> mysql-user, pass, db]"
+					sed -Ei "s:^HanayoKey=.*$:HanayoKey=$api_secret:g" api.conf || DIE 74 "Failed to Setup Config file! [$TASK/api.conf -> api_secret]"
+					sed -Ei "s:^OsuAPIKey=.*$:OsuAPIKey=$cikey:g" api.conf || DIE 74 "Failed to Setup Config file! [$TASK/api.conf -> cikey]"
+				fi
+
+				if [ ! -d "$directory/api" ]; then
+					mv -v ~/go/src/github.com/light-ripple/api "$directory"
+					GPRINT "Done setting up '$TASK'!"
+				else
+					DIE 12 "Unexpected Error!"
+				fi
+
 			else
 				DIE 1 "Could not install '$TASK' because golang wasn't found on this system!"
-			fi
-
-			if [ ! -f "api.conf" ]; then
-				sed -E -i -e 'H;1h;$!d;x' api.conf -e 's#DSN=#DSN='"$mysql_user"':'"$mysql_password"'@/'"$database_name"'#' || DIE 1 "Failed to Setup Config file! [$TASK/api.conf -> mysql-user, pass, db]"
-				sed -Ei "s:^HanayoKey=.*$:HanayoKey=$api_secret:g" api.conf || DIE 74 "Failed to Setup Config file! [$TASK/api.conf -> api_secret]"
-				sed -Ei "s:^OsuAPIKey=.*$:OsuAPIKey=$cikey:g" api.conf || DIE 74 "Failed to Setup Config file! [$TASK/api.conf -> cikey]"
-			fi
-
-			if [ ! -d "$directory/rippleapi" ]; then
-				mv -v go/src/zxq.co/ripple/rippleapi "$directory"
-				GPRINT "Done setting up '$TASK'!"
-			else
-				DIE 12 "Unexpected Error!"
 			fi
 		)
 	else
@@ -1163,7 +1154,7 @@ avatar_server() {
 	if command -v PING 1>/dev/null; then
 		PING -i 0.5 -c 5 github.com || DIE 121 "Domain 'github.com' is not reachable from this environment!"
 	else
-		DIE 61 "Unknown Error!"
+		DIE 127 "ping is not executable on this system."
 	fi
 
 	if [ -d "$directory" ]; then
@@ -1200,7 +1191,7 @@ nginx() {
 	if command -v PING 1>/dev/null; then
 		PING -i 0.5 -c 5 raw.githubusercontent.com || DIE 121 "Domain 'raw.githubusercontent.com' is not reachable from this environment!"
 	else
-		DIE 61 "Unknown Error!"
+		DIE 127 "ping is not executable on this system."
 	fi
 
 	if [ -d "/etc/nginx" ]; then
@@ -1258,7 +1249,7 @@ SSL() {
 	if command -v PING 1>/dev/null; then
 		PING -i 0.5 -c 5 github.com || DIE 121 "Domain 'github.com' is not reachable from this environment!"
 	else
-		DIE 61 "Unknown Error!"
+		DIE 127 "ping is not executable on this system."
 	fi
 
 	if [ -d "$directory" ]; then
@@ -1302,7 +1293,7 @@ old_frontend() {
 		PING -i 0.5 -c 5 zxq.co || DIE 121 "Domain 'zxq.co' is not reachable from this environment!"
 		PING -i 0.5 -c 5 getcomposer.org || DIE 121 "Domain 'getcomposer.org' is not reachable from this environment!"
 	else
-		DIE 61 "Unknown Error!"
+		DIE 127 "ping is not executable on this system."
 	fi
 
 	YPRINT "Installing Necessary Dependencies required for '$TASK'!"
@@ -1313,13 +1304,13 @@ old_frontend() {
 			"$package_manager_frontend" install build-essential \
 			apt install apt-transport-https lsb-release ca-certificates -y
 			WGET /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
-			echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list
+			PRINT "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list
 			"$package_manager_frontend" update
 			"$package_manager_frontend" install php7.2 php7.2-cli php7.2-common php7.2-json \
 			php7.2-opcache php7.2-mysql php7.2-zip php7.2-fpm php7.2-mbstring -y
 			curl -sS https://getcomposer.org/installer -o composer-setup.php
 			php -r "if (hash_file('SHA384', 'composer-setup.php') === '$HASH') \
-			{ echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+			{ PRINT 'Installer verified'; } else { PRINT 'Installer corrupt'; unlink('composer-setup.php'); } PRINT PHP_EOL;"
 			php composer-setup.php --install-dir=/usr/local/bin --filename=composer
 			
 			;;
