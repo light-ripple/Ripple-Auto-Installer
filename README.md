@@ -124,18 +124,19 @@ Make sure you configure cloudflare properly.
 ### RUNNING THE SCRIPT [![Build Status](https://travis-ci.com/Uniminin/Ripple-Auto-Installer.svg?branch=master)](https://travis-ci.com/Uniminin/Ripple-Auto-Installer)
 With Git
 ```bash
+# Clone the Repository
 git clone https://github.com/Uniminin/Ripple-Auto-Installer ; cd Ripple-Auto-Installer
 cd Main
-sha1sum -c ripple.sha1  # Check file integrity
 # Make the script readable, writable, and executable to root and your user:
 chmod 770 ripple.sh
 ./ripple.sh --help
 ```
 With wget (Recommended)
 ```bash
+# Download the latest script
 wget -O "ripple.sh" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/ripple.sh
+# Download the latest file integrity data
 wget -O "ripple.sha1" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/ripple.sha1
-sha1sum -c ripple.sha1  # Check file integrity
 # Make the script readable, writable, and executable to root and your user:
 chmod 770 ripple.sh
 ./ripple.sh --help
