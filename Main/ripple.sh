@@ -181,7 +181,7 @@ lineno() {
 
 # For capturing Bugs
 # kills the script if anything returns false
-# Temporarily Disable #
+# Temporarily Disabled #
 # set -e
 
 
