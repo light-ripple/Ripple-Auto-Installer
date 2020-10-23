@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|              Last Updated on Sunday, October 18, 2020 at 04:10 PM (GMT+6)               |
+|              Last Updated on Friday, October 23, 2020 at 04:00 PM (GMT+6)               |
 -------------------------------------------------------------------------------------------
 '
 
@@ -108,7 +108,7 @@
 
 
 # Version #
-UPSTREAM_VERSION=0.10-rc12
+UPSTREAM_VERSION="0.12-rc3"
 
 
 # Repositories
@@ -154,7 +154,7 @@ alias WGET="wget -O"
 alias GIT_CLONE="git clone"
 alias GO_CLONE="go get"
 alias PING="ping"
-alias CREATE_DIRECTORY="mkdir -v"
+alias CREATE_DIRECTORY="mkdir -vp"
 alias CREATE_FILE="touch"
 alias REMOVE="rm -rfv"
 alias READ="read -r"
@@ -181,7 +181,7 @@ lineno() {
 
 # For capturing Bugs
 # kills the script if anything returns false
-# Temporarily Disable #
+# Temporarily Disabled #
 # set -e
 
 
@@ -190,7 +190,7 @@ lineno() {
 die() {
 
 	# Current Date
-	Date=$(date)
+	Date="$(date)"
 
 
 	case "$2" in
@@ -210,7 +210,7 @@ die() {
 	
 	# Confirm :DIE: -> Die :?:
 	while [ -z "$CONFIRMATION" ]; do
-		BPRINT "Ignore All Errors and Continue ? y/n "
+		BPRINT "Do you want to Continue ? y/n "
 		READ CONFIRMATION
 	done
 	
@@ -218,6 +218,8 @@ die() {
 		RPRINT "EXITING..."
 		EXIT 4
 	fi
+	
+	unset CONFIRMATION
 
 }
 
@@ -296,7 +298,7 @@ nproc_detector() {
 }
 
 
-inputs() {
+INPUTS() {
 
 	TASK="Inputs"
 
@@ -523,7 +525,7 @@ DetectPackageManager() {
 
 packageManagerUpgrade() {
 
-	TASK="packages"
+	TASK="Packages"
 
 	GPRINT "Upgrading/Updating system '$TASK'!"
 	
@@ -555,7 +557,7 @@ packageManagerUpgrade() {
 # Dependencies Requires for Python3.5 & Python3.6
 python_dependencies() {
 
-	TASK="python"
+	TASK="Python"
 
 	YPRINT "Installing Necessary Dependencies required for '$TASK'!"
 
@@ -585,9 +587,11 @@ python_dependencies() {
 			;;
 	esac
 
-	for packages in gcc make git wget cython; do
-		if command -v $packages >/dev/null; then
+	for package in gcc make git wget cython; do
+		if command -v "$package" >/dev/null; then
 			GPRINT "Done Installing necessary Dependencies required for '$TASK'!"
+		elif ! command -v "$package" >/dev/null; then
+			DIE 1 "Required '$package' is not installed!"
 		else
 			DIE 123 "Failed to Install necessary Dependencies required for '$TASK'"
 		fi
@@ -793,9 +797,11 @@ extra_dependencies() {
 			;;
 	esac
 
-	for packages in tmux nginx redis-cli; do
-		if command -v $packages >/dev/null; then
+	for package in tmux nginx redis-cli; do
+		if command -v "$package" >/dev/null; then
 			GPRINT "Done Installing necessary Dependencies required for '$TASK'!"
+		elif ! command -v "$package" >/dev/null; then
+			DIE 1 "Required '$package' is not installed!"
 		else
 			DIE 1 "Failed to Install necessary Dependencies required for '$TASK'!"
 		fi
@@ -1095,6 +1101,10 @@ hanayo() {
 
 	TASK="hanayo"
 
+	# FIXME: Add proper logic to deal with such handicap
+	# Check: https://github.com/Uniminin/Ripple-Auto-Installer/issues/99
+	DIE 1 "Unable to detect 'GOPATH' as a result '$TASK' will fail to setup!"
+
 	YPRINT "Cloning & Setting up '$TASK'!"
 
 	if command -v PING 1>/dev/null; then
@@ -1154,6 +1164,10 @@ hanayo() {
 rippleapi() {
 
 	TASK="api"
+
+	# FIXME: Add proper logic to deal with such handicap
+	# Check: https://github.com/Uniminin/Ripple-Auto-Installer/issues/99
+	DIE 1 "Unable to detect 'GOPATH' as a result '$TASK' will fail to setup!"
 
 	YPRINT "Cloning & Setting up '$TASK'!"
 
@@ -1237,7 +1251,7 @@ avatar_server() {
 
 
 # Nginx to balance loads & for proxies
-nginx() {
+NGINX() {
 
 	TASK="nginx"
 
@@ -1281,9 +1295,10 @@ nginx() {
 				sed -Ei 's#DOMAIN#'"$domain"'#g; s#DIRECTORY#'"$directory"'#g' old-frontend.conf || DIE 1 "Failed to Setup Config file!"
 			fi
 
-			YPRINT "Downloading Certificates! (ainu-certificate)"
+			YPRINT "Downloading Certificates!"
 			WGET "cert.pem" "$certificate_url" || DIE 11 "Could not download file 'cert.pem'!"
 			WGET "key.pem" "$key_url" || DIE 11 "Could not download file 'key.pem'!"
+			
 			if [ -f "cert.pem" ] && [ -f "key.pem" ]; then
 				GPRINT "Done downloading Certificates."
 			else
@@ -1389,51 +1404,60 @@ old_frontend() {
 			;;
 	esac
 
-	for packages in php composer; do
-		if command -v $packages >/dev/null; then
+	for package in php composer; do
+		if command -v "$package" >/dev/null; then
 			GPRINT "Done Installing necessary Dependencies required for '$TASK'!"
+		elif ! command -v "$package" >/dev/null; then
+			DIE 1 "Required '$package' is not installed!"
 		else
 			DIE 1 "Failed to Install necessary Dependencies required for '$TASK'!"
 		fi
 	done
 
-	(
-		if [ ! -d "/var/www/" ]; then
-			CREATE_DIRECTORY /var/www/ ; cd /var/www/ || DIE 1 "Could not cd into '/var/www/'!"
-
-			if command -v git 1>/dev/null; then
-				GIT_CLONE "$old_frontend_url" osu.ppy.sh
-			else
-				 1 "git not found on this system!"
-			fi
-
-			if [ -d "osu.ppy.sh" ]; then
-				cd osu.ppy.sh || DIE 1 "Failed to cd into 'osu.ppy.sh'!"
-				curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-				(
-					cd inc || DIE 1 "Failed to cd into 'inc'!"
-					cp -v config.sample.php config.php
-
-					if [ -f "config.php" ]; then
-						sed -Ei "s/root/$mysql_user/g" config.php || DIE 1 "Failed to Setup Config file! [$TASK/config.php -> mysql_user]"
-						sed -Ei "s/meme/$mysql_password/g" config.php || DIE 1 "Failed to Setup Config file! [$TASK/config.php -> mysql_password]"
-						sed -Ei "s/allora/$database_name/g" config.php || DIE 1 "Failed to Setup Config file! [$TASK/config.php -> database_name]"
-						sed -Ei "s/ripple.moe/$domain/g" config.php || DIE 1 "Failed to Setup Config file! [$TASK/config.php -> domain]"
-					fi
-				)
-
-				if command -v composer 1>/dev/null; then
-					composer install
-				else
-					DIE 1 "composer not found!"
-				fi
-
-				secret
-
-				GPRINT "Done setting up '$TASK'!"
-			fi
+		if [ ! -d "/var/www" ]; then
+			CREATE_DIRECTORY /var/www
 		else
-			DIE 61 "Unknown Error!"
+			DIE 61 "Could not create directory '/var/www'!"
+		fi
+		
+	(	
+		
+		if [ -d "/var/www" ]; then
+			cd /var/www || DIE 1 "Could not cd into '/var/www/'!"
+		else
+			DIE 61 "Unexpected!"
+		fi
+		
+		if command -v git 1>/dev/null; then
+			GIT_CLONE "$old_frontend_url" osu.ppy.sh
+		else
+			 1 "git not found on this system!"
+		fi
+
+		if [ -d "osu.ppy.sh" ]; then
+			cd osu.ppy.sh || DIE 1 "Failed to cd into 'osu.ppy.sh'!"
+			curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+			(
+				cd inc || DIE 1 "Failed to cd into 'inc'!"
+				cp -v config.sample.php config.php
+
+				if [ -f "config.php" ]; then
+					sed -Ei "s/root/$mysql_user/g" config.php || DIE 1 "Failed to Setup Config file! [$TASK/config.php -> mysql_user]"
+					sed -Ei "s/meme/$mysql_password/g" config.php || DIE 1 "Failed to Setup Config file! [$TASK/config.php -> mysql_password]"
+					sed -Ei "s/allora/$database_name/g" config.php || DIE 1 "Failed to Setup Config file! [$TASK/config.php -> database_name]"
+					sed -Ei "s/ripple.moe/$domain/g" config.php || DIE 1 "Failed to Setup Config file! [$TASK/config.php -> domain]"
+				fi
+			)
+
+			if command -v composer 1>/dev/null; then
+				composer install
+			else
+				DIE 1 "composer not found!"
+			fi
+
+			secret
+
+			GPRINT "Done setting up '$TASK'!"
 		fi
 	)
 
@@ -1448,7 +1472,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				GPRINT "[NO Dependencies MODE]"
 				checkRoot
 				DetectPackageManager
-				inputs
+				INPUTS
 				checkNetwork
 				mysql_database
 				peppy
@@ -1458,7 +1482,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				rippleapi
 				frontend
 				phpmyadmin
-				nginx
+				NGINX
 				SSL
 				EXIT 0 ;;
 
@@ -1466,7 +1490,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				GPRINT "[Dependencies MODE]"
 				checkRoot
 				DetectPackageManager
-				inputs
+				INPUTS
 				checkNetwork
 				packageManagerUpgrade
 				mysql_database
@@ -1483,7 +1507,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				extra_dependencies
 				old_frontend
 				phpmyadmin
-				nginx
+				NGINX
 				SSL
 				EXIT 0 ;;
 
@@ -1557,7 +1581,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		GPRINT "[Dependencies MODE]"
 		checkRoot
 		DetectPackageManager
-		inputs
+		INPUTS
 		checkNetwork
 		packageManagerUpgrade
 		mysql_database
@@ -1568,7 +1592,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		case "$2" in
 			"--nodependencies" | "--nodep")
 				GPRINT "[NO Dependencies MODE]"
-				inputs
+				INPUTS
 				checkNetwork
 				peppy
 				EXIT 0 ;;
@@ -1577,7 +1601,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				GPRINT "[Dependencies MODE]"
 				checkRoot
 				DetectPackageManager
-				inputs
+				INPUTS
 				checkNetwork
 				packageManagerUpgrade
 				python_dependencies
@@ -1597,7 +1621,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		case "$2" in
 			"--nodependencies" | "--nodep")
 				GPRINT "[NO Dependencies MODE]"
-				inputs
+				INPUTS
 				checkNetwork
 				lets
 				EXIT 0 ;;
@@ -1606,7 +1630,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				GPRINT "[Dependencies MODE]"
 				checkRoot
 				DetectPackageManager
-				inputs
+				INPUTS
 				checkNetwork
 				packageManagerUpgrade
 				python_dependencies
@@ -1626,7 +1650,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		case "$2" in
 			"--nodependencies" | "--nodep")
 				GPRINT "[NO Dependencies MODE]"
-				inputs
+				INPUTS
 				checkNetwork
 				avatar_server
 				EXIT 0 ;;
@@ -1635,7 +1659,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				GPRINT "[Dependencies MODE]"
 				checkRoot
 				DetectPackageManager
-				inputs
+				INPUTS
 				checkNetwork
 				packageManagerUpgrade
 				python_dependencies
@@ -1655,7 +1679,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		case "$2" in
 			"--nodependencies" | "--nodep")
 				GPRINT "[NO Dependencies MODE]"
-				inputs
+				INPUTS
 				checkNetwork
 				hanayo
 				EXIT 0 ;;
@@ -1664,7 +1688,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				GPRINT "[Dependencies MODE]"
 				checkRoot
 				DetectPackageManager
-				inputs
+				INPUTS
 				checkNetwork
 				packageManagerUpgrade
 				golang
@@ -1682,7 +1706,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		case "$2" in
 			"--nodependencies" | "--nodep")
 				GPRINT "[NO Dependencies MODE]"
-				inputs
+				INPUTS
 				checkNetwork
 				rippleapi
 				EXIT 0 ;;
@@ -1691,7 +1715,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				GPRINT "[Dependencies MODE]"
 				checkRoot
 				DetectPackageManager
-				inputs
+				INPUTS
 				checkNetwork
 				packageManagerUpgrade
 				golang
@@ -1711,7 +1735,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				GPRINT "[NO Dependencies MODE]"
 				checkRoot
 				DetectPackageManager
-				inputs
+				INPUTS
 				checkNetwork
 				old_frontend
 				EXIT 0 ;;
@@ -1720,7 +1744,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				GPRINT "[Dependencies MODE]"
 				checkRoot
 				DetectPackageManager
-				inputs
+				INPUTS
 				checkNetwork
 				packageManagerUpgrade
 				php
@@ -1741,7 +1765,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				checkRoot
 				DetectPackageManager
 				checkNetwork
-				nginx
+				NGINX
 				EXIT 0 ;;
 
 			"")
@@ -1751,7 +1775,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				checkNetwork
 				packageManagerUpgrade
 				extra_dependencies
-				nginx
+				NGINX
 				EXIT 0 ;;
 
 			*)
