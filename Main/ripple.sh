@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|              Last Updated on Friday, October 23, 2020 at 02:10 PM (GMT+6)               |
+|              Last Updated on Friday, October 23, 2020 at 03:30 PM (GMT+6)               |
 -------------------------------------------------------------------------------------------
 '
 
@@ -108,7 +108,7 @@
 
 
 # Version #
-UPSTREAM_VERSION=0.11-rc2
+UPSTREAM_VERSION="0.12-rc1"
 
 
 # Repositories
@@ -298,7 +298,7 @@ nproc_detector() {
 }
 
 
-inputs() {
+INPUTS() {
 
 	TASK="Inputs"
 
@@ -525,7 +525,7 @@ DetectPackageManager() {
 
 packageManagerUpgrade() {
 
-	TASK="packages"
+	TASK="Packages"
 
 	GPRINT "Upgrading/Updating system '$TASK'!"
 	
@@ -557,7 +557,7 @@ packageManagerUpgrade() {
 # Dependencies Requires for Python3.5 & Python3.6
 python_dependencies() {
 
-	TASK="python"
+	TASK="Python"
 
 	YPRINT "Installing Necessary Dependencies required for '$TASK'!"
 
@@ -1239,7 +1239,7 @@ avatar_server() {
 
 
 # Nginx to balance loads & for proxies
-nginx() {
+NGINX() {
 
 	TASK="nginx"
 
@@ -1283,7 +1283,7 @@ nginx() {
 				sed -Ei 's#DOMAIN#'"$domain"'#g; s#DIRECTORY#'"$directory"'#g' old-frontend.conf || DIE 1 "Failed to Setup Config file!"
 			fi
 
-			YPRINT "Downloading Certificates! (ainu-certificate)"
+			YPRINT "Downloading Certificates!"
 			WGET "cert.pem" "$certificate_url" || DIE 11 "Could not download file 'cert.pem'!"
 			WGET "key.pem" "$key_url" || DIE 11 "Could not download file 'key.pem'!"
 			if [ -f "cert.pem" ] && [ -f "key.pem" ]; then
@@ -1457,7 +1457,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				GPRINT "[NO Dependencies MODE]"
 				checkRoot
 				DetectPackageManager
-				inputs
+				INPUTS
 				checkNetwork
 				mysql_database
 				peppy
@@ -1467,7 +1467,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				rippleapi
 				frontend
 				phpmyadmin
-				nginx
+				NGINX
 				SSL
 				EXIT 0 ;;
 
@@ -1475,7 +1475,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				GPRINT "[Dependencies MODE]"
 				checkRoot
 				DetectPackageManager
-				inputs
+				INPUTS
 				checkNetwork
 				packageManagerUpgrade
 				mysql_database
@@ -1492,7 +1492,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				extra_dependencies
 				old_frontend
 				phpmyadmin
-				nginx
+				NGINX
 				SSL
 				EXIT 0 ;;
 
@@ -1566,7 +1566,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		GPRINT "[Dependencies MODE]"
 		checkRoot
 		DetectPackageManager
-		inputs
+		INPUTS
 		checkNetwork
 		packageManagerUpgrade
 		mysql_database
@@ -1577,7 +1577,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		case "$2" in
 			"--nodependencies" | "--nodep")
 				GPRINT "[NO Dependencies MODE]"
-				inputs
+				INPUTS
 				checkNetwork
 				peppy
 				EXIT 0 ;;
@@ -1586,7 +1586,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				GPRINT "[Dependencies MODE]"
 				checkRoot
 				DetectPackageManager
-				inputs
+				INPUTS
 				checkNetwork
 				packageManagerUpgrade
 				python_dependencies
@@ -1606,7 +1606,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		case "$2" in
 			"--nodependencies" | "--nodep")
 				GPRINT "[NO Dependencies MODE]"
-				inputs
+				INPUTS
 				checkNetwork
 				lets
 				EXIT 0 ;;
@@ -1615,7 +1615,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				GPRINT "[Dependencies MODE]"
 				checkRoot
 				DetectPackageManager
-				inputs
+				INPUTS
 				checkNetwork
 				packageManagerUpgrade
 				python_dependencies
@@ -1635,7 +1635,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		case "$2" in
 			"--nodependencies" | "--nodep")
 				GPRINT "[NO Dependencies MODE]"
-				inputs
+				INPUTS
 				checkNetwork
 				avatar_server
 				EXIT 0 ;;
@@ -1644,7 +1644,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				GPRINT "[Dependencies MODE]"
 				checkRoot
 				DetectPackageManager
-				inputs
+				INPUTS
 				checkNetwork
 				packageManagerUpgrade
 				python_dependencies
@@ -1664,7 +1664,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		case "$2" in
 			"--nodependencies" | "--nodep")
 				GPRINT "[NO Dependencies MODE]"
-				inputs
+				INPUTS
 				checkNetwork
 				hanayo
 				EXIT 0 ;;
@@ -1673,7 +1673,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				GPRINT "[Dependencies MODE]"
 				checkRoot
 				DetectPackageManager
-				inputs
+				INPUTS
 				checkNetwork
 				packageManagerUpgrade
 				golang
@@ -1691,7 +1691,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		case "$2" in
 			"--nodependencies" | "--nodep")
 				GPRINT "[NO Dependencies MODE]"
-				inputs
+				INPUTS
 				checkNetwork
 				rippleapi
 				EXIT 0 ;;
@@ -1700,7 +1700,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				GPRINT "[Dependencies MODE]"
 				checkRoot
 				DetectPackageManager
-				inputs
+				INPUTS
 				checkNetwork
 				packageManagerUpgrade
 				golang
@@ -1720,7 +1720,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				GPRINT "[NO Dependencies MODE]"
 				checkRoot
 				DetectPackageManager
-				inputs
+				INPUTS
 				checkNetwork
 				old_frontend
 				EXIT 0 ;;
@@ -1729,7 +1729,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				GPRINT "[Dependencies MODE]"
 				checkRoot
 				DetectPackageManager
-				inputs
+				INPUTS
 				checkNetwork
 				packageManagerUpgrade
 				php
@@ -1750,7 +1750,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				checkRoot
 				DetectPackageManager
 				checkNetwork
-				nginx
+				NGINX
 				EXIT 0 ;;
 
 			"")
@@ -1760,7 +1760,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				checkNetwork
 				packageManagerUpgrade
 				extra_dependencies
-				nginx
+				NGINX
 				EXIT 0 ;;
 
 			*)
