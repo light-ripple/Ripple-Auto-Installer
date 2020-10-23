@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|              Last Updated on Friday, October 23, 2020 at 03:30 PM (GMT+6)               |
+|              Last Updated on Friday, October 23, 2020 at 03:40 PM (GMT+6)               |
 -------------------------------------------------------------------------------------------
 '
 
@@ -108,7 +108,7 @@
 
 
 # Version #
-UPSTREAM_VERSION="0.12-rc1"
+UPSTREAM_VERSION="0.12-rc2"
 
 
 # Repositories
@@ -1097,6 +1097,10 @@ hanayo() {
 
 	TASK="hanayo"
 
+	# FIXME: Add proper logic to deal with such handicap
+	# Check: https://github.com/Uniminin/Ripple-Auto-Installer/issues/99
+	DIE 1 "Unable to detect 'GOPATH' as a result '$TASK' will fail to setup!"
+
 	YPRINT "Cloning & Setting up '$TASK'!"
 
 	if command -v PING 1>/dev/null; then
@@ -1156,6 +1160,10 @@ hanayo() {
 rippleapi() {
 
 	TASK="api"
+
+	# FIXME: Add proper logic to deal with such handicap
+	# Check: https://github.com/Uniminin/Ripple-Auto-Installer/issues/99
+	DIE 1 "Unable to detect 'GOPATH' as a result '$TASK' will fail to setup!"
 
 	YPRINT "Cloning & Setting up '$TASK'!"
 
