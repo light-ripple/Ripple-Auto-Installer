@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|              Last Updated on Friday, October 23, 2020 at 01:56 PM (GMT+6)               |
+|              Last Updated on Friday, October 23, 2020 at 02:10 PM (GMT+6)               |
 -------------------------------------------------------------------------------------------
 '
 
@@ -108,7 +108,7 @@
 
 
 # Version #
-UPSTREAM_VERSION=0.11-rc1
+UPSTREAM_VERSION=0.11-rc2
 
 
 # Repositories
@@ -154,7 +154,7 @@ alias WGET="wget -O"
 alias GIT_CLONE="git clone"
 alias GO_CLONE="go get"
 alias PING="ping"
-alias CREATE_DIRECTORY="mkdir -v"
+alias CREATE_DIRECTORY="mkdir -vp"
 alias CREATE_FILE="touch"
 alias REMOVE="rm -rfv"
 alias READ="read -r"
@@ -1399,43 +1399,50 @@ old_frontend() {
 		fi
 	done
 
-	(
-		if [ ! -d "/var/www/" ]; then
-			CREATE_DIRECTORY /var/www/ ; cd /var/www/ || DIE 1 "Could not cd into '/var/www/'!"
-
-			if command -v git 1>/dev/null; then
-				GIT_CLONE "$old_frontend_url" osu.ppy.sh
-			else
-				 1 "git not found on this system!"
-			fi
-
-			if [ -d "osu.ppy.sh" ]; then
-				cd osu.ppy.sh || DIE 1 "Failed to cd into 'osu.ppy.sh'!"
-				curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-				(
-					cd inc || DIE 1 "Failed to cd into 'inc'!"
-					cp -v config.sample.php config.php
-
-					if [ -f "config.php" ]; then
-						sed -Ei "s/root/$mysql_user/g" config.php || DIE 1 "Failed to Setup Config file! [$TASK/config.php -> mysql_user]"
-						sed -Ei "s/meme/$mysql_password/g" config.php || DIE 1 "Failed to Setup Config file! [$TASK/config.php -> mysql_password]"
-						sed -Ei "s/allora/$database_name/g" config.php || DIE 1 "Failed to Setup Config file! [$TASK/config.php -> database_name]"
-						sed -Ei "s/ripple.moe/$domain/g" config.php || DIE 1 "Failed to Setup Config file! [$TASK/config.php -> domain]"
-					fi
-				)
-
-				if command -v composer 1>/dev/null; then
-					composer install
-				else
-					DIE 1 "composer not found!"
-				fi
-
-				secret
-
-				GPRINT "Done setting up '$TASK'!"
-			fi
+		if [ ! -d "/var/www" ]; then
+			CREATE_DIRECTORY /var/www
 		else
-			DIE 61 "Unknown Error!"
+			DIE 61 "Could not create directory '/var/www'!"
+		fi
+		
+	(	
+		
+		if [ -d "/var/www" ]; then
+			cd /var/www || DIE 1 "Could not cd into '/var/www/'!"
+		else
+			DIE 61 "Unexpected!"
+		fi
+		
+		if command -v git 1>/dev/null; then
+			GIT_CLONE "$old_frontend_url" osu.ppy.sh
+		else
+			 1 "git not found on this system!"
+		fi
+
+		if [ -d "osu.ppy.sh" ]; then
+			cd osu.ppy.sh || DIE 1 "Failed to cd into 'osu.ppy.sh'!"
+			curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+			(
+				cd inc || DIE 1 "Failed to cd into 'inc'!"
+				cp -v config.sample.php config.php
+
+				if [ -f "config.php" ]; then
+					sed -Ei "s/root/$mysql_user/g" config.php || DIE 1 "Failed to Setup Config file! [$TASK/config.php -> mysql_user]"
+					sed -Ei "s/meme/$mysql_password/g" config.php || DIE 1 "Failed to Setup Config file! [$TASK/config.php -> mysql_password]"
+					sed -Ei "s/allora/$database_name/g" config.php || DIE 1 "Failed to Setup Config file! [$TASK/config.php -> database_name]"
+					sed -Ei "s/ripple.moe/$domain/g" config.php || DIE 1 "Failed to Setup Config file! [$TASK/config.php -> domain]"
+				fi
+			)
+
+			if command -v composer 1>/dev/null; then
+				composer install
+			else
+				DIE 1 "composer not found!"
+			fi
+
+			secret
+
+			GPRINT "Done setting up '$TASK'!"
 		fi
 	)
 
