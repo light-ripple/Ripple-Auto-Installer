@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|              Last Updated on Friday, October 23, 2020 at 03:40 PM (GMT+6)               |
+|              Last Updated on Friday, October 23, 2020 at 04:00 PM (GMT+6)               |
 -------------------------------------------------------------------------------------------
 '
 
@@ -108,7 +108,7 @@
 
 
 # Version #
-UPSTREAM_VERSION="0.12-rc2"
+UPSTREAM_VERSION="0.12-rc3"
 
 
 # Repositories
@@ -190,7 +190,7 @@ lineno() {
 die() {
 
 	# Current Date
-	Date=$(date)
+	Date="$(date)"
 
 
 	case "$2" in
@@ -587,9 +587,11 @@ python_dependencies() {
 			;;
 	esac
 
-	for packages in gcc make git wget cython; do
-		if command -v $packages >/dev/null; then
+	for package in gcc make git wget cython; do
+		if command -v "$package" >/dev/null; then
 			GPRINT "Done Installing necessary Dependencies required for '$TASK'!"
+		elif ! command -v "$package" >/dev/null; then
+			DIE 1 "Required '$package' is not installed!"
 		else
 			DIE 123 "Failed to Install necessary Dependencies required for '$TASK'"
 		fi
@@ -795,9 +797,11 @@ extra_dependencies() {
 			;;
 	esac
 
-	for packages in tmux nginx redis-cli; do
-		if command -v $packages >/dev/null; then
+	for package in tmux nginx redis-cli; do
+		if command -v "$package" >/dev/null; then
 			GPRINT "Done Installing necessary Dependencies required for '$TASK'!"
+		elif ! command -v "$package" >/dev/null; then
+			DIE 1 "Required '$package' is not installed!"
 		else
 			DIE 1 "Failed to Install necessary Dependencies required for '$TASK'!"
 		fi
@@ -1294,6 +1298,7 @@ NGINX() {
 			YPRINT "Downloading Certificates!"
 			WGET "cert.pem" "$certificate_url" || DIE 11 "Could not download file 'cert.pem'!"
 			WGET "key.pem" "$key_url" || DIE 11 "Could not download file 'key.pem'!"
+			
 			if [ -f "cert.pem" ] && [ -f "key.pem" ]; then
 				GPRINT "Done downloading Certificates."
 			else
@@ -1399,9 +1404,11 @@ old_frontend() {
 			;;
 	esac
 
-	for packages in php composer; do
-		if command -v $packages >/dev/null; then
+	for package in php composer; do
+		if command -v "$package" >/dev/null; then
 			GPRINT "Done Installing necessary Dependencies required for '$TASK'!"
+		elif ! command -v "$package" >/dev/null; then
+			DIE 1 "Required '$package' is not installed!"
 		else
 			DIE 1 "Failed to Install necessary Dependencies required for '$TASK'!"
 		fi
