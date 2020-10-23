@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|              Last Updated on Sunday, October 18, 2020 at 04:10 PM (GMT+6)               |
+|              Last Updated on Friday, October 23, 2020 at 01:56 PM (GMT+6)               |
 -------------------------------------------------------------------------------------------
 '
 
@@ -108,7 +108,7 @@
 
 
 # Version #
-UPSTREAM_VERSION=0.10-rc12
+UPSTREAM_VERSION=0.11-rc1
 
 
 # Repositories
@@ -210,7 +210,7 @@ die() {
 	
 	# Confirm :DIE: -> Die :?:
 	while [ -z "$CONFIRMATION" ]; do
-		BPRINT "Ignore All Errors and Continue ? y/n "
+		BPRINT "Do you want to Continue ? y/n "
 		READ CONFIRMATION
 	done
 	
@@ -218,6 +218,8 @@ die() {
 		RPRINT "EXITING..."
 		EXIT 4
 	fi
+	
+	unset CONFIRMATION
 
 }
 
