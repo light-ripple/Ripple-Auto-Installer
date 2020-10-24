@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|              Last Updated on Friday, October 23, 2020 at 04:00 PM (GMT+6)               |
+|             Last Updated on Saturday, October 24, 2020 at 12:40 PM (GMT+6)              |
 -------------------------------------------------------------------------------------------
 '
 
@@ -108,7 +108,7 @@
 
 
 # Version #
-UPSTREAM_VERSION="0.12-rc3"
+UPSTREAM_VERSION="0.13-rc1"
 
 
 # Repositories
@@ -149,6 +149,7 @@ alias BPRINT="printf '\\033[0;34m%s'"		 # Blue
 
 
 # Command Overwrites
+alias SUBMODULE="git submodule init ; git submodule update"
 alias PRINT="printf '%s\n'"
 alias WGET="wget -O"
 alias GIT_CLONE="git clone"
@@ -158,11 +159,12 @@ alias CREATE_DIRECTORY="mkdir -vp"
 alias CREATE_FILE="touch"
 alias REMOVE="rm -rfv"
 alias READ="read -r"
+alias APPEND="sed -Ei"
 alias EXIT="exit"
-alias SUBMODULE="git submodule init ; git submodule update"
 
 
 
+# Part of uniminin's Simplified Assertion.
 # prints line number
 lineno() {
 
@@ -179,9 +181,11 @@ lineno() {
 }
 
 
-# For capturing Bugs
-# kills the script if anything returns false
-# Temporarily Disabled #
+'''
+* For capturing Bugs
+* kills the script if anything returns false
+* Temporarily Disabled
+'''
 # set -e
 
 
@@ -224,10 +228,11 @@ die() {
 }
 
 
-# DIE
+# DIE with lineno
 alias DIE="die \"[ line \$LINENO\"\\ ]"
 
 
+# Simplified File Integrity Checker by uniminin <uniminin@zoho.com> under the terms of AGPLv3
 # CHECK FILE INTEGRITY
 if [ ! -f "ripple.sha1" ]; then
 	RPRINT "file integrity data not found" ; GPRINT "Fetching the latest file integrity data"
@@ -271,7 +276,7 @@ checkNetwork() {
 }
 
 
-# Check for root
+# Check for root permission
 checkRoot() {
 
 	if ! [ "$(id -u)" = 0 ]; then
@@ -282,7 +287,7 @@ checkRoot() {
 }
 
 
-# Detect number of cpu threads for faster compilation/builds
+# Detect the total number of cpu threads for faster compilation/builds. If fails then returns 1.
 nproc_detector() {
 
 	case "$(nproc)" in
@@ -298,6 +303,7 @@ nproc_detector() {
 }
 
 
+# Obtain necessary data from input. Required to setup & configure Ripple stack softwares.
 INPUTS() {
 
 	TASK="Inputs"
@@ -704,7 +710,7 @@ python3_6() {
 }
 
 
-# Golang1.14+ for Hanayo & rippleapi
+# Golang1.14+ for Hanayo & RippleApi
 golang() {
 
 	TASK="golang"
@@ -714,7 +720,7 @@ golang() {
 	else
 		YPRINT "Setting up '$TASK'!"
 		
-		if [ "$package_manager_frontend" = "apt" ]; then
+		if [ "$package_manager_frontend" = "apt" ] || [ "$package_manager_frontend" = "pacman" ]; then
 			if command -v PING 1>/dev/null; then
 				PING -i 0.5 -c 5 golang.org || DIE 121 "Domain 'golang.org' is not reachable from this environment."
 				PING -i 0.5 -c 5 dl.google.com || DIE 121 "Domain 'dl.google.com' is not reachable from this environment."
@@ -725,6 +731,8 @@ golang() {
 			(
 				if [ -d "/usr/src" ]; then
 					cd /usr/src || DIE 1 "Failed to cd into '/usr/src'!"
+
+					# golang 1.14+ for Hanayo & Api (Needed. Verified from UPSTREAM)
 					WGET "go1.14.tar.gz" https://golang.org/dl/go1.14.linux-amd64.tar.gz
 					tar -xvf go1.14.tar.gz
 					chown -R root:root ./go
@@ -742,10 +750,6 @@ golang() {
 					fi
 				fi
 			)
-		
-		# FIXME: use pacman to install golang1.14
-		elif [ "$package_manager_frontend" = "pacman" ]; then
-			"$package_manager_frontend" --noconfirm -S go
 
 		elif [ "$package_manager_frontend" = "emerge" ]; then
 			# Latest stable (Gentoo package database) [12:40 PM | 8/30/20 | Sun | GMT+6]
@@ -810,7 +814,8 @@ extra_dependencies() {
 }
 
 
-# Database is required to access, read, write & manage all the user's data. (Required for all Ripple's Softwares i.e lets, peppy..)
+# Database is required to access, read, write & manage all the user's data. 
+# (Required for all Ripple's Softwares i.e lets, peppy..)
 mysql_database() {
 
 	TASK="MySQL Database"
@@ -988,11 +993,20 @@ peppy () {
 				if [ -f "pep.py" ]; then
 					python3.5 pep.py
 					if [ -f "config.ini" ]; then
-						sed -Ei "s:^username =.*$:username = $mysql_user:g" config.ini || DIE 74 "Failed to Setup Config file! [$TASK/config.ini -> mysql_user]"
-						sed -Ei "s:^password =.*$:password = $mysql_password:g" config.ini || DIE 74 "Failed to Setup Config file! [$TASK/config.ini -> mysql_password]"
-						sed -Ei "s:^database =.*$:database = $database_name:g" config.ini || DIE 74 "Failed to Setup Config file! [$TASK/config.ini -> database_name]"
-						sed -Ei "s:^cikey =.*$:cikey = $cikey:g" config.ini || DIE 74 "Failed to Setup Config file! [$TASK/config.ini -> cikey]"
-						sed -Ei "s:^apikey =.*$:apikey = $api:g" config.ini || DIE 74 "Failed to Setup Config file! [$TASK/config.ini -> api]"
+						APPEND "s:^username =.*$:username = $mysql_user:g" config.ini || DIE 74 \
+							"Failed to Setup Config file! [$TASK/config.ini -> mysql_user]"
+
+						APPEND "s:^password =.*$:password = $mysql_password:g" config.ini || DIE 74 \
+							"Failed to Setup Config file! [$TASK/config.ini -> mysql_password]"
+
+						APPEND "s:^database =.*$:database = $database_name:g" config.ini || DIE 74 \
+							"Failed to Setup Config file! [$TASK/config.ini -> database_name]"
+
+						APPEND "s:^cikey =.*$:cikey = $cikey:g" config.ini || DIE 74 \
+							"Failed to Setup Config file! [$TASK/config.ini -> cikey]"
+
+						APPEND "s:^apikey =.*$:apikey = $api:g" config.ini || DIE 74 \
+							"Failed to Setup Config file! [$TASK/config.ini -> api]"
 					fi
 				fi
 				GPRINT "Done Setting Up '$TASK'!"
@@ -1068,11 +1082,20 @@ lets() {
 				if [ -f "lets.py" ]; then
 					python3.6 lets.py
 					if [ -f "config.ini" ]; then
-						sed -Ei "s:^username =.*$:username = $mysql_user:g" config.ini || DIE 74 "Failed to Setup Config file! [$TASK/config.ini -> mysql_user]"
-						sed -Ei "s:^password =.*$:password = $mysql_password:g" config.ini || DIE 74 "Failed to Setup Config file! [$TASK/config.ini -> mysql_password]"
-						sed -Ei "s:^database =.*$:database = $database_name:g" config.ini || DIE 74 "Failed to Setup Config file! [$TASK/config.ini -> database_name]"
-						sed -Ei "s/changeme/$cikey/g" config.ini || DIE 74 "Failed to Setup Config file! [$TASK/config.ini -> cikey]"
-						sed -Ei "s:^apikey =.*$:apikey = $api:g" config.ini || DIE 74 "Failed to Setup Config file! [$TASK/config.ini -> apikey]"
+						APPEND "s:^username =.*$:username = $mysql_user:g" config.ini || DIE 74 \
+							"Failed to Setup Config file! [$TASK/config.ini -> mysql_user]"
+
+						APPEND "s:^password =.*$:password = $mysql_password:g" config.ini || DIE 74 \
+							"Failed to Setup Config file! [$TASK/config.ini -> mysql_password]"
+
+						APPEND "s:^database =.*$:database = $database_name:g" config.ini || DIE 74 \
+							"Failed to Setup Config file! [$TASK/config.ini -> database_name]"
+
+						APPEND "s/changeme/$cikey/g" config.ini || DIE 74 \
+							"Failed to Setup Config file! [$TASK/config.ini -> cikey]"
+
+						APPEND "s:^apikey =.*$:apikey = $api:g" config.ini || DIE 74 \
+							"Failed to Setup Config file! [$TASK/config.ini -> apikey]"
 					fi
 				fi
 				GPRINT "Done Setting Up '$TASK'!"
@@ -1125,20 +1148,35 @@ hanayo() {
 				fi
 
 				if [ -f "hanayo.conf" ]; then
-					sed -Ei "s/ListenTo=:45221/ListenTo=127.0.0.1:45221/g" hanayo.conf || DIE 74 "Failed to Setup Config file! [$TASK/hanayo.conf -> ListenTo]"
-					sed -E -i -e 'H;1h;$!d;x' hanayo.conf -e 's#DSN=#DSN='"$mysql_user"':'"$mysql_password"'@/'"$database_name"'#' || DIE 1 "Failed to Setup Config file! [$TASK/hanayo.conf -> mysql-user, pass, db]"
-					sed -Ei "s:^RedisEnable=.*$:RedisEnable=true:g" hanayo.conf || DIE 74 "Failed to Setup Config file! [$TASK/hanayo.conf -> Redis]"
-					sed -Ei "s/ripple.moe/$domain/g" hanayo.conf || DIE 74 "Failed to Setup Config file! [$TASK/hanayo.conf -> domain]"
-					sed -Ei "s:^APISecret=.*$:APISecret=$api_secret:g" hanayo.conf || DIE 74 "Failed to Setup Config file! [$TASK/hanayo.conf -> api_secret]"
-					sed -Ei "s:^MainRippleFolder=.*$:MainRippleFolder=$directory:g" hanayo.conf || DIE 74 "Failed to Setup Config file! [$TASK/hanayo.conf -> directory]"
-					sed -Ei "s:^AvatarsFolder=.*$:AvatarsFolder=$directory/nginx/avatar-server/Avatars:g" hanayo.conf || DIE 74 "Failed to Setup Config file! [$TASK/hanayo.conf -> avatar-folder]"
-					sed -Ei "s#https://storage.$domain/api#'https://storage.ripple.moe/api'#g" hanayo.conf || DIE 74 "Failed to Setup Config file! [$TASK/hanayo.conf -> cheesegull]"
+					APPEND "s/ListenTo=:45221/ListenTo=127.0.0.1:45221/g" hanayo.conf || DIE 74 \
+						"Failed to Setup Config file! [$TASK/hanayo.conf -> ListenTo]"
+
+					APPEND -e 'H;1h;$!d;x' hanayo.conf -e 's#DSN=#DSN='"$mysql_user"':'"$mysql_password"'@/'"$database_name"'#' || DIE 74 \
+						"Failed to Setup Config file! [$TASK/hanayo.conf -> mysql-user, pass, db]"
+
+					APPEND "s:^RedisEnable=.*$:RedisEnable=true:g" hanayo.conf || DIE 74 \
+						"Failed to Setup Config file! [$TASK/hanayo.conf -> Redis]"
+
+					APPEND "s/ripple.moe/$domain/g" hanayo.conf || DIE 74 \
+						"Failed to Setup Config file! [$TASK/hanayo.conf -> domain]"
+
+					APPEND "s:^APISecret=.*$:APISecret=$api_secret:g" hanayo.conf || DIE 74 \
+						"Failed to Setup Config file! [$TASK/hanayo.conf -> api_secret]"
+
+					APPEND "s:^MainRippleFolder=.*$:MainRippleFolder=$directory:g" hanayo.conf || DIE 74 \
+						"Failed to Setup Config file! [$TASK/hanayo.conf -> directory]"
+
+					APPEND "s:^AvatarsFolder=.*$:AvatarsFolder=$directory/nginx/avatar-server/Avatars:g" hanayo.conf || DIE 74 \
+						"Failed to Setup Config file! [$TASK/hanayo.conf -> avatar-folder]"
+
+					APPEND "s#https://storage.$domain/api#'https://storage.ripple.moe/api'#g" hanayo.conf || DIE 74 \
+						"Failed to Setup Config file! [$TASK/hanayo.conf -> cheesegull]"
 				else
 					DIE 1 "Failed To Configure '$TASK'!"
 				fi
 
 				if [ -f "templates/navbar.html" ]; then
-					sed -Ei 's#ripple.moe#'"$domain"'#' templates/navbar.html
+					APPEND 's#ripple.moe#'"$domain"'#' templates/navbar.html
 				fi
 
 				if [ ! -d "$directory/hanayo" ]; then
@@ -1190,9 +1228,14 @@ rippleapi() {
 				fi
 
 				if [ -f "api.conf" ]; then
-					sed -E -i -e 'H;1h;$!d;x' api.conf -e 's#DSN=#DSN='"$mysql_user"':'"$mysql_password"'@/'"$database_name"'#' || DIE 1 "Failed to Setup Config file! [$TASK/api.conf -> mysql-user, pass, db]"
-					sed -Ei "s:^HanayoKey=.*$:HanayoKey=$api_secret:g" api.conf || DIE 74 "Failed to Setup Config file! [$TASK/api.conf -> api_secret]"
-					sed -Ei "s:^OsuAPIKey=.*$:OsuAPIKey=$cikey:g" api.conf || DIE 74 "Failed to Setup Config file! [$TASK/api.conf -> cikey]"
+					APPEND -e 'H;1h;$!d;x' api.conf -e 's#DSN=#DSN='"$mysql_user"':'"$mysql_password"'@/'"$database_name"'#' || DIE 74 \
+						"Failed to Setup Config file! [$TASK/api.conf -> mysql-user, pass, db]"
+
+					APPEND "s:^HanayoKey=.*$:HanayoKey=$api_secret:g" api.conf || DIE 74 \
+						"Failed to Setup Config file! [$TASK/api.conf -> api_secret]"
+
+					APPEND "s:^OsuAPIKey=.*$:OsuAPIKey=$cikey:g" api.conf || DIE 74 \
+						"Failed to Setup Config file! [$TASK/api.conf -> cikey]"
 				fi
 
 				if [ ! -d "$directory/api" ]; then
@@ -1287,12 +1330,12 @@ NGINX() {
 
 			WGET "nginx.conf" "$nginx_config2_url" || DIE 11 "Could not download file 'nginx.conf'!"
 			if [ -f "nginx.conf" ]; then
-				sed -Ei 's#DOMAIN#'"$domain"'#g; s#DIRECTORY#'"$directory"'#g' nginx.conf || DIE 1 "Failed to Setup Config file!"
+				APPEND 's#DOMAIN#'"$domain"'#g; s#DIRECTORY#'"$directory"'#g' nginx.conf || DIE 1 "Failed to Setup Config file!"
 			fi
 
 			WGET "old-frontend.conf" "$old_frontend_config_url" || DIE 11 "Could not download file 'old-frontend.conf'!"
 			if [ -f "old-frontend.conf" ]; then
-				sed -Ei 's#DOMAIN#'"$domain"'#g; s#DIRECTORY#'"$directory"'#g' old-frontend.conf || DIE 1 "Failed to Setup Config file!"
+				APPEND 's#DOMAIN#'"$domain"'#g; s#DIRECTORY#'"$directory"'#g' old-frontend.conf || DIE 1 "Failed to Setup Config file!"
 			fi
 
 			YPRINT "Downloading Certificates!"
@@ -1442,10 +1485,17 @@ old_frontend() {
 				cp -v config.sample.php config.php
 
 				if [ -f "config.php" ]; then
-					sed -Ei "s/root/$mysql_user/g" config.php || DIE 1 "Failed to Setup Config file! [$TASK/config.php -> mysql_user]"
-					sed -Ei "s/meme/$mysql_password/g" config.php || DIE 1 "Failed to Setup Config file! [$TASK/config.php -> mysql_password]"
-					sed -Ei "s/allora/$database_name/g" config.php || DIE 1 "Failed to Setup Config file! [$TASK/config.php -> database_name]"
-					sed -Ei "s/ripple.moe/$domain/g" config.php || DIE 1 "Failed to Setup Config file! [$TASK/config.php -> domain]"
+					APPEND "s/root/$mysql_user/g" config.php || DIE 74 \
+						"Failed to Setup Config file! [$TASK/config.php -> mysql_user]"
+
+					APPEND "s/meme/$mysql_password/g" config.php || DIE 74 \
+						"Failed to Setup Config file! [$TASK/config.php -> mysql_password]"
+
+					APPEND "s/allora/$database_name/g" config.php || DIE 74 \
+						"Failed to Setup Config file! [$TASK/config.php -> database_name]"
+
+					APPEND "s/ripple.moe/$domain/g" config.php || DIE 74 \
+						"Failed to Setup Config file! [$TASK/config.php -> domain]"
 				fi
 			)
 
