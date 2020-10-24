@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|             Last Updated on Saturday, October 24, 2020 at 12:40 PM (GMT+6)              |
+|             Last Updated on Saturday, October 24, 2020 at 12:54 PM (GMT+6)              |
 -------------------------------------------------------------------------------------------
 '
 
@@ -108,7 +108,7 @@
 
 
 # Version #
-UPSTREAM_VERSION="0.13-rc1"
+UPSTREAM_VERSION="0.13-rc2"
 
 
 # Repositories
@@ -181,11 +181,11 @@ lineno() {
 }
 
 
-'''
+: '
 * For capturing Bugs
 * kills the script if anything returns false
 * Temporarily Disabled
-'''
+'
 # set -e
 
 
