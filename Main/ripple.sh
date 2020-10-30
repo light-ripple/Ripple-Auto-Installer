@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|             Last Updated on Saturday, October 24, 2020 at 12:54 PM (GMT+6)              |
+|              Last Updated on Friday, October 30, 2020 at 02:25 PM (GMT+6)               |
 -------------------------------------------------------------------------------------------
 '
 
@@ -22,7 +22,7 @@
 ###! - lets          (https://zxq.co/ripple/lets)         [SCORE SERVER]
 ###! osu!fx's:
 ###! - secret        (https://github.com/osufx/secret)    [AUTOMATED ANITCHEAT +-] . Note: Not used by Ripple
-###! - lets          (https://github.com/osufx/lets)      [SCORE SERVER]           . Note: fork of Ripple's lets
+###! - lets          (https://github.com/osufx/lets)      [SCORE SERVER]           . Note: Fork of Ripple's lets
 ###! Custom:
 ###! - avatar-server (https://github.com/Uniminin/avatar-server)
 ###! We need:
@@ -96,7 +96,6 @@
 
 
 # TODO: Detect Operating Operating-System/Kernel and pull proper packages.
-# KNOWN ISSUES: UNABLE TO DETECT GOPATH AS A RESULT "hanayo" & "rippleapi" Fails to setup.
 
 # WARNING: Script Untested. Use at your own risk.
 
@@ -108,7 +107,7 @@
 
 
 # Version #
-UPSTREAM_VERSION="0.13-rc2"
+UPSTREAM_VERSION="1.0-rc1"
 
 
 # Repositories
@@ -117,10 +116,8 @@ lets_url="https://github.com/light-ripple/lets"
 secret_url="https://github.com/light-ripple/secret"
 avatar_server_url="https://github.com/light-ripple/avatar-server"
 old_frontend_url="https://github.com/light-ripple/old-frontend"
-
-# Note: Do not include 'http/https://' in go repos
-hanayo_url="github.com/light-ripple/hanayo"
-rippleapi_url="github.com/light-ripple/api"
+hanayo_url="https://github.com/light-ripple/hanayo"
+rippleapi_url="https://github.com/light-ripple/api"
 
 
 # Database File(s)
@@ -153,7 +150,6 @@ alias SUBMODULE="git submodule init ; git submodule update"
 alias PRINT="printf '%s\n'"
 alias WGET="wget -O"
 alias GIT_CLONE="git clone"
-alias GO_CLONE="go get"
 alias PING="ping"
 alias CREATE_DIRECTORY="mkdir -vp"
 alias CREATE_FILE="touch"
@@ -270,7 +266,7 @@ checkNetwork() {
 			DIE 64 "The network is down!"
 		fi
 	else
-		DIE 127 "ping is not executable on this system. Failed to check network connectivity."
+		DIE 127 "ping is not executable on this system. Failed to check network connectivity!"
 	fi
 
 }
@@ -619,7 +615,7 @@ python3_5() {
 		if command -v PING 1>/dev/null; then
 			PING -i 0.5 -c 5 python.org || DIE 121 "Domain 'python.org' is not reachable from this environment."
 		else
-			DIE 127 "ping is not executable on this system."
+			DIE 127 "ping is not executable on this system!"
 		fi
 
 		(
@@ -671,7 +667,7 @@ python3_6() {
 	if command -v PING 1>/dev/null; then
 		PING -i 0.5 -c 5 python.org || DIE 121 "Domain 'python.org' is not reachable from this environment."
 	else
-		DIE 127 "ping is not executable on this system."
+		DIE 127 "ping is not executable on this system!"
 	fi
 
 	(
@@ -725,14 +721,14 @@ golang() {
 				PING -i 0.5 -c 5 golang.org || DIE 121 "Domain 'golang.org' is not reachable from this environment."
 				PING -i 0.5 -c 5 dl.google.com || DIE 121 "Domain 'dl.google.com' is not reachable from this environment."
 			else
-				DIE 127 "ping & go are not executable on this system."
+				DIE 127 "ping is not executable on this system!"
 			fi
 
 			(
 				if [ -d "/usr/src" ]; then
 					cd /usr/src || DIE 1 "Failed to cd into '/usr/src'!"
 
-					# golang 1.14+ for Hanayo & Api (Needed. Verified from UPSTREAM)
+					# golang 1.14+ for Hanayo & Api (Needed::Verified from UPSTREAM)
 					WGET "go1.14.tar.gz" https://golang.org/dl/go1.14.linux-amd64.tar.gz
 					tar -xvf go1.14.tar.gz
 					chown -R root:root ./go
@@ -740,8 +736,12 @@ golang() {
 					if [ -d "/usr/local" ]; then
 						mv go /usr/local
 
-						PRINT export GOPATH=/root/go > ~/.bashrc
-						PRINT export PATH="$PATH":/usr/local/go/bin:"$GOPATH"/bin > ~/.bashrc
+						if [ ! -f "/home/$USER/.bashrc" ]; then
+							CREATE_FILE /home/"$USER"/.bashrc
+						fi
+
+						PRINT export GOPATH=/root/go > /home/"$USER"/.bashrc
+						PRINT export PATH="$PATH":/usr/local/go/bin:"$GOPATH"/bin > /home/"$USER"/.bashrc
 						
 						. /home/"$USER"/.bashrc
 
@@ -752,11 +752,11 @@ golang() {
 			)
 
 		elif [ "$package_manager_frontend" = "emerge" ]; then
-			# Latest stable (Gentoo package database) [12:40 PM | 8/30/20 | Sun | GMT+6]
+			# Latest stable (Gentoo package database) [02:20 PM | 30/10/2020 | Sun | GMT+6]
 			"$package_manager_frontend" -q =dev-lang/go-1.14.10
 
 		elif [ "$package_manager_frontend" = "cave" ]; then
-			# Latest stable (Exherbo package database) [12:40 PM | 8/30/20 | Sun | GMT+6]
+			# Latest stable (Exherbo package database) [02:20 PM | 30/10/2020 | Sun | GMT+6]
 			"$package_manager_frontend" resolve -x =dev-lang/go-1.14.10
 		fi
 
@@ -894,7 +894,7 @@ mysql_database() {
 	if command -v PING 1>/dev/null; then
 		PING -i 0.5 -c 5 raw.githubusercontent.com || DIE 121 "Domain 'raw.githubusercontent.com' is not reachable from this environment."
 	else
-		DIE 127 "ping is not executable on this system."
+		DIE 127 "ping is not executable on this system!"
 	fi
 
 	(
@@ -973,7 +973,7 @@ peppy () {
 	if command -v PING 1>/dev/null; then
 		PING -i 0.5 -c 5 zxq.co || DIE 121 "Domain: zxq.co is not reachable from this environment!"
 	else
-		DIE 127 "ping is not executable on this system."
+		DIE 127 "ping is not executable on this system!"
 	fi
 
 	if [ -d "$directory" ]; then
@@ -1030,7 +1030,7 @@ secret() {
 	if command -v PING 1>/dev/null; then
 		PING -i 0.5 -c 5 github.com || DIE 121 "Domain 'github.com' is not reachable from this environmen!"
 	else
-		DIE 127 "ping is not executable on this system."
+		DIE 127 "ping is not executable on this system!"
 	fi
 
 	if [ -d "secret" ]; then
@@ -1061,7 +1061,7 @@ lets() {
 	if command -v PING 1>/dev/null; then
 		PING -i 0.5 -c 5 github.com || DIE 121 "Domain 'github.com' is not reachable from this environment!"
 	else
-		DIE 127 "ping is not executable on this system."
+		DIE 127 "ping is not executable on this system!"
 	fi
 
 	if [ -d "$directory" ]; then
@@ -1071,7 +1071,7 @@ lets() {
 			if command -v git 1>/dev/null; then
 				GIT_CLONE "$lets_url" ; cd lets || DIE 1 "Failed to cd into '$TASK'!"
 			else
-				 1 "git not found on this system!"
+				DIE 1 "git not found on this system!"
 			fi
 
 			if command -v python3.6 >/dev/null; then
@@ -1124,28 +1124,26 @@ hanayo() {
 
 	TASK="hanayo"
 
-	# FIXME: Add proper logic to deal with such handicap
-	# Check: https://github.com/Uniminin/Ripple-Auto-Installer/issues/99
-	DIE 1 "Unable to detect 'GOPATH' as a result '$TASK' will fail to setup!"
-
 	YPRINT "Cloning & Setting up '$TASK'!"
 
 	if command -v PING 1>/dev/null; then
 		PING -i 0.5 -c 5 github.com || DIE 121 "Domain 'github.com' is not reachable from this environment!"
 	else
-		DIE 127 "ping is not executable on this system."
+		DIE 127 "ping is not executable on this system!"
 	fi
 
 	if [ -d "$directory" ]; then
 		(
+			cd "$directory" || DIE 1 "Failed to cd into '$directory'!"
+
+			if command -v git 1>/dev/null; then
+				GIT_CLONE "$hanayo_url" ; cd hanayo || DIE 1 "Failed to cd into '$TASK'!"
+			else
+				DIE 1 "git not found on this system!"
+			fi
+
 			if command -v go 1>/dev/null; then
-				GO_CLONE "$hanayo_url"
-				if [ -d "$HOME/go/src/github.com/light-ripple/hanayo" ]; then
-					cd ~/go/src/github.com/light-ripple/hanayo || DIE 1 "Failed to cd into '$TASK'!"
 					go build ; ./hanayo
-				else
-					DIE 1 "Could not install '$TASK' because hanayo directory not found!"
-				fi
 
 				if [ -f "hanayo.conf" ]; then
 					APPEND "s/ListenTo=:45221/ListenTo=127.0.0.1:45221/g" hanayo.conf || DIE 74 \
@@ -1179,13 +1177,8 @@ hanayo() {
 					APPEND 's#ripple.moe#'"$domain"'#' templates/navbar.html
 				fi
 
-				if [ ! -d "$directory/hanayo" ]; then
-					mv -v ~/go/src/github.com/light-ripple/hanayo "$directory"
-					GPRINT "Done Setting Up '$TASK'!"
-				else
-					DIE 12 "Unexpected Error!"
-				fi
-
+				GPRINT "Done Setting Up '$TASK'!"
+				
 			else
 				DIE 1 "Could not install '$TASK' because golang wasn't found on this system!"
 			fi
@@ -1203,29 +1196,26 @@ rippleapi() {
 
 	TASK="api"
 
-	# FIXME: Add proper logic to deal with such handicap
-	# Check: https://github.com/Uniminin/Ripple-Auto-Installer/issues/99
-	DIE 1 "Unable to detect 'GOPATH' as a result '$TASK' will fail to setup!"
-
 	YPRINT "Cloning & Setting up '$TASK'!"
 
 	if command -v PING 1>/dev/null; then
 		PING -i 0.5 -c 5 github.com || DIE 121 "Domain 'github.com' is not reachable from this environment!"
 	else
-		DIE 127 "ping is not executable on this system."
+		DIE 127 "ping is not executable on this system!"
 	fi
 
 	if [ -d "$directory" ]; then
 		(
-			if command -v go 1>/dev/null; then
-				GO_CLONE "$rippleapi_url"
+			cd "$directory" || DIE 1 "Failed to cd into '$directory'!"
 
-				if [ -d "$HOME/go/src/github.com/light-ripple/api" ]; then
-					cd ~/go/src/github.com/light-ripple/api || DIE 1 "Failed to cd into '$TASK'!"
+			if command -v git 1>/dev/null; then
+				GIT_CLONE "$rippleapi_url" ; cd api || DIE 1 "Failed to cd into '$TASK'!"
+			else
+				DIE 1 "git not found on this system!"
+			fi
+
+			if command -v go 1>/dev/null; then
 					go build ; ./rippleapi
-				else
-					DIE 1 "Could not install '$TASK' because api directory not found!"
-				fi
 
 				if [ -f "api.conf" ]; then
 					APPEND -e 'H;1h;$!d;x' api.conf -e 's#DSN=#DSN='"$mysql_user"':'"$mysql_password"'@/'"$database_name"'#' || DIE 74 \
@@ -1266,7 +1256,7 @@ avatar_server() {
 	if command -v PING 1>/dev/null; then
 		PING -i 0.5 -c 5 github.com || DIE 121 "Domain 'github.com' is not reachable from this environment!"
 	else
-		DIE 127 "ping is not executable on this system."
+		DIE 127 "ping is not executable on this system!"
 	fi
 
 	if [ -d "$directory" ]; then
@@ -1303,7 +1293,7 @@ NGINX() {
 	if command -v PING 1>/dev/null; then
 		PING -i 0.5 -c 5 raw.githubusercontent.com || DIE 121 "Domain 'raw.githubusercontent.com' is not reachable from this environment!"
 	else
-		DIE 127 "ping is not executable on this system."
+		DIE 127 "ping is not executable on this system!"
 	fi
 
 	if [ -d "/etc/nginx" ]; then
@@ -1365,7 +1355,7 @@ SSL() {
 	if command -v PING 1>/dev/null; then
 		PING -i 0.5 -c 5 github.com || DIE 121 "Domain 'github.com' is not reachable from this environment!"
 	else
-		DIE 127 "ping is not executable on this system."
+		DIE 127 "ping is not executable on this system!"
 	fi
 
 	if [ -d "$directory" ]; then
@@ -1409,7 +1399,7 @@ old_frontend() {
 		PING -i 0.5 -c 5 zxq.co || DIE 121 "Domain 'zxq.co' is not reachable from this environment!"
 		PING -i 0.5 -c 5 getcomposer.org || DIE 121 "Domain 'getcomposer.org' is not reachable from this environment!"
 	else
-		DIE 127 "ping is not executable on this system."
+		DIE 127 "ping is not executable on this system!"
 	fi
 
 	YPRINT "Installing Necessary Dependencies required for '$TASK'!"
