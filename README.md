@@ -6,6 +6,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/Maintained%3F-Yes-green?style=for-the-badge">
   <img src="https://img.shields.io/travis/com/Uniminin/Ripple-Auto-Installer?style=for-the-badge">
+  <img src="https://img.shields.io/codefactor/grade/github/Uniminin/Ripple-Auto-Installer?style=for-the-badge">
   <img src="https://img.shields.io/github/license/Uniminin/Ripple-Auto-Installer?style=for-the-badge">
   <img src="https://img.shields.io/github/issues/Uniminin/Ripple-Auto-Installer?color=violet&style=for-the-badge">
   <img src="https://img.shields.io/github/stars/Uniminin/Ripple-Auto-Installer?style=for-the-badge">
@@ -61,7 +62,7 @@ This project gives you a base and foundation if you're willing to setup your own
 * Posix compatible
 
 
-### FILE STRUCTURE [![CodeFactor](https://www.codefactor.io/repository/github/uniminin/ripple-auto-installer/badge/master)](https://www.codefactor.io/repository/github/uniminin/ripple-auto-installer/overview/master)
+### FILE STRUCTURE
 ```
 .
 ├── .github
@@ -122,7 +123,7 @@ Make sure you configure cloudflare properly.
 </p>
 
 
-### RUNNING THE SCRIPT [![Build Status](https://travis-ci.com/Uniminin/Ripple-Auto-Installer.svg?branch=master)](https://travis-ci.com/Uniminin/Ripple-Auto-Installer)
+### RUNNING THE SCRIPT
 With Git
 ```bash
 # Clone the Repository
