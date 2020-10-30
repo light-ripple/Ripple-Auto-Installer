@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|              Last Updated on Friday, October 30, 2020 at 02:25 PM (GMT+6)               |
+|              Last Updated on Friday, October 30, 2020 at 03:05 PM (GMT+6)               |
 -------------------------------------------------------------------------------------------
 '
 
@@ -92,7 +92,7 @@
 ###!  - [ ] s6
 ###! System Detection:
 ###!  TODO:
-###!  	- [] IMPLEMENT
+###!   - [] IMPLEMENT
 
 
 # TODO: Detect Operating Operating-System/Kernel and pull proper packages.
@@ -107,7 +107,7 @@
 
 
 # Version #
-UPSTREAM_VERSION="1.0-rc1"
+UPSTREAM_VERSION="1.0-rc8"
 
 
 # Repositories
@@ -1143,7 +1143,7 @@ hanayo() {
 			fi
 
 			if command -v go 1>/dev/null; then
-					go build ; ./hanayo
+				go build ; ./hanayo
 
 				if [ -f "hanayo.conf" ]; then
 					APPEND "s/ListenTo=:45221/ListenTo=127.0.0.1:45221/g" hanayo.conf || DIE 74 \
@@ -1215,7 +1215,7 @@ rippleapi() {
 			fi
 
 			if command -v go 1>/dev/null; then
-					go build ; ./rippleapi
+				go build ; ./rippleapi
 
 				if [ -f "api.conf" ]; then
 					APPEND -e 'H;1h;$!d;x' api.conf -e 's#DSN=#DSN='"$mysql_user"':'"$mysql_password"'@/'"$database_name"'#' || DIE 74 \
@@ -1226,14 +1226,11 @@ rippleapi() {
 
 					APPEND "s:^OsuAPIKey=.*$:OsuAPIKey=$cikey:g" api.conf || DIE 74 \
 						"Failed to Setup Config file! [$TASK/api.conf -> cikey]"
+				else
+					DIE 1 "Failed To Configure '$TASK'!"
 				fi
 
-				if [ ! -d "$directory/api" ]; then
-					mv -v ~/go/src/github.com/light-ripple/api "$directory"
-					GPRINT "Done setting up '$TASK'!"
-				else
-					DIE 12 "Unexpected Error!"
-				fi
+				GPRINT "Done setting up '$TASK'!"
 
 			else
 				DIE 1 "Could not install '$TASK' because golang wasn't found on this system!"
@@ -1420,14 +1417,14 @@ old_frontend() {
 			php composer-setup.php --install-dir=/usr/local/bin --filename=composer
 			
 			;;
-			  
+			
 		"pacman")
 			"$package_manager_frontend" --noconfirm -S php composer
 			
 			;;
 			
 		"emerge")
-	  		"$package_manager_frontend" -q dev-lang/php dev-lang/composer
+			"$package_manager_frontend" -q dev-lang/php dev-lang/composer
 			
 			;;
 			
@@ -1453,7 +1450,7 @@ old_frontend() {
 			DIE 61 "Could not create directory '/var/www'!"
 		fi
 		
-	(	
+	(
 		
 		if [ -d "/var/www" ]; then
 			cd /var/www || DIE 1 "Could not cd into '/var/www/'!"
@@ -1526,7 +1523,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				SSL
 				EXIT 0 ;;
 
-			"")	
+			"")
 				GPRINT "[Dependencies MODE]"
 				checkRoot
 				DetectPackageManager
