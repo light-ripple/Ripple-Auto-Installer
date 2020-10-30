@@ -8,8 +8,6 @@ on:
   pull_request:
     types: [synchronize, opened, reopened, ready_for_review]
     paths:
-    - '**.sh'
-    - '**.bash'
     - "Main/ripple.sh"
 
 jobs:
@@ -55,17 +53,17 @@ jobs:
           else
             exit 255
           fi
-      - name: Pulling git dir..
-        uses: actions/checkout@v2
-      - name: Processing files..
+
+      - name: Checking for execution error(s)..
         # Make sure that bash is used
         shell: bash
         run: |
-          cd "$GITHUB_WORKSPACE"
-
-          # Process files
-          ## NOTICE: Do not use for loop to avoid pitfall https://mywiki.wooledge.org/BashPitfalls#pf1
-          git --git-dir="$GITHUB_WORKSPACE/.git" ls-files -z -- '*.bash' tools/dockerfreeze | while IFS= read -rd '' file; do
-              printf 'linting bash file %s\n' "$file"
-              shellcheck --external-sources --shell=bash "$file"
-          done
+          cd "$GITHUB_WORKSPACE"/Main
+          ./ripple.sh -h | exit 1
+          
+       - name: Checking for shellcheck error(s)..
+        # Make sure that bash is used
+        shell: bash
+        run: |
+          cd "$GITHUB_WORKSPACE"/Main
+          shellcheck --external-sources --shell=bash ripple.sh | exit 1
