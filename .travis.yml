@@ -61,7 +61,7 @@ jobs:
           cd "$GITHUB_WORKSPACE"/Main
           ./ripple.sh -h | exit 1
           
-       - name: Checking for shellcheck error(s)..
+      - name: Checking for shellcheck error(s)..
         # Make sure that bash is used
         shell: bash
         run: |
