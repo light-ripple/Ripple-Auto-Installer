@@ -5,7 +5,8 @@ on:
   pull_request:
     types: [ready_for_review]
     paths:
-    - '**.sh'
+    - "**.sh"
+    - "Main/ripple.sh"
 
 jobs:
   # Linting
