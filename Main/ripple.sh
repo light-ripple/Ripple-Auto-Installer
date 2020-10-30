@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|              Last Updated on Friday, October 30, 2020 at 02:55 PM (GMT+6)               |
+|              Last Updated on Friday, October 30, 2020 at 03:00 PM (GMT+6)               |
 -------------------------------------------------------------------------------------------
 '
 
@@ -107,7 +107,7 @@
 
 
 # Version #
-UPSTREAM_VERSION="1.0-rc3"
+UPSTREAM_VERSION="1.0-rc6"
 
 
 # Repositories
@@ -1417,7 +1417,7 @@ old_frontend() {
 			php composer-setup.php --install-dir=/usr/local/bin --filename=composer
 			
 			;;
-			  
+			
 		"pacman")
 			"$package_manager_frontend" --noconfirm -S php composer
 			
@@ -1450,7 +1450,7 @@ old_frontend() {
 			DIE 61 "Could not create directory '/var/www'!"
 		fi
 		
-	(	
+	(
 		
 		if [ -d "/var/www" ]; then
 			cd /var/www || DIE 1 "Could not cd into '/var/www/'!"
@@ -1523,7 +1523,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				SSL
 				EXIT 0 ;;
 
-			"")	
+			"")
 				GPRINT "[Dependencies MODE]"
 				checkRoot
 				DetectPackageManager
