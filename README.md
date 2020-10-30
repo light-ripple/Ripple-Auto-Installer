@@ -66,35 +66,35 @@ This project gives you a base and foundation if you're willing to setup your own
 ### FILE STRUCTURE
 ```
 .
-├── .github
-│  └── workflows
-│     ├── ripple-test.yml
-│     └── shell.yml
-├── .gitpod.yml
-├── .travis.yml
-├── Database files
-│  └── ripple.sql
-├── LICENSE
-├── Main
-│  ├── gencert.sh
-│  ├── openssl.cnf
-│  ├── ripple.conf
-│  ├── ripple.sh
-│  └── ripple.sha1
-├── Miscellaneous
-│  ├── certificate.md
-│  ├── cloudflare.png
-│  ├── configs.md
-│  ├── connect.md
-│  ├── inbound-rules.png
-│  ├── old_ripple.svg
-│  ├── ripple.svg
-│  └── start.md
-├── Nginx
-│  ├── N1.conf
-│  ├── N2.conf
-│  └── old-frontend.conf
-└── README.md
+├──  .deepsource.toml
+├──  .github
+│  └──  workflows
+│     └──  shell.yml
+├──  .gitpod.yml
+├──  .travis.yml
+├──  Database files
+│  └──  ripple.sql
+├──  LICENSE
+├──  Main
+│  ├──  gencert.sh
+│  ├──  openssl.cnf
+│  ├──  ripple.conf
+│  ├──  ripple.sh
+│  └──  ripple.sha1
+├──  Miscellaneous
+│  ├──  certificate.md
+│  ├──  cloudflare.png
+│  ├──  configs.md
+│  ├──  connect.md
+│  ├──  inbound-rules.png
+│  ├──  old_ripple.svg
+│  ├──  ripple.svg
+│  └──  start.md
+├──  Nginx
+│  ├──  N1.conf
+│  ├──  N2.conf
+│  └──  old-frontend.conf
+└──  README.md
 ```
 
 
