@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|             Last Updated on Saturday, October 31, 2020 at 03:40 PM (GMT+6)              |
+|             Last Updated on Saturday, October 31, 2020 at 04:00 PM (GMT+6)              |
 -------------------------------------------------------------------------------------------
 '
 
@@ -107,7 +107,7 @@
 
 
 # Version #
-UPSTREAM_VERSION="1.0-rc11"
+UPSTREAM_VERSION="1.0-rc12"
 
 # Upstream File #
 # ripple.sh
@@ -159,6 +159,7 @@ alias WGET="wget -O"
 alias CURL="curl -sS"
 alias GIT_CLONE="git clone"
 alias PING="ping"
+alias EXPORT="export"
 alias CREATE_DIRECTORY="mkdir -vp"
 alias CREATE_FILE="touch"
 alias REMOVE="rm -rfv"
@@ -296,13 +297,13 @@ checkRoot() {
 nproc_detector() {
 
 	case "$(nproc)" in
-		[1-9] | [1-9][0-9] | [1-9][0-9][0-9] | [1-9][0-9][0-9][0-9]) procNum="$(nproc)" export procNum EXIT ;;
+		[1-9] | [1-9][0-9] | [1-9][0-9][0-9] | [1-9][0-9][0-9][0-9]) procNum="$(nproc)" EXPORT procNum EXIT ;;
 		*)
 			case "$LANG" in
 				en-*|*) DIE 5 "Command 'nproc' does not return an expected value on this system, setting the processor count on '1' which will negatively affect performance on systems with more then one thread"
 			esac
 
-			export procNum="1"
+			EXPORT procNum="1"
 	esac
 
 }
@@ -350,7 +351,7 @@ INPUTS() {
 
 		if [ -d "$master_dir" ]; then
 			"$CHMOD" -R a+rwx "$master_dir" || DIE 1 "Unable to change permission of the file '$master_dir'!"
-			export directory="$master_dir"
+			EXPORT directory="$master_dir"
 		else
 			DIE 1 "Failed to create Directory '$master_dir'!"
 		fi
@@ -368,7 +369,7 @@ INPUTS() {
 	done
 
 	if [ "$confirmation2" = "y" ]; then
-		export domain
+		EXPORT domain
 	else
 		DIE 1 "Domain Not specified!"
 	fi
@@ -385,7 +386,7 @@ INPUTS() {
 	done
 
 	if [ "$confirmation3" = "y" ]; then
-		export cikey
+		EXPORT cikey
 	else
 		DIE 1 "cikey Not specified!"
 	fi
@@ -404,7 +405,7 @@ INPUTS() {
 	done
 
 	if [ "$confirmation4" = "y" ]; then
-		export api
+		EXPORT api
 	else
 		DIE 1 "OSU!API Key Not specified!"
 	fi
@@ -421,7 +422,7 @@ INPUTS() {
 	done
 
 	if [ "$confirmation5" = "y" ]; then
-		export api_secret
+		EXPORT api_secret
 	else
 		DIE 1 "API Secret Not specified!"
 	fi
@@ -438,7 +439,7 @@ INPUTS() {
 	done
 
 	if [ "$confirmation6" = "y" ]; then
-		export mysql_user
+		EXPORT mysql_user
 	else
 		DIE 1 "MYSQL Username Not specified!"
 	fi
@@ -455,7 +456,7 @@ INPUTS() {
 	done
 
 	if [ "$confirmation7" = "y" ]; then
-		export mysql_password
+		EXPORT mysql_password
 	else
 		DIE 1 "MYSQL Password Not specified!"
 	fi
@@ -472,7 +473,7 @@ INPUTS() {
 	done
 
 	if [ "$confirmation8" = "y" ]; then
-		export database_name
+		EXPORT database_name
 	else
 		DIE 1 "MYSQL Database Name Not specified!"
 	fi
@@ -504,28 +505,28 @@ DetectPackageManager() {
 	case "$frontend" in
 		"apt")
 			GPRINT "Found Package Manager: 'APT [ $frontend ]'"
-			export package_manager_frontend="$frontend"
+			EXPORT package_manager_frontend="$frontend"
 			YPRINT "Using Package Manager Frontend: '$package_manager_frontend'."
 			
 			;;
 
 		"pacman")
 			GPRINT "Found Package Manager: 'Pacman [ $frontend ]'"
-			export package_manager_frontend="$frontend"
+			EXPORT package_manager_frontend="$frontend"
 			YPRINT "Using Package Manager Frontend: '$package_manager_frontend'."
 
 			;;
 
 		"emerge")
 			GPRINT "Found Package Manager: 'Portage [ $frontend ]'"
-			export package_manager_frontend="emerge"
+			EXPORT package_manager_frontend="emerge"
 			YPRINT "Using Package Manager Frontend: 'Portage'."
 
 			;;
 
 		"cave")
 			GPRINT "Found Package Manager: 'Paludis [ $frontend ]'"
-			export package_manager_frontend="cave"
+			EXPORT package_manager_frontend="cave"
 			YPRINT "Using Package Manager Frontend: 'Paludis'."
 
 			;;
@@ -640,7 +641,15 @@ python3_5() {
 				else
 					DIE 1 "Failed to extract 'Python-3.5.9.tar.xz'!"
 				fi
-				./configure --enable-optimizations --with-ensurepip=install ; make --jobs "$procNum" build_all ; make install
+
+				if [ -f "Makefile" ]; then
+					./configure --enable-optimizations --with-ensurepip=install
+					make --jobs "$procNum" build_all
+					make install
+				else
+					DIE 1 "Makefile not found. Cannot build/install python3.5 from source!"
+				fi
+
 				if command -v python3.5 -m pip >/dev/null; then
 					python3.5 -m pip install --upgrade pip
 				else
@@ -692,7 +701,15 @@ python3_6() {
 			else
 				DIE 1 "Failed to extract 'Python-3.6.8.tar.xz'!"
 			fi
-			./configure --enable-optimizations --with-ensurepip=install ; make --jobs "$procNum" build_all ; make install
+
+			if [ -f "Makefile" ]; then
+				./configure --enable-optimizations --with-ensurepip=install
+				make --jobs "$procNum" build_all
+				make install
+			else
+				DIE 1 "Makefile not found. Cannot build/install python3.6 from source!"
+			fi
+
 			if command -v python3.6 -m pip >/dev/null; then
 				python3.6 -m pip install --upgrade pip
 			else
@@ -929,7 +946,7 @@ mysql_database() {
 
 
 # For Interacting with Database online.
-phpmyadmin(){
+phpmyadmin() {
 
 	TASK="phpmyadmin"
 
@@ -1309,11 +1326,13 @@ NGINX() {
 		
 		(
 			cd /etc/nginx || DIE 1 "Failed to cd into '/etc/nginx'!"
+
 			if [ -f "nginx.conf" ]; then
 				REMOVE nginx.conf
 			fi
+
 			WGET "nginx.conf" "$nginx_config1_url" || DIE 11 "Could not download file 'nginx.conf'!"
-			sed -i 's#include /root/ripple/nginx/*.conf\*#include '"$directory"'/nginx/*.conf#' /etc/nginx/nginx.conf || DIE 1 "Failed to Setup Config file!"
+			APPEND 's#include /root/ripple/nginx/*.conf\*#include '"$directory"'/nginx/*.conf#' /etc/nginx/nginx.conf || DIE 1 "Failed to Setup Config file!"
 		)
 	else
 		DIE 1 "Directory '/etc/nginx' does not exist!"
@@ -1325,11 +1344,13 @@ NGINX() {
 			CREATE_DIRECTORY nginx ; cd nginx || DIE 1 "Failed to cd into 'nginx'!"
 
 			WGET "nginx.conf" "$nginx_config2_url" || DIE 11 "Could not download file 'nginx.conf'!"
+
 			if [ -f "nginx.conf" ]; then
 				APPEND 's#DOMAIN#'"$domain"'#g; s#DIRECTORY#'"$directory"'#g' nginx.conf || DIE 1 "Failed to Setup Config file!"
 			fi
 
 			WGET "old-frontend.conf" "$old_frontend_config_url" || DIE 11 "Could not download file 'old-frontend.conf'!"
+
 			if [ -f "old-frontend.conf" ]; then
 				APPEND 's#DOMAIN#'"$domain"'#g; s#DIRECTORY#'"$directory"'#g' old-frontend.conf || DIE 1 "Failed to Setup Config file!"
 			fi
