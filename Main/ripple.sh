@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|             Last Updated on Saturday, October 31, 2020 at 03:30 PM (GMT+6)              |
+|             Last Updated on Saturday, October 31, 2020 at 03:40 PM (GMT+6)              |
 -------------------------------------------------------------------------------------------
 '
 
@@ -107,7 +107,14 @@
 
 
 # Version #
-UPSTREAM_VERSION="1.0-rc10"
+UPSTREAM_VERSION="1.0-rc11"
+
+# Upstream File #
+# ripple.sh
+RIPPLE_SH="https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/ripple.sh"
+
+# ripple.sha1 (checksum)
+RIPPLE_SHA1="https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/ripple.sha1"
 
 
 # Repositories
@@ -149,12 +156,14 @@ alias BPRINT="printf '\\033[0;34m%s'"		 # Blue
 alias SUBMODULE="git submodule init ; git submodule update"
 alias PRINT="printf '%s\n'"
 alias WGET="wget -O"
+alias CURL="curl -sS"
 alias GIT_CLONE="git clone"
 alias PING="ping"
 alias CREATE_DIRECTORY="mkdir -vp"
 alias CREATE_FILE="touch"
 alias REMOVE="rm -rfv"
 alias READ="read -r"
+alias CHMOD="chmod"
 alias APPEND="sed -Ei"
 alias EXIT="exit"
 
@@ -204,7 +213,7 @@ die() {
 	fi
 	
 	if [ -f "$log_file" ]; then
-		printf "[$Date]\\nFATAL: %s\\n\\n" "$3 $1" >> "$log_file" || EXIT 4
+		PRINT "[$Date]\\nFATAL: %s\\n\\n" "$3 $1" >> "$log_file" || EXIT 4
 		GPRINT "Successfully Written into '$log_file'"
 	fi
 	
@@ -232,7 +241,7 @@ alias DIE="die \"[ line \$LINENO\"\\ ]"
 # CHECK FILE INTEGRITY
 if [ ! -f "ripple.sha1" ]; then
 	RPRINT "file integrity data not found" ; GPRINT "Fetching the latest file integrity data"
-	wget -O "ripple.sha1" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/ripple.sha1
+	wget -O "ripple.sha1" "$RIPPLE_SHA1"
 	if [ ! -f "ripple.sha1" ]; then
 		RPRINT "Failed to fetch the latest file integrity data" ; EXIT 1
 	fi
@@ -242,7 +251,7 @@ if [ -f "ripple.sha1" ]; then
 	sha1sum -c ripple.sha1 || match="false"
 	if [ "$match" = "false" ]; then
 		GPRINT "Fetching the latest script, please try again..."
-		wget -O "ripple.sh" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/ripple.sh
+		wget -O "ripple.sh" "$RIPPLE_SH"
 		EXIT 1
 	fi
 else
@@ -340,7 +349,7 @@ INPUTS() {
 		fi
 
 		if [ -d "$master_dir" ]; then
-			chmod -R a+rwx "$master_dir" || DIE 1 "Unable to change permission of the file '$master_dir'!"
+			"$CHMOD" -R a+rwx "$master_dir" || DIE 1 "Unable to change permission of the file '$master_dir'!"
 			export directory="$master_dir"
 		else
 			DIE 1 "Failed to create Directory '$master_dir'!"
@@ -1107,7 +1116,7 @@ lets() {
 				(
 					cd pp/oppai-ng || DIE 1 "Failed to cd into 'pp/oppai-ng'!"
 					if [ -f "build" ]; then
-						chmod +x build ; ./build
+						"$CHMOD" +x build ; ./build
 					fi
 				)
 			fi
@@ -1411,7 +1420,7 @@ old_frontend() {
 			"$package_manager_frontend" update
 			"$package_manager_frontend" install curl php7.2 php7.2-cli php7.2-common php7.2-json \
 			php7.2-opcache php7.2-mysql php7.2-zip php7.2-fpm php7.2-mbstring -y
-			curl -sS https://getcomposer.org/installer -o composer-setup.php
+			"$CURL" https://getcomposer.org/installer -o composer-setup.php
 			php -r "if (hash_file('SHA384', 'composer-setup.php') === '$HASH') \
 			{ PRINT 'Installer verified'; } else { PRINT 'Installer corrupt'; unlink('composer-setup.php'); } PRINT PHP_EOL;"
 			php composer-setup.php --install-dir=/usr/local/bin --filename=composer
@@ -1464,7 +1473,7 @@ old_frontend() {
 
 		if [ -d "osu.ppy.sh" ]; then
 			cd osu.ppy.sh || DIE 1 "Failed to cd into 'osu.ppy.sh'!"
-			curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+			"$CURL" https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 			(
 				cd inc || DIE 1 "Failed to cd into 'inc'!"
 				cp -v config.sample.php config.php
