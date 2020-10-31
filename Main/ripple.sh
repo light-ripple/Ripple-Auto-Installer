@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|             Last Updated on Saturday, October 31, 2020 at 04:00 PM (GMT+6)              |
+|             Last Updated on Saturday, October 31, 2020 at 04:04 PM (GMT+6)              |
 -------------------------------------------------------------------------------------------
 '
 
@@ -90,24 +90,23 @@
 ###!  - [ ] SysV-init
 ###!  - [ ] runit
 ###!  - [ ] s6
-###! System Detection:
 ###!  TODO:
-###!   - [] IMPLEMENT
+###!   - [] System Detection
 
 
-# TODO: Detect Operating Operating-System/Kernel and pull proper packages.
+# [ WARNING ]: Script Untested. Use at your own Risk!
 
-# WARNING: Script Untested. Use at your own risk.
 
-# Maintainer info
-# UPSTREAM="https://github.com/Uniminin/Ripple-Auto-Installer"
-# MAINTAINER_EMAIL="uniminin@zoho.com"
-# MAINTAINER_NICKNAME="Uniminin"
-# MAINTAINER_NAME="uniminin"
-
+: '
+> Maintainer info <
+* UPSTREAM="https://github.com/Uniminin/Ripple-Auto-Installer"
+* MAINTAINER_EMAIL="uniminin@zoho.com"
+* MAINTAINER_NICKNAME="Uniminin"
+* MAINTAINER_NAME="uniminin"
+'
 
 # Version #
-UPSTREAM_VERSION="1.0-rc12"
+UPSTREAM_VERSION="1.0-rc13"
 
 # Upstream File #
 # ripple.sh
@@ -483,7 +482,6 @@ INPUTS() {
 }
 
 
-# TODO: Add more support for other distros and package managers.
 # Supports: apt, pacman, portage and paludis.
 DetectPackageManager() {
 
