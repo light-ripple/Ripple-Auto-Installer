@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|              Last Updated on Friday, October 30, 2020 at 03:05 PM (GMT+6)               |
+|             Last Updated on Saturday, October 31, 2020 at 04:04 PM (GMT+6)              |
 -------------------------------------------------------------------------------------------
 '
 
@@ -90,24 +90,30 @@
 ###!  - [ ] SysV-init
 ###!  - [ ] runit
 ###!  - [ ] s6
-###! System Detection:
 ###!  TODO:
-###!   - [] IMPLEMENT
+###!   - [] System Detection
 
 
-# TODO: Detect Operating Operating-System/Kernel and pull proper packages.
+# [ WARNING ]: Script Untested. Use at your own Risk!
 
-# WARNING: Script Untested. Use at your own risk.
 
-# Maintainer info
-# UPSTREAM="https://github.com/Uniminin/Ripple-Auto-Installer"
-# MAINTAINER_EMAIL="uniminin@zoho.com"
-# MAINTAINER_NICKNAME="Uniminin"
-# MAINTAINER_NAME="uniminin"
-
+: '
+> Maintainer info <
+* UPSTREAM="https://github.com/Uniminin/Ripple-Auto-Installer"
+* MAINTAINER_EMAIL="uniminin@zoho.com"
+* MAINTAINER_NICKNAME="Uniminin"
+* MAINTAINER_NAME="uniminin"
+'
 
 # Version #
-UPSTREAM_VERSION="1.0-rc8"
+UPSTREAM_VERSION="1.0-rc13"
+
+# Upstream File #
+# ripple.sh
+RIPPLE_SH="https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/ripple.sh"
+
+# ripple.sha1 (checksum)
+RIPPLE_SHA1="https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/ripple.sha1"
 
 
 # Repositories
@@ -149,12 +155,15 @@ alias BPRINT="printf '\\033[0;34m%s'"		 # Blue
 alias SUBMODULE="git submodule init ; git submodule update"
 alias PRINT="printf '%s\n'"
 alias WGET="wget -O"
+alias CURL="curl -sS"
 alias GIT_CLONE="git clone"
 alias PING="ping"
+alias EXPORT="export"
 alias CREATE_DIRECTORY="mkdir -vp"
 alias CREATE_FILE="touch"
 alias REMOVE="rm -rfv"
 alias READ="read -r"
+alias CHMOD="chmod"
 alias APPEND="sed -Ei"
 alias EXIT="exit"
 
@@ -204,7 +213,7 @@ die() {
 	fi
 	
 	if [ -f "$log_file" ]; then
-		printf "[$Date]\\nFATAL: %s\\n\\n" "$3 $1" >> "$log_file" || EXIT 4
+		PRINT "[$Date]\\nFATAL: %s\\n\\n" "$3 $1" >> "$log_file" || EXIT 4
 		GPRINT "Successfully Written into '$log_file'"
 	fi
 	
@@ -232,7 +241,7 @@ alias DIE="die \"[ line \$LINENO\"\\ ]"
 # CHECK FILE INTEGRITY
 if [ ! -f "ripple.sha1" ]; then
 	RPRINT "file integrity data not found" ; GPRINT "Fetching the latest file integrity data"
-	wget -O "ripple.sha1" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/ripple.sha1
+	wget -O "ripple.sha1" "$RIPPLE_SHA1"
 	if [ ! -f "ripple.sha1" ]; then
 		RPRINT "Failed to fetch the latest file integrity data" ; EXIT 1
 	fi
@@ -242,7 +251,7 @@ if [ -f "ripple.sha1" ]; then
 	sha1sum -c ripple.sha1 || match="false"
 	if [ "$match" = "false" ]; then
 		GPRINT "Fetching the latest script, please try again..."
-		wget -O "ripple.sh" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/ripple.sh
+		wget -O "ripple.sh" "$RIPPLE_SH"
 		EXIT 1
 	fi
 else
@@ -287,13 +296,13 @@ checkRoot() {
 nproc_detector() {
 
 	case "$(nproc)" in
-		[1-9] | [1-9][0-9] | [1-9][0-9][0-9] | [1-9][0-9][0-9][0-9]) procNum="$(nproc)" export procNum EXIT ;;
+		[1-9] | [1-9][0-9] | [1-9][0-9][0-9] | [1-9][0-9][0-9][0-9]) procNum="$(nproc)" EXPORT procNum EXIT ;;
 		*)
 			case "$LANG" in
 				en-*|*) DIE 5 "Command 'nproc' does not return an expected value on this system, setting the processor count on '1' which will negatively affect performance on systems with more then one thread"
 			esac
 
-			export procNum="1"
+			EXPORT procNum="1"
 	esac
 
 }
@@ -340,8 +349,8 @@ INPUTS() {
 		fi
 
 		if [ -d "$master_dir" ]; then
-			chmod -R a+rwx "$master_dir" || DIE 1 "Unable to change permission of the file '$master_dir'!"
-			export directory="$master_dir"
+			"$CHMOD" -R a+rwx "$master_dir" || DIE 1 "Unable to change permission of the file '$master_dir'!"
+			EXPORT directory="$master_dir"
 		else
 			DIE 1 "Failed to create Directory '$master_dir'!"
 		fi
@@ -359,7 +368,7 @@ INPUTS() {
 	done
 
 	if [ "$confirmation2" = "y" ]; then
-		export domain
+		EXPORT domain
 	else
 		DIE 1 "Domain Not specified!"
 	fi
@@ -376,7 +385,7 @@ INPUTS() {
 	done
 
 	if [ "$confirmation3" = "y" ]; then
-		export cikey
+		EXPORT cikey
 	else
 		DIE 1 "cikey Not specified!"
 	fi
@@ -395,7 +404,7 @@ INPUTS() {
 	done
 
 	if [ "$confirmation4" = "y" ]; then
-		export api
+		EXPORT api
 	else
 		DIE 1 "OSU!API Key Not specified!"
 	fi
@@ -412,7 +421,7 @@ INPUTS() {
 	done
 
 	if [ "$confirmation5" = "y" ]; then
-		export api_secret
+		EXPORT api_secret
 	else
 		DIE 1 "API Secret Not specified!"
 	fi
@@ -429,7 +438,7 @@ INPUTS() {
 	done
 
 	if [ "$confirmation6" = "y" ]; then
-		export mysql_user
+		EXPORT mysql_user
 	else
 		DIE 1 "MYSQL Username Not specified!"
 	fi
@@ -446,7 +455,7 @@ INPUTS() {
 	done
 
 	if [ "$confirmation7" = "y" ]; then
-		export mysql_password
+		EXPORT mysql_password
 	else
 		DIE 1 "MYSQL Password Not specified!"
 	fi
@@ -463,7 +472,7 @@ INPUTS() {
 	done
 
 	if [ "$confirmation8" = "y" ]; then
-		export database_name
+		EXPORT database_name
 	else
 		DIE 1 "MYSQL Database Name Not specified!"
 	fi
@@ -473,7 +482,6 @@ INPUTS() {
 }
 
 
-# TODO: Add more support for other distros and package managers.
 # Supports: apt, pacman, portage and paludis.
 DetectPackageManager() {
 
@@ -495,28 +503,28 @@ DetectPackageManager() {
 	case "$frontend" in
 		"apt")
 			GPRINT "Found Package Manager: 'APT [ $frontend ]'"
-			export package_manager_frontend="$frontend"
+			EXPORT package_manager_frontend="$frontend"
 			YPRINT "Using Package Manager Frontend: '$package_manager_frontend'."
 			
 			;;
 
 		"pacman")
 			GPRINT "Found Package Manager: 'Pacman [ $frontend ]'"
-			export package_manager_frontend="$frontend"
+			EXPORT package_manager_frontend="$frontend"
 			YPRINT "Using Package Manager Frontend: '$package_manager_frontend'."
 
 			;;
 
 		"emerge")
 			GPRINT "Found Package Manager: 'Portage [ $frontend ]'"
-			export package_manager_frontend="emerge"
+			EXPORT package_manager_frontend="emerge"
 			YPRINT "Using Package Manager Frontend: 'Portage'."
 
 			;;
 
 		"cave")
 			GPRINT "Found Package Manager: 'Paludis [ $frontend ]'"
-			export package_manager_frontend="cave"
+			EXPORT package_manager_frontend="cave"
 			YPRINT "Using Package Manager Frontend: 'Paludis'."
 
 			;;
@@ -631,7 +639,15 @@ python3_5() {
 				else
 					DIE 1 "Failed to extract 'Python-3.5.9.tar.xz'!"
 				fi
-				./configure --enable-optimizations --with-ensurepip=install ; make --jobs "$procNum" build_all ; make install
+
+				if [ -f "Makefile" ]; then
+					./configure --enable-optimizations --with-ensurepip=install
+					make --jobs "$procNum" build_all
+					make install
+				else
+					DIE 1 "Makefile not found. Cannot build/install python3.5 from source!"
+				fi
+
 				if command -v python3.5 -m pip >/dev/null; then
 					python3.5 -m pip install --upgrade pip
 				else
@@ -683,7 +699,15 @@ python3_6() {
 			else
 				DIE 1 "Failed to extract 'Python-3.6.8.tar.xz'!"
 			fi
-			./configure --enable-optimizations --with-ensurepip=install ; make --jobs "$procNum" build_all ; make install
+
+			if [ -f "Makefile" ]; then
+				./configure --enable-optimizations --with-ensurepip=install
+				make --jobs "$procNum" build_all
+				make install
+			else
+				DIE 1 "Makefile not found. Cannot build/install python3.6 from source!"
+			fi
+
 			if command -v python3.6 -m pip >/dev/null; then
 				python3.6 -m pip install --upgrade pip
 			else
@@ -920,7 +944,7 @@ mysql_database() {
 
 
 # For Interacting with Database online.
-phpmyadmin(){
+phpmyadmin() {
 
 	TASK="phpmyadmin"
 
@@ -1107,7 +1131,7 @@ lets() {
 				(
 					cd pp/oppai-ng || DIE 1 "Failed to cd into 'pp/oppai-ng'!"
 					if [ -f "build" ]; then
-						chmod +x build ; ./build
+						"$CHMOD" +x build ; ./build
 					fi
 				)
 			fi
@@ -1300,11 +1324,13 @@ NGINX() {
 		
 		(
 			cd /etc/nginx || DIE 1 "Failed to cd into '/etc/nginx'!"
+
 			if [ -f "nginx.conf" ]; then
 				REMOVE nginx.conf
 			fi
+
 			WGET "nginx.conf" "$nginx_config1_url" || DIE 11 "Could not download file 'nginx.conf'!"
-			sed -i 's#include /root/ripple/nginx/*.conf\*#include '"$directory"'/nginx/*.conf#' /etc/nginx/nginx.conf || DIE 1 "Failed to Setup Config file!"
+			APPEND 's#include /root/ripple/nginx/*.conf\*#include '"$directory"'/nginx/*.conf#' /etc/nginx/nginx.conf || DIE 1 "Failed to Setup Config file!"
 		)
 	else
 		DIE 1 "Directory '/etc/nginx' does not exist!"
@@ -1316,11 +1342,13 @@ NGINX() {
 			CREATE_DIRECTORY nginx ; cd nginx || DIE 1 "Failed to cd into 'nginx'!"
 
 			WGET "nginx.conf" "$nginx_config2_url" || DIE 11 "Could not download file 'nginx.conf'!"
+
 			if [ -f "nginx.conf" ]; then
 				APPEND 's#DOMAIN#'"$domain"'#g; s#DIRECTORY#'"$directory"'#g' nginx.conf || DIE 1 "Failed to Setup Config file!"
 			fi
 
 			WGET "old-frontend.conf" "$old_frontend_config_url" || DIE 11 "Could not download file 'old-frontend.conf'!"
+
 			if [ -f "old-frontend.conf" ]; then
 				APPEND 's#DOMAIN#'"$domain"'#g; s#DIRECTORY#'"$directory"'#g' old-frontend.conf || DIE 1 "Failed to Setup Config file!"
 			fi
@@ -1409,9 +1437,9 @@ old_frontend() {
 			WGET /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
 			PRINT "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list
 			"$package_manager_frontend" update
-			"$package_manager_frontend" install php7.2 php7.2-cli php7.2-common php7.2-json \
+			"$package_manager_frontend" install curl php7.2 php7.2-cli php7.2-common php7.2-json \
 			php7.2-opcache php7.2-mysql php7.2-zip php7.2-fpm php7.2-mbstring -y
-			curl -sS https://getcomposer.org/installer -o composer-setup.php
+			"$CURL" https://getcomposer.org/installer -o composer-setup.php
 			php -r "if (hash_file('SHA384', 'composer-setup.php') === '$HASH') \
 			{ PRINT 'Installer verified'; } else { PRINT 'Installer corrupt'; unlink('composer-setup.php'); } PRINT PHP_EOL;"
 			php composer-setup.php --install-dir=/usr/local/bin --filename=composer
@@ -1446,8 +1474,6 @@ old_frontend() {
 
 		if [ ! -d "/var/www" ]; then
 			CREATE_DIRECTORY /var/www
-		else
-			DIE 61 "Could not create directory '/var/www'!"
 		fi
 		
 	(
@@ -1466,7 +1492,7 @@ old_frontend() {
 
 		if [ -d "osu.ppy.sh" ]; then
 			cd osu.ppy.sh || DIE 1 "Failed to cd into 'osu.ppy.sh'!"
-			curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+			"$CURL" https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 			(
 				cd inc || DIE 1 "Failed to cd into 'inc'!"
 				cp -v config.sample.php config.php
