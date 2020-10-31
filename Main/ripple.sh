@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|              Last Updated on Friday, October 30, 2020 at 03:05 PM (GMT+6)               |
+|             Last Updated on Saturday, October 31, 2020 at 03:30 PM (GMT+6)              |
 -------------------------------------------------------------------------------------------
 '
 
@@ -107,7 +107,7 @@
 
 
 # Version #
-UPSTREAM_VERSION="1.0-rc8"
+UPSTREAM_VERSION="1.0-rc10"
 
 
 # Repositories
@@ -1409,7 +1409,7 @@ old_frontend() {
 			WGET /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
 			PRINT "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list
 			"$package_manager_frontend" update
-			"$package_manager_frontend" install php7.2 php7.2-cli php7.2-common php7.2-json \
+			"$package_manager_frontend" install curl php7.2 php7.2-cli php7.2-common php7.2-json \
 			php7.2-opcache php7.2-mysql php7.2-zip php7.2-fpm php7.2-mbstring -y
 			curl -sS https://getcomposer.org/installer -o composer-setup.php
 			php -r "if (hash_file('SHA384', 'composer-setup.php') === '$HASH') \
@@ -1446,8 +1446,6 @@ old_frontend() {
 
 		if [ ! -d "/var/www" ]; then
 			CREATE_DIRECTORY /var/www
-		else
-			DIE 61 "Could not create directory '/var/www'!"
 		fi
 		
 	(
