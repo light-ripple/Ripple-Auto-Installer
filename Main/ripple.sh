@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|             Last Updated on Saturday, November 1, 2020 at 06:50 PM (GMT+6)              |
+|             Last Updated on Saturday, November 1, 2020 at 07:32 PM (GMT+6)              |
 -------------------------------------------------------------------------------------------
 '
 
@@ -106,7 +106,7 @@
 '
 
 # Version #
-UPSTREAM_VERSION="1.0-rc19"
+UPSTREAM_VERSION="1.0-rc27"
 
 # Upstream File #
 # ripple.sh
@@ -156,15 +156,19 @@ alias SUBMODULE="git submodule init ; git submodule update"
 alias PRINT="printf '%s\n'"
 alias WGET="wget -O"
 alias CURL="curl -sS"
-alias GIT_CLONE="git clone"
+alias GCLONE="git clone"
+alias GOBUILD="go build ."
 alias PING="ping"
+alias CHANGE_DIRECTORY="CHANGE_DIRECTORY"
 alias EXPORT="export"
 alias CREATE_DIRECTORY="mkdir -vp"
 alias CREATE_FILE="touch"
 alias REMOVE="rm -rfv"
 alias READ="read -r"
 alias CHMOD="chmod"
+alias CHOWN="chown -R"
 alias APPEND="sed -Ei"
+alias MV="mv"
 alias EXIT="exit"
 
 
@@ -206,8 +210,9 @@ die() {
 		*) RPRINT "FATAL ""$2"": $3 $1"
 	esac
 	
-	if [ ! -z "$log_file" ]; then
-		export log_file="$(pwd)/ErrorLog.txt"
+	if [ -n "$log_file" ]; then
+		log_file="$(pwd)/ErrorLog.txt"
+		export log_file
 	fi
 	
 	if [ ! -f "$log_file" ]; then
@@ -630,14 +635,14 @@ python3_5() {
 
 		(
 			if [ -d "/usr/src" ]; then
-				cd /usr/src || DIE 1 "Failed to cd into '/usr/src'"
+				CHANGE_DIRECTORY /usr/src || DIE 1 "Failed to CHANGE_DIRECTORY into '/usr/src'"
 				WGET "Python-3.5.9.tar.xz" https://www.python.org/ftp/python/3.5.9/Python-3.5.9.tar.xz || DIE 1 "Could not download file 'Python-3.5.9.tar.xz'."
 			fi
 
 			if [ -f "Python-3.5.9.tar.xz" ]; then
 				tar -xvf Python-3.5.9.tar.xz
 				if [ -d "Python-3.5.9" ]; then
-					cd Python-3.5.9 || DIE 1 "Could not cd into 'Python-3.5.9'!"
+					CHANGE_DIRECTORY Python-3.5.9 || DIE 1 "Could not CHANGE_DIRECTORY into 'Python-3.5.9'!"
 				else
 					DIE 1 "Failed to extract 'Python-3.5.9.tar.xz'!"
 				fi
@@ -690,14 +695,14 @@ python3_6() {
 
 	(
 		if [ -d "/usr/src" ]; then
-			cd /usr/src || DIE 1 "Failed to cd into '/usr/src'!"
+			CHANGE_DIRECTORY /usr/src || DIE 1 "Failed to CHANGE_DIRECTORY into '/usr/src'!"
 			WGET "Python-3.6.8.tar.xz" https://www.python.org/ftp/python/3.6.8/Python-3.6.8.tar.xz || DIE 11 "Could not download file 'Python-3.6.8.tar.xz'."
 		fi
 
 		if [ -f "Python-3.6.8.tar.xz" ]; then
 			tar -xvf Python-3.6.8.tar.xz
 			if [ -d "Python-3.6.8" ]; then
-				cd Python-3.6.8 || DIE 1 "Failed to cd into 'Python-3.6.8'!"
+				CHANGE_DIRECTORY Python-3.6.8 || DIE 1 "Failed to CHANGE_DIRECTORY into 'Python-3.6.8'!"
 			else
 				DIE 1 "Failed to extract 'Python-3.6.8.tar.xz'!"
 			fi
@@ -752,24 +757,24 @@ golang() {
 
 			(
 				if [ -d "/usr/src" ]; then
-					cd /usr/src || DIE 1 "Failed to cd into '/usr/src'!"
+					CHANGE_DIRECTORY /usr/src || DIE 1 "Failed to CHANGE_DIRECTORY into '/usr/src'!"
 
 					# golang 1.14+ for Hanayo & Api (Needed::Verified from UPSTREAM)
 					WGET "go1.14.tar.gz" https://golang.org/dl/go1.14.linux-amd64.tar.gz
 					tar -xvf go1.14.tar.gz
-					chown -R root:root ./go
+					CHOWN "$USER":"$USER" ./go
 
 					if [ -d "/usr/local" ]; then
-						mv go /usr/local
+						MV go /usr/local
 
-						if [ ! -f "/home/$USER/.bashrc" ]; then
-							CREATE_FILE /home/"$USER"/.bashrc
+						if [ ! -f "/$USER/home/.bashrc" ]; then
+							CREATE_FILE /"$USER"/home/.bashrc
 						fi
 
-						PRINT export GOPATH=/root/go > /home/"$USER"/.bashrc
-						PRINT export PATH="$PATH":/usr/local/go/bin:"$GOPATH"/bin > /home/"$USER"/.bashrc
+						PRINT export GOPATH=/"$USER"/go > /"$USER"/home/.bashrc
+						PRINT export PATH="$PATH":/usr/local/go/bin:"$GOPATH"/bin > /"$USER"/home/.bashrc
 						
-						. /home/"$USER"/.bashrc
+						. /"$USER"/home/.bashrc
 
 					else
 						DIE 1 "Directory: '/usr/local' doesn't exist!"
@@ -925,9 +930,9 @@ mysql_database() {
 
 	(
 		if [ -d "$directory" ]; then
-			cd "$directory" || DIE 1 "Failed to cd into '$directory'!"
+			CHANGE_DIRECTORY "$directory" || DIE 1 "Failed to CHANGE_DIRECTORY into '$directory'!"
 			mysql_dir="mysql_db"
-			CREATE_DIRECTORY $mysql_dir ; cd $mysql_dir || DIE 1 "Failed to cd into '$mysql_dir'!"
+			CREATE_DIRECTORY $mysql_dir ; CHANGE_DIRECTORY $mysql_dir || DIE 1 "Failed to CHANGE_DIRECTORY into '$mysql_dir'!"
 			WGET "ripple.sql" "$sql_schema_url" || DIE 11 "Could not download file 'ripple.sql'!"
 			
 			if [ -f "ripple.sql" ]; then
@@ -979,7 +984,7 @@ phpmyadmin() {
 
 	if [ -d "/var/www/osu.ppy.sh" ]; then
 		(
-			cd /var/www/osu.ppy.sh || DIE 1 "Failed to cd into '/var/www/osu.ppy.sh'!"
+			CHANGE_DIRECTORY /var/www/osu.ppy.sh || DIE 1 "Failed to CHANGE_DIRECTORY into '/var/www/osu.ppy.sh'!"
 			ln -s /usr/share/phpmyadmin phpmyadmin
 		)
 		GPRINT "Done setting up '$TASK'!"
@@ -1005,10 +1010,10 @@ peppy () {
 
 	if [ -d "$directory" ]; then
 		(
-			cd "$directory" || DIE 1 "Failed to cd into '$directory'!"
+			CHANGE_DIRECTORY "$directory" || DIE 1 "Failed to CHANGE_DIRECTORY into '$directory'!"
 
 			if command -v git 1>/dev/null; then
-				GIT_CLONE "$peppy_url" ; cd pep.py || DIE 1 "Failed to cd into '$TASK'!"
+				GCLONE "$peppy_url" ; CHANGE_DIRECTORY pep.py || DIE 1 "Failed to CHANGE_DIRECTORY into '$TASK'!"
 				SUBMODULE
 			else
 				DIE 1 "git not found on this system!"
@@ -1064,9 +1069,9 @@ secret() {
 		REMOVE secret
 
 		if command -v git 1>/dev/null; then
-			GIT_CLONE "$secret_url"
+			GCLONE "$secret_url"
 		(
-			cd secret || DIE 1 "Failed to cd into 'secret'!"
+			CHANGE_DIRECTORY secret || DIE 1 "Failed to CHANGE_DIRECTORY into 'secret'!"
 			SUBMODULE
 		)
 		else
@@ -1093,10 +1098,10 @@ lets() {
 
 	if [ -d "$directory" ]; then
 		(
-			cd "$directory" || DIE 1 "Failed to cd into '$directory'!"
+			CHANGE_DIRECTORY "$directory" || DIE 1 "Failed to CHANGE_DIRECTORY into '$directory'!"
 
 			if command -v git 1>/dev/null; then
-				GIT_CLONE "$lets_url" ; cd lets || DIE 1 "Failed to cd into '$TASK'!"
+				GCLONE "$lets_url" ; CHANGE_DIRECTORY lets || DIE 1 "Failed to CHANGE_DIRECTORY into '$TASK'!"
 			else
 				DIE 1 "git not found on this system!"
 			fi
@@ -1132,7 +1137,7 @@ lets() {
 			# compile oppai-ng to make pp calculation working
 			if [ -d "pp/oppai-ng" ]; then
 				(
-					cd pp/oppai-ng || DIE 1 "Failed to cd into 'pp/oppai-ng'!"
+					CHANGE_DIRECTORY pp/oppai-ng || DIE 1 "Failed to CHANGE_DIRECTORY into 'pp/oppai-ng'!"
 					
 					if [ -f "build" ]; then
 						CHMOD +x build ; ./build
@@ -1162,16 +1167,16 @@ hanayo() {
 
 	if [ -d "$directory" ]; then
 		(
-			cd "$directory" || DIE 1 "Failed to cd into '$directory'!"
+			CHANGE_DIRECTORY "$directory" || DIE 1 "Failed to CHANGE_DIRECTORY into '$directory'!"
 
 			if command -v git 1>/dev/null; then
-				GIT_CLONE "$hanayo_url" ; cd hanayo || DIE 1 "Failed to cd into '$TASK'!"
+				GCLONE "$hanayo_url" ; CHANGE_DIRECTORY hanayo || DIE 1 "Failed to CHANGE_DIRECTORY into '$TASK'!"
 			else
 				DIE 1 "git not found on this system!"
 			fi
 
 			if command -v go 1>/dev/null; then
-				go build ; ./hanayo
+				GOBUILD ; ./hanayo
 
 				if [ -f "hanayo.conf" ]; then
 					APPEND "s/ListenTo=:45221/ListenTo=127.0.0.1:45221/g" hanayo.conf || DIE 74 \
@@ -1234,16 +1239,16 @@ rippleapi() {
 
 	if [ -d "$directory" ]; then
 		(
-			cd "$directory" || DIE 1 "Failed to cd into '$directory'!"
+			CHANGE_DIRECTORY "$directory" || DIE 1 "Failed to CHANGE_DIRECTORY into '$directory'!"
 
 			if command -v git 1>/dev/null; then
-				GIT_CLONE "$rippleapi_url" ; cd api || DIE 1 "Failed to cd into '$TASK'!"
+				GCLONE "$rippleapi_url" ; CHANGE_DIRECTORY api || DIE 1 "Failed to CHANGE_DIRECTORY into '$TASK'!"
 			else
 				DIE 1 "git not found on this system!"
 			fi
 
 			if command -v go 1>/dev/null; then
-				go build ; ./rippleapi
+				GOBUILD ; ./rippleapi
 
 				if [ -f "api.conf" ]; then
 					APPEND -e 'H;1h;$!d;x' api.conf -e 's#DSN=#DSN='"$mysql_user"':'"$mysql_password"'@/'"$database_name"'#' || DIE 74 \
@@ -1286,16 +1291,16 @@ avatar_server() {
 
 	if [ -d "$directory" ]; then
 		(
-			cd "$directory" || DIE 1 "Failed to cd into '$directory'!"
+			CHANGE_DIRECTORY "$directory" || DIE 1 "Failed to CHANGE_DIRECTORY into '$directory'!"
 
 			if command -v git 1>/dev/null; then
-				GIT_CLONE "$avatar_server_url"
+				GCLONE "$avatar_server_url"
 			else
 				DIE 1 "git not found on this system!"
 			fi
 
 			if [ -d "avatar-server" ]; then
-				cd avatar-server || DIE 1 "Failed to cd into '$TASK'!"
+				CHANGE_DIRECTORY avatar-server || DIE 1 "Failed to CHANGE_DIRECTORY into '$TASK'!"
 				python3.6 -m pip install -r requirements.txt
 				GPRINT "Done setting up '$TASK'!"
 			else
@@ -1327,14 +1332,14 @@ NGINX() {
 		fi
 		
 		(
-			cd /etc/nginx || DIE 1 "Failed to cd into '/etc/nginx'!"
+			CHANGE_DIRECTORY /etc/nginx || DIE 1 "Failed to CHANGE_DIRECTORY into '/etc/nginx'!"
 
 			if [ -f "nginx.conf" ]; then
 				REMOVE nginx.conf
 			fi
 
 			WGET "nginx.conf" "$nginx_config1_url" || DIE 11 "Could not download file 'nginx.conf'!"
-			APPEND 's#include /root/ripple/nginx/*.conf\*#include '"$directory"'/nginx/*.conf#' /etc/nginx/nginx.conf || DIE 1 "Failed to Setup Config file!"
+			APPEND 's#include /'"$USER"'/ripple/nginx/*.conf\*#include '"$directory"'/nginx/*.conf#' /etc/nginx/nginx.conf || DIE 1 "Failed to Setup Config file!"
 		)
 	else
 		DIE 1 "Directory '/etc/nginx' does not exist!"
@@ -1342,8 +1347,8 @@ NGINX() {
 
 	if [ -d "$directory" ]; then
 		(
-			cd "$directory" || DIE 1 "Failed to cd into '$directory'!"
-			CREATE_DIRECTORY nginx ; cd nginx || DIE 1 "Failed to cd into 'nginx'!"
+			CHANGE_DIRECTORY "$directory" || DIE 1 "Failed to CHANGE_DIRECTORY into '$directory'!"
+			CREATE_DIRECTORY nginx ; CHANGE_DIRECTORY nginx || DIE 1 "Failed to CHANGE_DIRECTORY into 'nginx'!"
 
 			WGET "nginx.conf" "$nginx_config2_url" || DIE 11 "Could not download file 'nginx.conf'!"
 
@@ -1389,15 +1394,15 @@ SSL() {
 
 	if [ -d "$directory" ]; then
 		(
-			cd "$directory" || DIE 1 "Failed to cd into '$directory'!"
+			CHANGE_DIRECTORY "$directory" || DIE 1 "Failed to CHANGE_DIRECTORY into '$directory'!"
 			if command -v git 1>/dev/null; then
-				GIT_CLONE https://github.com/Neilpang/acme.sh
+				GCLONE https://github.com/Neilpang/acme.sh
 			else
 				DIE 1 "git not found on this system!"
 			fi
 
 			if [ -d "acme.sh" ]; then
-				cd acme.sh || DIE 1 "Failed to cd into acme.sh"
+				CHANGE_DIRECTORY acme.sh || DIE 1 "Failed to CHANGE_DIRECTORY into acme.sh"
 				if [ -f "acme.sh" ]; then
 					./acme.sh --install
 					./acme.sh --issue --standalone -d "$domain" -d c."$domain" -d i."$domain" -d a."$domain" -d s."$domain" -d old."$domain"
@@ -1483,26 +1488,26 @@ old_frontend() {
 	(
 		
 		if [ -d "/var/www" ]; then
-			cd /var/www || DIE 1 "Could not cd into '/var/www/'!"
+			CHANGE_DIRECTORY /var/www || DIE 1 "Could not CHANGE_DIRECTORY into '/var/www/'!"
 		else
 			DIE 61 "Unexpected!"
 		fi
 		
 		if command -v git 1>/dev/null; then
-			GIT_CLONE "$old_frontend_url" osu.ppy.sh
+			GCLONE "$old_frontend_url" osu.ppy.sh
 		else
 			 1 "git not found on this system!"
 		fi
 
 		if [ -d "osu.ppy.sh" ]; then
-			cd osu.ppy.sh || DIE 1 "Failed to cd into 'osu.ppy.sh'!"
+			CHANGE_DIRECTORY osu.ppy.sh || DIE 1 "Failed to CHANGE_DIRECTORY into 'osu.ppy.sh'!"
 			"$CURL" https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 			(
-				cd inc || DIE 1 "Failed to cd into 'inc'!"
+				CHANGE_DIRECTORY inc || DIE 1 "Failed to CHANGE_DIRECTORY into 'inc'!"
 				cp -v config.sample.php config.php
 
 				if [ -f "config.php" ]; then
-					APPEND "s/root/$mysql_user/g" config.php || DIE 74 \
+					APPEND "s/""$USER""/$mysql_user/g" config.php || DIE 74 \
 						"Failed to Setup Config file! [$TASK/config.php -> mysql_user]"
 
 					APPEND "s/meme/$mysql_password/g" config.php || DIE 74 \
