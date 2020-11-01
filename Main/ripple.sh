@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|             Last Updated on Saturday, November 1, 2020 at 06:40 PM (GMT+6)              |
+|             Last Updated on Saturday, November 1, 2020 at 06:50 PM (GMT+6)              |
 -------------------------------------------------------------------------------------------
 '
 
@@ -106,7 +106,7 @@
 '
 
 # Version #
-UPSTREAM_VERSION="1.0-rc16"
+UPSTREAM_VERSION="1.0-rc19"
 
 # Upstream File #
 # ripple.sh
@@ -642,7 +642,7 @@ python3_5() {
 					DIE 1 "Failed to extract 'Python-3.5.9.tar.xz'!"
 				fi
 
-				if [ -f "Makefile" ]; then
+				if [ -f "Makefile.pre.in" ]; then
 					./configure --enable-optimizations --with-ensurepip=install
 					make --jobs "$procNum" build_all
 					make install
@@ -702,7 +702,7 @@ python3_6() {
 				DIE 1 "Failed to extract 'Python-3.6.8.tar.xz'!"
 			fi
 
-			if [ -f "Makefile" ]; then
+			if [ -f "Makefile.pre.in" ]; then
 				./configure --enable-optimizations --with-ensurepip=install
 				make --jobs "$procNum" build_all
 				make install
