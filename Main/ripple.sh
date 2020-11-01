@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|             Last Updated on Saturday, November 1, 2020 at 08:28 PM (GMT+6)              |
+|             Last Updated on Saturday, November 1, 2020 at 09:15 PM (GMT+6)              |
 -------------------------------------------------------------------------------------------
 '
 
@@ -106,7 +106,7 @@
 '
 
 # Version #
-UPSTREAM_VERSION="1.0-rc41"
+UPSTREAM_VERSION="1.0-rc60"
 
 # Upstream File #
 # ripple.sh
@@ -223,7 +223,7 @@ die() {
 	fi
 	
 	if [ -f "$log_file" ]; then
-		PRINT "[$Date]\\nFATAL: %s\\n\\n" "$3 $1" >> "$log_file" || EXIT 4
+		printf "[$Date]\\nFATAL: %s\\n\\n" "$3 $1" >> "$log_file" || EXIT 4
 		GPRINT "Successfully Written into '$log_file'"
 	else
 		RPRINT "Could not write into logfile!"
@@ -780,8 +780,8 @@ golang() {
 							CREATE_FILE /"$USER"/.bashrc
 						fi
 
-						PRINT export GOPATH=/"$USER"/go > /"$USER"/.bashrc
-						PRINT export PATH="$PATH":/usr/local/go/bin:"$GOPATH"/bin > /"$USER"/.bashrc
+						PRINT "export GOPATH=/$USER/go" >> /"$USER"/.bashrc
+						PRINT "export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin" >> /"$USER"/.bashrc
 						
 						. /"$USER"/.bashrc
 
