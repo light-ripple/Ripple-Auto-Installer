@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|             Last Updated on Saturday, October 31, 2020 at 04:04 PM (GMT+6)              |
+|             Last Updated on Saturday, November 1, 2020 at 05:40 PM (GMT+6)              |
 -------------------------------------------------------------------------------------------
 '
 
@@ -106,7 +106,7 @@
 '
 
 # Version #
-UPSTREAM_VERSION="1.0-rc13"
+UPSTREAM_VERSION="1.0-rc15"
 
 # Upstream File #
 # ripple.sh
@@ -349,7 +349,7 @@ INPUTS() {
 		fi
 
 		if [ -d "$master_dir" ]; then
-			"$CHMOD" -R a+rwx "$master_dir" || DIE 1 "Unable to change permission of the file '$master_dir'!"
+			CHMOD -R a+rwx "$master_dir" || DIE 1 "Unable to change permission of the file '$master_dir'!"
 			EXPORT directory="$master_dir"
 		else
 			DIE 1 "Failed to create Directory '$master_dir'!"
@@ -927,6 +927,7 @@ mysql_database() {
 			mysql_dir="mysql_db"
 			CREATE_DIRECTORY $mysql_dir ; cd $mysql_dir || DIE 1 "Failed to cd into '$mysql_dir'!"
 			WGET "ripple.sql" "$sql_schema_url" || DIE 11 "Could not download file 'ripple.sql'!"
+			
 			if [ -f "ripple.sql" ]; then
 				YPRINT "Note: Enter MySql Password. Same for each prompt"
 				mysql -u "$mysql_user" -p -e 'CREATE DATABASE '"$database_name"'';
@@ -1130,8 +1131,9 @@ lets() {
 			if [ -d "pp/oppai-ng" ]; then
 				(
 					cd pp/oppai-ng || DIE 1 "Failed to cd into 'pp/oppai-ng'!"
+					
 					if [ -f "build" ]; then
-						"$CHMOD" +x build ; ./build
+						CHMOD +x build ; ./build
 					fi
 				)
 			fi
