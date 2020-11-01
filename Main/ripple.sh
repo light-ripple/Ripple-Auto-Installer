@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|             Last Updated on Saturday, November 1, 2020 at 08:28 PM (GMT+6)              |
+|             Last Updated on Saturday, November 1, 2020 at 09:10 PM (GMT+6)              |
 -------------------------------------------------------------------------------------------
 '
 
@@ -106,7 +106,7 @@
 '
 
 # Version #
-UPSTREAM_VERSION="1.0-rc41"
+UPSTREAM_VERSION="1.0-rc44"
 
 # Upstream File #
 # ripple.sh
@@ -780,8 +780,8 @@ golang() {
 							CREATE_FILE /"$USER"/.bashrc
 						fi
 
-						PRINT export GOPATH=/"$USER"/go > /"$USER"/.bashrc
-						PRINT export PATH="$PATH":/usr/local/go/bin:"$GOPATH"/bin > /"$USER"/.bashrc
+						PRINT "export GOPATH=/$USER/go" >> /"$USER"/.bashrc
+						PRINT "export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin" >> /"$USER"/.bashrc
 						
 						. /"$USER"/.bashrc
 
