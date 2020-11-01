@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|             Last Updated on Saturday, November 1, 2020 at 05:40 PM (GMT+6)              |
+|             Last Updated on Saturday, November 1, 2020 at 06:40 PM (GMT+6)              |
 -------------------------------------------------------------------------------------------
 '
 
@@ -106,7 +106,7 @@
 '
 
 # Version #
-UPSTREAM_VERSION="1.0-rc15"
+UPSTREAM_VERSION="1.0-rc16"
 
 # Upstream File #
 # ripple.sh
@@ -206,7 +206,9 @@ die() {
 		*) RPRINT "FATAL ""$2"": $3 $1"
 	esac
 	
-	log_file="$(pwd)/ErrorLog.txt"
+	if [ ! -z "$log_file" ]; then
+		export log_file="$(pwd)/ErrorLog.txt"
+	fi
 	
 	if [ ! -f "$log_file" ]; then
 		CREATE_FILE "$log_file"
