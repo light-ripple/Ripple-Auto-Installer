@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|             Last Updated on Saturday, November 1, 2020 at 06:50 PM (GMT+6)              |
+|             Last Updated on Saturday, November 1, 2020 at 07:20 PM (GMT+6)              |
 -------------------------------------------------------------------------------------------
 '
 
@@ -106,7 +106,7 @@
 '
 
 # Version #
-UPSTREAM_VERSION="1.0-rc19"
+UPSTREAM_VERSION="1.0-rc23"
 
 # Upstream File #
 # ripple.sh
@@ -206,8 +206,9 @@ die() {
 		*) RPRINT "FATAL ""$2"": $3 $1"
 	esac
 	
-	if [ ! -z "$log_file" ]; then
-		export log_file="$(pwd)/ErrorLog.txt"
+	if [ -n "$log_file" ]; then
+		log_file="$(pwd)/ErrorLog.txt"
+		export log_file
 	fi
 	
 	if [ ! -f "$log_file" ]; then
@@ -762,14 +763,14 @@ golang() {
 					if [ -d "/usr/local" ]; then
 						mv go /usr/local
 
-						if [ ! -f "/home/$USER/.bashrc" ]; then
-							CREATE_FILE /home/"$USER"/.bashrc
+						if [ ! -f "/$USER/home/.bashrc" ]; then
+							CREATE_FILE /"$USER"/home/.bashrc
 						fi
 
-						PRINT export GOPATH=/root/go > /home/"$USER"/.bashrc
-						PRINT export PATH="$PATH":/usr/local/go/bin:"$GOPATH"/bin > /home/"$USER"/.bashrc
+						PRINT export GOPATH=/"$USER"/go > /"$USER"/home/.bashrc
+						PRINT export PATH="$PATH":/usr/local/go/bin:"$GOPATH"/bin > /"$USER"/home/.bashrc
 						
-						. /home/"$USER"/.bashrc
+						. /"$USER"/home/.bashrc
 
 					else
 						DIE 1 "Directory: '/usr/local' doesn't exist!"
