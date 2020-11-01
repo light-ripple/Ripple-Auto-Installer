@@ -1458,8 +1458,6 @@ old_frontend() {
 			"$package_manager_frontend" install curl php7.2 php7.2-cli php7.2-common php7.2-json \
 			php7.2-opcache php7.2-mysql php7.2-zip php7.2-fpm php7.2-mbstring -y
 			"$CURL" https://getcomposer.org/installer -o composer-setup.php
-
-			# FIXME: FIX
 			php -r "if (hash_file('SHA384', 'composer-setup.php') === '$HASH') \
 			{ PRINT 'Installer verified'; } else { PRINT 'Installer corrupt'; unlink('composer-setup.php'); } PRINT PHP_EOL;"
 			php composer-setup.php --install-dir=/usr/local/bin --filename=composer
