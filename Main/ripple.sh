@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|             Last Updated on Saturday, November 1, 2020 at 09:10 PM (GMT+6)              |
+|             Last Updated on Saturday, November 1, 2020 at 09:15 PM (GMT+6)              |
 -------------------------------------------------------------------------------------------
 '
 
@@ -106,7 +106,7 @@
 '
 
 # Version #
-UPSTREAM_VERSION="1.0-rc44"
+UPSTREAM_VERSION="1.0-rc60"
 
 # Upstream File #
 # ripple.sh
@@ -223,7 +223,7 @@ die() {
 	fi
 	
 	if [ -f "$log_file" ]; then
-		PRINT "[$Date]\\nFATAL: %s\\n\\n" "$3 $1" >> "$log_file" || EXIT 4
+		printf "[$Date]\\nFATAL: %s\\n\\n" "$3 $1" >> "$log_file" || EXIT 4
 		GPRINT "Successfully Written into '$log_file'"
 	else
 		RPRINT "Could not write into logfile!"
@@ -1458,6 +1458,8 @@ old_frontend() {
 			"$package_manager_frontend" install curl php7.2 php7.2-cli php7.2-common php7.2-json \
 			php7.2-opcache php7.2-mysql php7.2-zip php7.2-fpm php7.2-mbstring -y
 			"$CURL" https://getcomposer.org/installer -o composer-setup.php
+
+			# FIXME: FIX
 			php -r "if (hash_file('SHA384', 'composer-setup.php') === '$HASH') \
 			{ PRINT 'Installer verified'; } else { PRINT 'Installer corrupt'; unlink('composer-setup.php'); } PRINT PHP_EOL;"
 			php composer-setup.php --install-dir=/usr/local/bin --filename=composer
