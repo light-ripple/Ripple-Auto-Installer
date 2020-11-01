@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|             Last Updated on Saturday, November 1, 2020 at 08:15 PM (GMT+6)              |
+|             Last Updated on Saturday, November 1, 2020 at 08:28 PM (GMT+6)              |
 -------------------------------------------------------------------------------------------
 '
 
@@ -106,7 +106,7 @@
 '
 
 # Version #
-UPSTREAM_VERSION="1.0-rc37"
+UPSTREAM_VERSION="1.0-rc41"
 
 # Upstream File #
 # ripple.sh
@@ -200,6 +200,8 @@ lineno() {
 
 # Simplified Assersion by uniminin <uniminin@zoho.com> under the terms of AGPLv3
 # Usage: DIE "EXIT-CODE" "msg..."
+execution_=0
+
 die() {
 
 	# Current Date
@@ -210,9 +212,10 @@ die() {
 		*) RPRINT "FATAL ""$2"": $3 $1"
 	esac
 	
-	if [ -n "$log_file" ]; then
+	if [ ! "$execution_" = 1 ]; then
 		log_file="$(pwd)/ErrorLog.txt"
 		export log_file
+		execution_=1
 	fi
 	
 	if [ ! -f "$log_file" ]; then
@@ -224,7 +227,6 @@ die() {
 		GPRINT "Successfully Written into '$log_file'"
 	else
 		RPRINT "Could not write into logfile!"
-		EXIT 4
 	fi
 	
 	# Confirm :DIE: -> Die :?:
