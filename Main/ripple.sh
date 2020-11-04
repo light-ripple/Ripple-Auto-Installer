@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|             Last Updated on Saturday, November 4, 2020 at 06:30 PM (GMT+6)              |
+|             Last Updated on Saturday, November 4, 2020 at 07:15 PM (GMT+6)              |
 -------------------------------------------------------------------------------------------
 '
 
@@ -106,7 +106,7 @@
 '
 
 # Version #
-UPSTREAM_VERSION="1.1-rc06"
+UPSTREAM_VERSION="1.1-rc11"
 
 # Upstream File #
 # ripple.sh
@@ -1849,6 +1849,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				checkRoot
 				DetectPackageManager
 				checkNetwork
+				INPUTS
 				NGINX
 				EXIT 0 ;;
 
@@ -1857,6 +1858,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				checkRoot
 				DetectPackageManager
 				checkNetwork
+				INPUTS
 				packageManagerUpgrade
 				extra_dependencies
 				NGINX
