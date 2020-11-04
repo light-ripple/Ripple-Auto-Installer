@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|             Last Updated on Saturday, November 4, 2020 at 06:12 PM (GMT+6)              |
+|             Last Updated on Saturday, November 4, 2020 at 06:30 PM (GMT+6)              |
 -------------------------------------------------------------------------------------------
 '
 
@@ -106,7 +106,7 @@
 '
 
 # Version #
-UPSTREAM_VERSION="1.1-rc01"
+UPSTREAM_VERSION="1.1-rc06"
 
 # Upstream File #
 # ripple.sh
@@ -248,28 +248,30 @@ die() {
 # DIE with lineno
 alias DIE="die \"[ line \$LINENO\"\\ ]"
 
+checksum_checker="true"
 
 # Simplified File Integrity Checker by uniminin <uniminin@zoho.com> under the terms of AGPLv3
 # CHECK FILE INTEGRITY
-if [ ! -f "ripple.sha1" ]; then
-	RPRINT "file integrity data not found" ; GPRINT "Fetching the latest file integrity data"
-	wget -O "ripple.sha1" "$RIPPLE_SHA1"
+if [ "$checksum_checker" = "true" ]; then
 	if [ ! -f "ripple.sha1" ]; then
-		RPRINT "Failed to fetch the latest file integrity data" ; EXIT 1
+		RPRINT "file integrity data not found" ; GPRINT "Fetching the latest file integrity data"
+		wget -O "ripple.sha1" "$RIPPLE_SHA1"
+		if [ ! -f "ripple.sha1" ]; then
+			RPRINT "Failed to fetch the latest file integrity data" ; EXIT 1
+		fi
+	fi
+
+	if [ -f "ripple.sha1" ]; then
+		sha1sum -c ripple.sha1 || match="false"
+		if [ "$match" = "false" ]; then
+			GPRINT "Fetching the latest script, please try again..."
+			wget -O "ripple.sh" "$RIPPLE_SH"
+			EXIT 1
+		fi
+	else
+		RPRINT "file integrity data not found" ; EXIT 1
 	fi
 fi
-
-if [ -f "ripple.sha1" ]; then
-	sha1sum -c ripple.sha1 || match="false"
-	if [ "$match" = "false" ]; then
-		GPRINT "Fetching the latest script, please try again..."
-		wget -O "ripple.sh" "$RIPPLE_SH"
-		EXIT 1
-	fi
-else
-	RPRINT "file integrity data not found" ; EXIT 1
-fi
-
 
 # Simplified Network Checker (IPv4 & DNS connectivity) 
 checkNetwork() {
