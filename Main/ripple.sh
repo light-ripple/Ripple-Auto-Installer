@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|             Last Updated on Saturday, November 1, 2020 at 09:15 PM (GMT+6)              |
+|             Last Updated on Saturday, November 4, 2020 at 06:12 PM (GMT+6)              |
 -------------------------------------------------------------------------------------------
 '
 
@@ -106,7 +106,7 @@
 '
 
 # Version #
-UPSTREAM_VERSION="1.0-rc60"
+UPSTREAM_VERSION="1.1-rc01"
 
 # Upstream File #
 # ripple.sh
@@ -516,31 +516,29 @@ DetectPackageManager() {
 		"apt")
 			GPRINT "Found Package Manager: 'APT [ $frontend ]'"
 			EXPORT package_manager_frontend="$frontend"
-			YPRINT "Using Package Manager Frontend: '$package_manager_frontend'."
 			
 			;;
 
 		"pacman")
 			GPRINT "Found Package Manager: 'Pacman [ $frontend ]'"
 			EXPORT package_manager_frontend="$frontend"
-			YPRINT "Using Package Manager Frontend: '$package_manager_frontend'."
 
 			;;
 
 		"emerge")
 			GPRINT "Found Package Manager: 'Portage [ $frontend ]'"
 			EXPORT package_manager_frontend="emerge"
-			YPRINT "Using Package Manager Frontend: 'Portage'."
 
 			;;
 
 		"cave")
 			GPRINT "Found Package Manager: 'Paludis [ $frontend ]'"
 			EXPORT package_manager_frontend="cave"
-			YPRINT "Using Package Manager Frontend: 'Paludis'."
 
 			;;
 	esac
+	
+	YPRINT "Using Package Manager Frontend: '$package_manager_frontend'."
 
 }
 
@@ -752,7 +750,7 @@ golang() {
 	else
 		YPRINT "Setting up '$TASK'!"
 		
-		if [ "$package_manager_frontend" = "apt" ] || [ "$package_manager_frontend" = "pacman" ]; then
+		if [ "$package_manager_frontend" = "apt" ]; then
 			if command -v PING 1>/dev/null; then
 				PING -i 0.5 -c 5 golang.org || DIE 121 "Domain 'golang.org' is not reachable from this environment."
 				PING -i 0.5 -c 5 dl.google.com || DIE 121 "Domain 'dl.google.com' is not reachable from this environment."
@@ -790,6 +788,9 @@ golang() {
 					fi
 				fi
 			)
+			
+		elif [ "$package_manager_frontend" = "pacman" ]; then
+			"$package_manager_frontend" -S go
 
 		elif [ "$package_manager_frontend" = "emerge" ]; then
 			# Latest stable (Gentoo package database) [02:20 PM | 30/10/2020 | Sun | GMT+6]
