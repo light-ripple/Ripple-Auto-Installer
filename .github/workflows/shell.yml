@@ -7,6 +7,7 @@ on:
     paths:
     - "**.sh"
     - "Main/ripple.sh"
+    - "Main/tmux.sh"
 
 jobs:
   # Linting
