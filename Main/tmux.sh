@@ -5,8 +5,6 @@ alias EXIT="exit"
 
 new () {
 
-	TASK="new"
-
 	tmux new-session -c /root/liveemily/ -s $session -d
 	tmux send-keys "cd pep.py" C-m
 	tmux send-keys "python3.5 pep.py &" C-m
@@ -28,15 +26,12 @@ new () {
 
 attach () {
 
-	TASK="attach"
-
 	tmux "attach" -t $session
 
 }
 
 kill () {
 
-	TASK="kill"
 
 	tmux kill-session -t $session
 
