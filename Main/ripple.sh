@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|             Last Updated on Monday, November 9, 2020 at 01:45 PM (GMT+6)              |
+|             Last Updated on Monday, November 9, 2020 at 06:12 PM (GMT+6)                |
 -------------------------------------------------------------------------------------------
 '
 
@@ -106,7 +106,7 @@
 '
 
 # Version #
-UPSTREAM_VERSION="1.2-rc1"
+UPSTREAM_VERSION="1.3.0"
 
 # Upstream File #
 # ripple.sh
@@ -145,10 +145,10 @@ key_url="https://raw.githubusercontent.com/osuthailand/ainu-certificate/master/k
 
 
 # Colors For Prints
-alias RPRINT="printf '\\033[0;31m%s\\n'"	 # Red
-alias GPRINT="printf '\\033[0;32m%s\\n'"	 # Green
-alias YPRINT="printf '\\033[0;33m%s\\n'"	 # Yellow
-alias BPRINT="printf '\\033[0;34m%s'"		 # Blue
+alias RPRINT="printf '\\033[0;31m%s\\n''\\033[0;37m'"	 # Red
+alias GPRINT="printf '\\033[0;32m%s\\n''\\033[0;37m'"	 # Green
+alias YPRINT="printf '\\033[0;33m%s\\n''\\033[0;37m'"	 # Yellow
+alias BPRINT="printf '\\033[0;34m%s''\\033[0;37m'"	 # Blue
 
 
 # Command Overwrites
@@ -1609,28 +1609,28 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		"     version(12)" \
 		"" \
 		"Script Specific:" \
-		"   --help, -h             Shows the list of all arguments including relevant informations." \
-		"   --version, -V          Prints the upstream version of the script." \
+		"   --help, -h             | Shows the list of all arguments including relevant informations." \
+		"   --version, -V          | Prints the upstream version of the script." \
 		"" \
 		"With Dependencies:" \
 		"" \
-		"   --all, -A              To Setup Entire Ripple Stack with Dependencies!" \
-		"   --dependencies, -dep   To Install all the necessary dependencies required for Ripple Stack." \
-		"   --mysql, -M            To Install & Setup MySQL DB with Dependencies." \
-		"   --peppy, -P            To Clone & Setup peppy with Dependencies." \
-		"   --lets, -L             To Clone & Setup lets with Dependencies." \
-		"   --hanayo, -H           To Clone & Setup hanayo with Dependencies." \
-		"   --rippleapi, -api      To Clone & Setup rippleapi with Dependencies." \
-		"   --avatarserver, -AS    To Clone & Setup avatar-server with Dependencies." \
-		"   --oldfrontend, -OF     To Clone & Setup oldfrontend with Dependencies." \
-		"   --nginx, -N            To Install & Configure Nginx with nginx Dependencies." \
+		"   --all, -A              | To Setup Entire Ripple Stack with Dependencies!" \
+		"   --dependencies, -dep   | To Install all the necessary dependencies required for Ripple Stack." \
+		"   --mysql, -M            | To Install & Setup MySQL DB with Dependencies." \
+		"   --peppy, -P            | To Clone & Setup peppy with Dependencies." \
+		"   --lets, -L             | To Clone & Setup lets with Dependencies." \
+		"   --hanayo, -H           | To Clone & Setup hanayo with Dependencies." \
+		"   --rippleapi, -api      | To Clone & Setup rippleapi with Dependencies." \
+		"   --avatarserver, -AS    | To Clone & Setup avatar-server with Dependencies." \
+		"   --oldfrontend, -OF     | To Clone & Setup oldfrontend with Dependencies." \
+		"   --nginx, -N            | To Install & Configure Nginx with nginx Dependencies." \
 		"" \
 		"Without Dependencies:" \
 		"   --nodependencies, --nodep" \
 		"" \
 		"Examples:" \
-		"sudo $0 --all            To Setup Entire Ripple Stack with Dependencies!" \
-		"sudo $0 -peppy --nodep   To Clone & Setup peppy without Dependencies." \
+		"sudo $0 --all            | To Setup Entire Ripple Stack with Dependencies!" \
+		"sudo $0 -peppy --nodep   | To Clone & Setup peppy without Dependencies." \
 		"" \
 		"Report bugs to: 'uniminin@zoho.com' or Discord: 'uniminin#7522'" \
 		"RAI Repository URL: <https://github.com/Uniminin/Ripple-Auto-Installer/>" \
