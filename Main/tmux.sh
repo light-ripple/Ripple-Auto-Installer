@@ -20,7 +20,7 @@
 '
 
 # Version #
-UPSTREAM_VERSION="1.0.0"
+UPSTREAM_VERSION="1.0.1"
 
 # Name
 session="Ripple"
