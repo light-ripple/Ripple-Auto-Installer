@@ -101,7 +101,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		EXIT 0 ;;
 
 	"--version" | "-V")
-		GRPINT "Version: $UPSTREAM_VERSION"
+		GPRINT "Version: $UPSTREAM_VERSION"
 		EXIT 0 ;;
 
 	"")
@@ -109,7 +109,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		EXIT 74 ;;
 
 	*)
-		PRINT "Fatal: Unknown argument | Try: $0 --help"
+		RPRINT "Fatal: Unknown argument | Try: $0 --help"
 		EXIT 74 ;;
 
 esac; shift; done
