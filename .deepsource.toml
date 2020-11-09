@@ -1,6 +1,9 @@
 version = 1
 
-test_patterns = ["Main/ripple.sh"]
+test_patterns = [
+  "Main/ripple.sh",
+  "Main/tmux.sh"
+]
 
 [[analyzers]]
 name = "shell"
