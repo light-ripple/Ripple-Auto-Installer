@@ -5,7 +5,7 @@
 : '
 -----------------------------------------------------------------------------------------------
 |  Created by LiveEmily <d.claassen2003@outlook.com> in 2020 under the terms of GNU AGPL-3.0  |
-|             Last Updated on Monday, November 9, 2020 at 02:00 PM (CET)                      |
+|             Last Updated on Monday, November 9, 2020 at 03:25 PM (CET)                      |
 -----------------------------------------------------------------------------------------------
 '
 
@@ -20,7 +20,7 @@
 '
 
 # Version #
-UPSTREAM_VERSION="1.0.0"
+UPSTREAM_VERSION="1.0.1"
 
 # Name
 session="Ripple"
@@ -101,7 +101,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		EXIT 0 ;;
 
 	"--version" | "-V")
-		GRPINT "Version: $UPSTREAM_VERSION"
+		GPRINT "Version: $UPSTREAM_VERSION"
 		EXIT 0 ;;
 
 	"")
@@ -109,7 +109,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		EXIT 74 ;;
 
 	*)
-		PRINT "Fatal: Unknown argument | Try: $0 --help"
+		RPRINT "Fatal: Unknown argument | Try: $0 --help"
 		EXIT 74 ;;
 
 esac; shift; done
