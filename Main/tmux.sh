@@ -3,6 +3,10 @@
 session="Ripple!Clone"
 alias EXIT="exit"
 
+# Colors For Prints
+alias RPRINT="printf '\\033[0;31m%s\\n'"     # Red
+alias GPRINT="printf '\\033[0;32m%s\\n'"     # Green
+
 new () {
 
 	tmux new-session -c /root/liveemily/ -s $session -d
@@ -52,10 +56,10 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		
 		EXIT 0 ;;
 	*)
-		printf "%s\n" "No argument provided"
-		printf "%s\n" "Available commands: "
-		printf "%s\n" "new --new -N | Makes a new session"
-		printf "%s\n" "attach --attach -A | Attaches you to the Ripple session"
-		printf "%s\n" "kill --kill -K | Kills the current Ripple session"
+		RPRINT "No argument provided"
+		GPRINT "Available commands: " \
+		"	new    --new    -N | Makes a new session" \
+		"	attach --attach -A | Attaches you to the Ripple session" \
+		"	kill   --kill   -K | Kills the current Ripple session"
 		EXIT 74 ;;
 esac; shift; done
