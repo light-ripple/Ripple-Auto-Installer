@@ -1,7 +1,7 @@
 version = 1
 
 test_patterns = [
-  "Main/ripple.sh"
+  "Main/ripple.sh",
   "Main/tmux.sh"
 ]
 
