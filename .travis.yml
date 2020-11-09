@@ -9,6 +9,7 @@ on:
     types: [synchronize, opened, reopened, ready_for_review]
     paths:
     - "Main/ripple.sh"
+    - "Main/tmux.sh"
 
 jobs:
   # Linting
