@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|             Last Updated on Saturday, November 4, 2020 at 07:15 PM (GMT+6)              |
+|             Last Updated on Monday, November 9, 2020 at 01:45 PM (GMT+6)              |
 -------------------------------------------------------------------------------------------
 '
 
@@ -106,7 +106,7 @@
 '
 
 # Version #
-UPSTREAM_VERSION="1.1-rc11"
+UPSTREAM_VERSION="1.2-rc1"
 
 # Upstream File #
 # ripple.sh
@@ -553,24 +553,16 @@ packageManagerUpgrade() {
 	
 	case "$package_manager_frontend" in
 		"apt")
-			apt update ; apt upgrade -y ; apt update
-			
-			;;
+			apt update ; apt upgrade -y ; apt update ;;
 			
 		"pacman")
-			pacman --noconfirm -Syyu
-			
-			;;
+			pacman --noconfirm -Syyu ;;
 			
 		"emerge")
-			emerge --sync ; emerge -qvuDN @world
-			
-			;;
+			emerge --sync ; emerge -qvuDN @world ;;
 			
 		"cave")
-			cave sync ; cave resolve world -qx
-			
-			;;
+			cave sync ; cave resolve world -qx ;;
 	esac
 
 }
@@ -978,7 +970,6 @@ phpmyadmin() {
 			;;
 			
 		"pacman")
-		
 			"$package_manager_frontend" --noconfirm -S phpmyadmin
 			
 			;;
@@ -1123,6 +1114,7 @@ lets() {
 				SUBMODULE
 				python3.6 -m pip install -r requirements.txt
 				python3.6 setup.py build_ext --inplace
+				
 				if [ -f "lets.py" ]; then
 					python3.6 lets.py
 					if [ -f "config.ini" ]; then
@@ -1188,7 +1180,8 @@ hanayo() {
 			fi
 
 			if command -v go 1>/dev/null; then
-				GOBUILD ; ./hanayo
+				GOBUILD || DIE 1 "'$TASK' Build Failure!"
+				./hanayo || DIE 1 "'$TASK' Execution Failure!"
 
 				if [ -f "hanayo.conf" ]; then
 					APPEND "s/ListenTo=:45221/ListenTo=127.0.0.1:45221/g" hanayo.conf || DIE 74 \
@@ -1260,7 +1253,8 @@ rippleapi() {
 			fi
 
 			if command -v go 1>/dev/null; then
-				GOBUILD ; ./rippleapi
+				GOBUILD || DIE 1 "'$TASK' Build Failure!"
+				./rippleapi || DIE 1 "'$TASK' Execution Failure!"
 
 				if [ -f "api.conf" ]; then
 					APPEND -e 'H;1h;$!d;x' api.conf -e 's#DSN=#DSN='"$mysql_user"':'"$mysql_password"'@/'"$database_name"'#' || DIE 74 \
