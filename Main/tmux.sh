@@ -30,7 +30,7 @@ attach () {
 
 	TASK="attach"
 
-	tmux attach -t $session
+	tmux "attach" -t $session
 
 }
 
