@@ -5,7 +5,7 @@
 : '
 -----------------------------------------------------------------------------------------------
 |  Created by LiveEmily <d.claassen2003@outlook.com> in 2020 under the terms of GNU AGPL-3.0  |
-|               Last Updated on Monday, December 14, 2020 at 08:59 AM (GMT+6)                  |
+|               Last Updated on Monday, December 14, 2020 at 09:08 AM (GMT+6)                 |
 -----------------------------------------------------------------------------------------------
 '
 
@@ -37,8 +37,6 @@ TMUX_SHA1="https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/mast
 # RPRINT -> prints to standard error instead of standard output
 alias RPRINT="printf '\\033[0;31m%s\\n''\\033[0;37m' >&2"    # Red
 alias GPRINT="printf '\\033[0;32m%s\\n''\\033[0;37m'"        # Green
-alias YPRINT="printf '\\033[0;33m%s\\n''\\033[0;37m'"        # Yellow
-alias BPRINT="printf '\\033[0;34m%s''\\033[0;37m'"           # Blue
 
 
 # Command Overwrites
