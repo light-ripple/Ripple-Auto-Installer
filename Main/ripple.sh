@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|             Last Updated on Monday, December 14, 2020 at 11:00 AM (GMT+6)               |
+|             Last Updated on Monday, December 14, 2020 at 11:40 AM (GMT+6)               |
 -------------------------------------------------------------------------------------------
 '
 
@@ -106,7 +106,7 @@
 '
 
 # Version #
-UPSTREAM_VERSION="1.3.11"
+UPSTREAM_VERSION="1.3.12"
 
 # Upstream File #
 # ripple.sh (main script)
@@ -808,7 +808,7 @@ golang() {
 
 		elif [ "$package_manager_frontend" = "cave" ]; then
 			# Latest stable (Exherbo package database) [10:10 AM | 14/12/2020 | Mon | GMT+6]
-			"$package_manager_frontend" resolve -x =dev-lang/go-1.15.5
+			"$package_manager_frontend" resolve -qx =dev-lang/go-1.15.5
 		fi
 
 		if command -v go 1>/dev/null; then
@@ -997,7 +997,7 @@ phpmyadmin() {
 			;;
 			
 		"cave")
-			"$package_manager_frontend" resolve -x dev-lang/php
+			"$package_manager_frontend" resolve -qx dev-lang/php
 			
 			;;	
 	esac
@@ -1495,7 +1495,7 @@ old_frontend() {
 			;;
 			
 		"cave")
-			"$package_manager_frontend" resolve -x dev-lang/php dev-php/composer
+			"$package_manager_frontend" resolve -qx dev-lang/php dev-php/composer
 			
 			;;
 	esac
