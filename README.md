@@ -76,12 +76,15 @@ This project gives you a base and foundation if you're willing to setup your own
 ├── Database files
 │  └── ripple.sql
 ├── LICENSE
-├── ain
+├── Main
+│  ├── config.sh
 │  ├── gencert.sh
 │  ├── openssl.cnf
 │  ├── ripple.conf
 │  ├── ripple.sh
-│  └── ripple.sha1
+│  ├── ripple.sha1
+│  ├── tmux.sh
+│  └── tmux.sha1
 ├── Miscellaneous
 │  ├── certificate.md
 │  ├── cloudflare.png
