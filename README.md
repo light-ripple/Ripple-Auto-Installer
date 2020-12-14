@@ -11,10 +11,11 @@
   <img src="https://img.shields.io/github/stars/Uniminin/Ripple-Auto-Installer?style=for-the-badge">
   <img src="https://img.shields.io/github/forks/Uniminin/Ripple-Auto-Installer?color=teal&style=for-the-badge">
   <img src="https://img.shields.io/codefactor/grade/github/Uniminin/Ripple-Auto-Installer?style=for-the-badge">
-  
-  <img src="https://github.com/Uniminin/Ripple-Auto-Installer/blob/master/Miscellaneous/ripple.svg">
 </p>
 
+<p align="center">
+  <img src="https://github.com/Uniminin/Ripple-Auto-Installer/blob/master/Miscellaneous/ripple.svg">
+</p>
 
 ## ATTENTION
 <b>**FOR ADVANCED USERS!**</b><br>
