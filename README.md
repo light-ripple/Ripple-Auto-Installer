@@ -138,7 +138,7 @@ cd Main
 # Make the script readable, writable, and executable to root and your user:
 chmod 770 ripple.sh
 
-# edit the ripple.sh or config.sh file located in `./Main/` if necessary (optional)
+# Edit the ripple.sh or config.sh file located in `./Main/` if necessary (optional)
 
 # Finally read the output of
 ./ripple.sh --help
@@ -154,7 +154,7 @@ wget -O "ripple.sha1" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Ins
 # Make the script readable, writable, and executable to root and your user:
 chmod 770 ripple.sh
 
-# edit the ripple.sh or config.sh file located in `./Main/` if necessary (optional)
+# Edit the ripple.sh or config.sh file located in `./Main/` if necessary (optional)
 
 # Finally read the output of
 ./ripple.sh --help
