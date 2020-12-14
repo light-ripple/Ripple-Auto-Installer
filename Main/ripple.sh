@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|             Last Updated on Monday, December 14, 2020 at 12:15 AM (GMT+6)               |
+|             Last Updated on Monday, December 14, 2020 at 12:20 AM (GMT+6)               |
 -------------------------------------------------------------------------------------------
 '
 
@@ -106,7 +106,7 @@
 '
 
 # Version #
-UPSTREAM_VERSION="2.0.0"
+UPSTREAM_VERSION="2.1.1"
 
 # Upstream File #
 # ripple.sh (main script)
@@ -211,7 +211,9 @@ mysql_password=""
 database_name=""
 
 # Read from the config file
-. "$(pwd)/config.sh"
+if [ -f "$(pwd)/config.sh" ]; then
+	. "$(pwd)/config.sh"	
+fi
 
 
 
