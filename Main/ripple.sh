@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|             Last Updated on Monday, November 9, 2020 at 06:12 PM (GMT+6)                |
+|             Last Updated on Monday, December 14, 2020 at 11:00 AM (GMT+6)               |
 -------------------------------------------------------------------------------------------
 '
 
@@ -106,10 +106,10 @@
 '
 
 # Version #
-UPSTREAM_VERSION="1.3.0"
+UPSTREAM_VERSION="1.3.11"
 
 # Upstream File #
-# ripple.sh
+# ripple.sh (main script)
 RIPPLE_SH="https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/ripple.sh"
 
 # ripple.sha1 (checksum)
@@ -143,12 +143,27 @@ certificate_url="https://raw.githubusercontent.com/osuthailand/ainu-certificate/
 key_url="https://raw.githubusercontent.com/osuthailand/ainu-certificate/master/key.key"
 
 
+# Golang Bin
+golang_dl_url="https://golang.org/dl/go1.15.6.linux-amd64.tar.gz"
+
+# Python
+# python3.5
+python35_dl_url="https://www.python.org/ftp/python/3.5.9/Python-3.5.9.tar.xz"
+# python3.6
+python36_dl_url="https://www.python.org/ftp/python/3.6.8/Python-3.6.8.tar.xz"
+
+# mysql.deb (apt)
+mysql_deb_url="https://repo.mysql.com//mysql-apt-config_0.8.15-1_all.deb"
+
+# acme.sh
+acme_sh_dl_url="https://github.com/Neilpang/acme.sh"
+
 
 # Colors For Prints
-alias RPRINT="printf '\\033[0;31m%s\\n''\\033[0;37m'"	 # Red
-alias GPRINT="printf '\\033[0;32m%s\\n''\\033[0;37m'"	 # Green
-alias YPRINT="printf '\\033[0;33m%s\\n''\\033[0;37m'"	 # Yellow
-alias BPRINT="printf '\\033[0;34m%s''\\033[0;37m'"	 # Blue
+alias RPRINT="printf '\\033[0;31m%s\\n''\\033[0;37m'"    # Red
+alias GPRINT="printf '\\033[0;32m%s\\n''\\033[0;37m'"    # Green
+alias YPRINT="printf '\\033[0;33m%s\\n''\\033[0;37m'"    # Yellow
+alias BPRINT="printf '\\033[0;34m%s''\\033[0;37m'"       # Blue
 
 
 # Command Overwrites
@@ -255,7 +270,7 @@ checksum_checker="true"
 if [ "$checksum_checker" = "true" ]; then
 	if [ ! -f "ripple.sha1" ]; then
 		RPRINT "file integrity data not found" ; GPRINT "Fetching the latest file integrity data"
-		wget -O "ripple.sha1" "$RIPPLE_SHA1"
+		WGET "ripple.sha1" "$RIPPLE_SHA1"
 		if [ ! -f "ripple.sha1" ]; then
 			RPRINT "Failed to fetch the latest file integrity data" ; EXIT 1
 		fi
@@ -265,13 +280,14 @@ if [ "$checksum_checker" = "true" ]; then
 		sha1sum -c ripple.sha1 || match="false"
 		if [ "$match" = "false" ]; then
 			GPRINT "Fetching the latest script, please try again..."
-			wget -O "ripple.sh" "$RIPPLE_SH"
+			WGET "ripple.sh" "$RIPPLE_SH"
 			EXIT 1
 		fi
 	else
 		RPRINT "file integrity data not found" ; EXIT 1
 	fi
 fi
+
 
 # Simplified Network Checker (IPv4 & DNS connectivity) 
 checkNetwork() {
@@ -633,7 +649,7 @@ python3_5() {
 		(
 			if [ -d "/usr/src" ]; then
 				CHANGE_DIRECTORY /usr/src || DIE 1 "Could not change directory into '/usr/src'!"
-				WGET "Python-3.5.9.tar.xz" https://www.python.org/ftp/python/3.5.9/Python-3.5.9.tar.xz || DIE 1 "Could not download file 'Python-3.5.9.tar.xz'."
+				WGET "Python-3.5.9.tar.xz" "$python35_dl_url" || DIE 1 "Could not download file 'Python-3.5.9.tar.xz'."
 			fi
 
 			if [ -f "Python-3.5.9.tar.xz" ]; then
@@ -646,8 +662,8 @@ python3_5() {
 
 				if [ -f "Makefile.pre.in" ]; then
 					./configure --enable-optimizations --with-ensurepip=install
-					make --jobs "$procNum" build_all
-					make install
+					make --jobs "$procNum" build_all || DIE 1 "'Python-3.5.9' make returned error at build_all!"
+					make install || DIE 1 "'Python-3.5.9' make returned error at install!"
 				else
 					DIE 1 "Makefile not found. Cannot build/install python3.5 from source!"
 				fi
@@ -693,7 +709,7 @@ python3_6() {
 	(
 		if [ -d "/usr/src" ]; then
 			CHANGE_DIRECTORY /usr/src || DIE 1 "Could not change directory into '/usr/src'!"
-			WGET "Python-3.6.8.tar.xz" https://www.python.org/ftp/python/3.6.8/Python-3.6.8.tar.xz || DIE 11 "Could not download file 'Python-3.6.8.tar.xz'."
+			WGET "Python-3.6.8.tar.xz" "$python36_dl_url" || DIE 11 "Could not download file 'Python-3.6.8.tar.xz'."
 		fi
 
 		if [ -f "Python-3.6.8.tar.xz" ]; then
@@ -706,8 +722,8 @@ python3_6() {
 
 			if [ -f "Makefile.pre.in" ]; then
 				./configure --enable-optimizations --with-ensurepip=install
-				make --jobs "$procNum" build_all
-				make install
+				make --jobs "$procNum" build_all || DIE 1 "'Python-3.6.8' make returned error at build_all!"
+				make install || DIE 1 "'Python-3.6.8' make returned error at install!"
 			else
 				DIE 1 "Makefile not found. Cannot build/install python3.6 from source!"
 			fi
@@ -756,9 +772,9 @@ golang() {
 				if [ -d "/usr/src" ]; then
 					CHANGE_DIRECTORY /usr/src || DIE 1 "Could not change directory into '/usr/src'!"
 
-					# golang 1.14+ for Hanayo & Api (Needed::Verified from UPSTREAM)
-					WGET "go1.14.tar.gz" https://golang.org/dl/go1.14.linux-amd64.tar.gz
-					tar -xvf go1.14.tar.gz
+					# golang 1.15+ for Hanayo & Api (Needed. Verified from UPSTREAM)
+					WGET "golang" "$golang_dl_url"
+					tar -xvf golang
 					CHOWN "$USER":"$USER" go
 
 					if [ -d "/usr/local" ]; then
@@ -787,12 +803,12 @@ golang() {
 			"$package_manager_frontend" -S go
 
 		elif [ "$package_manager_frontend" = "emerge" ]; then
-			# Latest stable (Gentoo package database) [02:20 PM | 30/10/2020 | Sun | GMT+6]
-			"$package_manager_frontend" -q =dev-lang/go-1.14.10
+			# Latest stable (Gentoo package database) [10:10 AM | 14/12/2020 | Mon | GMT+6]
+			"$package_manager_frontend" -q =dev-lang/go-1.15.5
 
 		elif [ "$package_manager_frontend" = "cave" ]; then
-			# Latest stable (Exherbo package database) [02:20 PM | 30/10/2020 | Sun | GMT+6]
-			"$package_manager_frontend" resolve -x =dev-lang/go-1.14.10
+			# Latest stable (Exherbo package database) [10:10 AM | 14/12/2020 | Mon | GMT+6]
+			"$package_manager_frontend" resolve -x =dev-lang/go-1.15.5
 		fi
 
 		if command -v go 1>/dev/null; then
@@ -860,64 +876,65 @@ mysql_database() {
 	else	
 		YPRINT "Setting up '$TASK'!"
 
-	# Dependencies
-	case "$package_manager_frontend" in
-		"apt")
-			"$package_manager_frontend" install gnupg -y
-			if command -v wget >/dev/null; then
-				WGET "mysql.deb" https://repo.mysql.com//mysql-apt-config_0.8.15-1_all.deb
-				# Choose MySQL 8.0+
-				dpkg -i mysql.deb
+		# Dependencies
+		case "$package_manager_frontend" in
+			"apt")
+				"$package_manager_frontend" install gnupg -y
+				if command -v wget >/dev/null; then
+					WGET "mysql.deb" "$mysql_deb_url"
+					# Choose MySQL 8.0+
+					dpkg -i mysql.deb
 
-				if [ -f "mysql.deb" ]; then
-					REMOVE mysql.deb
+					if [ -f "mysql.deb" ]; then
+						REMOVE mysql.deb
+					fi
+				else
+					DIE 1 "wget not found on this system!"
 				fi
-			else
-				DIE 1 "wget not found on this system!"
-			fi
 
-			packageManagerUpgrade
-			"$package_manager_frontend" install mysql-community-server -y
-			service mysql start
-
-			if command -v systemctl >/dev/null; then
-				systemctl restart mysql
-			fi
-			
-			;;
-			
-		"pacman")
-			"$package_manager_frontend" --noconfirm -S mariadb
-			mariadb-install-db --user=mysql --basedir=/usr --datadir=/var/lib/mysql
-			systemctl start mariadb.service
-			
-			;;
-			
-		"emerge")
-			"$package_manager_frontend" -q dev-db/mysql
-			if command -v rc >/dev/null; then
-				rc-update add mysql default ; rc-service mysql start
-			elif command -v service >/dev/null; then
+				packageManagerUpgrade
+				
+				"$package_manager_frontend" install mysql-community-server -y
 				service mysql start
-			else
-				DIE 1 "Unable to Detect init system and start Mysql service!"
-			fi
-			
-			;;
-			
-		"cave")
-			"$package_manager_frontend" resolve -x virtual/mysql
-			if command -v rc >/dev/null; then
-				rc-update add mysql default ; rc-service mysql start
-			elif command -v service >/dev/null; then
-				service mysql start
-			else
-				DIE 1 "Unable to Detect init system and start Mysql service!"
-			fi
-			
-			;;
-	esac
 
+				if command -v systemctl >/dev/null; then
+					systemctl restart mysql
+				fi
+
+				;;
+
+			"pacman")
+				"$package_manager_frontend" --noconfirm -S mariadb
+				mariadb-install-db --user=mysql --basedir=/usr --datadir=/var/lib/mysql
+				systemctl start mariadb.service
+
+				;;
+
+			"emerge")
+				"$package_manager_frontend" -q dev-db/mysql
+				if command -v rc >/dev/null; then
+					rc-update add mysql default
+					rc-service mysql start
+				elif command -v service >/dev/null; then
+					service mysql start
+				else
+					DIE 1 "Unable to Detect init system and start Mysql service!"
+				fi
+
+				;;
+
+			"cave")
+				"$package_manager_frontend" resolve -qx virtual/mysql
+				if command -v rc >/dev/null; then
+					rc-update add mysql default ; rc-service mysql start
+				elif command -v service >/dev/null; then
+					service mysql start
+				else
+					DIE 1 "Unable to Detect init system and start Mysql service!"
+				fi
+
+				;;
+		esac
 
 		if command -v mysql >/dev/null; then
 			GPRINT "Done Installing necessary Dependencies required for '$TASK'!"
@@ -1016,7 +1033,8 @@ peppy () {
 			CHANGE_DIRECTORY "$directory" || DIE 1 "Could not change directory into '$directory'!"
 
 			if command -v git 1>/dev/null; then
-				GCLONE "$peppy_url" ; CHANGE_DIRECTORY pep.py || DIE 1 "Could not change directory into '$TASK'!"
+				GCLONE "$peppy_url"
+				CHANGE_DIRECTORY pep.py || DIE 1 "Could not change directory into '$TASK'!"
 				SUBMODULE
 			else
 				DIE 1 "git not found on this system!"
@@ -1025,6 +1043,7 @@ peppy () {
 			if command -v python3.5 >/dev/null; then
 				python3.5 -m pip install -r requirements.txt
 				python3.5 setup.py build_ext --inplace
+				
 				if [ -f "pep.py" ]; then
 					python3.5 pep.py
 					if [ -f "config.ini" ]; then
@@ -1104,7 +1123,8 @@ lets() {
 			CHANGE_DIRECTORY "$directory" || DIE 1 "Could not change directory into '$directory'!"
 
 			if command -v git 1>/dev/null; then
-				GCLONE "$lets_url" ; CHANGE_DIRECTORY lets || DIE 1 "Could not change directory into '$TASK'!"
+				GCLONE "$lets_url"
+				CHANGE_DIRECTORY lets || DIE 1 "Could not change directory into '$TASK'!"
 			else
 				DIE 1 "git not found on this system!"
 			fi
@@ -1354,7 +1374,8 @@ NGINX() {
 	if [ -d "$directory" ]; then
 		(
 			CHANGE_DIRECTORY "$directory" || DIE 1 "Could not change directory into '$directory'!"
-			CREATE_DIRECTORY nginx ; CHANGE_DIRECTORY nginx || DIE 1 "Could not change directory into 'nginx'!"
+			CREATE_DIRECTORY nginx
+			CHANGE_DIRECTORY nginx || DIE 1 "Could not change directory into 'nginx'!"
 
 			WGET "nginx.conf" "$nginx_config2_url" || DIE 11 "Could not download file 'nginx.conf'!"
 
@@ -1402,7 +1423,7 @@ SSL() {
 		(
 			CHANGE_DIRECTORY "$directory" || DIE 1 "Could not change directory into '$directory'!"
 			if command -v git 1>/dev/null; then
-				GCLONE https://github.com/Neilpang/acme.sh
+				GCLONE "$acme_sh_dl_url"
 			else
 				DIE 1 "git not found on this system!"
 			fi
@@ -1451,9 +1472,11 @@ old_frontend() {
 			apt install apt-transport-https lsb-release ca-certificates -y
 			WGET /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
 			PRINT "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list
+			
 			"$package_manager_frontend" update
 			"$package_manager_frontend" install curl php7.2 php7.2-cli php7.2-common php7.2-json \
 			php7.2-opcache php7.2-mysql php7.2-zip php7.2-fpm php7.2-mbstring -y
+			
 			"$CURL" https://getcomposer.org/installer -o composer-setup.php
 			php -r "if (hash_file('SHA384', 'composer-setup.php') === '$HASH') \
 			{ PRINT 'Installer verified'; } else { PRINT 'Installer corrupt'; unlink('composer-setup.php'); } PRINT PHP_EOL;"
