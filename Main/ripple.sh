@@ -1,13 +1,13 @@
 #!/bin/sh
 # shellcheck shell=sh # Written to be posix compatible
-# shellcheck disable=SC2154,SC1090 # False Trigger
+# shellcheck disable=SC2154,SC1090,SC1091 # False Trigger
 # USING: APT, Pacman, Portage, Paludis, UNIX or GNU/Linux, Mysql/Mariadb Database.
 # SUPPORTS INIT SYSTEMS: systemd and openrc.
 
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|             Last Updated on Monday, November 9, 2020 at 06:12 PM (GMT+6)                |
+|             Last Updated on Monday, December 14, 2020 at 12:20 AM (GMT+6)               |
 -------------------------------------------------------------------------------------------
 '
 
@@ -106,10 +106,10 @@
 '
 
 # Version #
-UPSTREAM_VERSION="1.3.0"
+UPSTREAM_VERSION="2.1.1"
 
 # Upstream File #
-# ripple.sh
+# ripple.sh (main script)
 RIPPLE_SH="https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/ripple.sh"
 
 # ripple.sha1 (checksum)
@@ -143,12 +143,27 @@ certificate_url="https://raw.githubusercontent.com/osuthailand/ainu-certificate/
 key_url="https://raw.githubusercontent.com/osuthailand/ainu-certificate/master/key.key"
 
 
+# Golang Bin
+golang_dl_url="https://golang.org/dl/go1.15.6.linux-amd64.tar.gz"
+
+# Python
+# python3.5
+python35_dl_url="https://www.python.org/ftp/python/3.5.9/Python-3.5.9.tar.xz"
+# python3.6
+python36_dl_url="https://www.python.org/ftp/python/3.6.8/Python-3.6.8.tar.xz"
+
+# mysql.deb (apt)
+mysql_deb_url="https://repo.mysql.com//mysql-apt-config_0.8.15-1_all.deb"
+
+# acme.sh
+acme_sh_dl_url="https://github.com/Neilpang/acme.sh"
+
 
 # Colors For Prints
-alias RPRINT="printf '\\033[0;31m%s\\n''\\033[0;37m'"	 # Red
-alias GPRINT="printf '\\033[0;32m%s\\n''\\033[0;37m'"	 # Green
-alias YPRINT="printf '\\033[0;33m%s\\n''\\033[0;37m'"	 # Yellow
-alias BPRINT="printf '\\033[0;34m%s''\\033[0;37m'"	 # Blue
+alias RPRINT="printf '\\033[0;31m%s\\n''\\033[0;37m'"    # Red
+alias GPRINT="printf '\\033[0;32m%s\\n''\\033[0;37m'"    # Green
+alias YPRINT="printf '\\033[0;33m%s\\n''\\033[0;37m'"    # Yellow
+alias BPRINT="printf '\\033[0;34m%s''\\033[0;37m'"       # Blue
 
 
 # Command Overwrites
@@ -170,6 +185,35 @@ alias CHOWN="chown -R"
 alias APPEND="sed -Ei"
 alias MV="mv"
 alias EXIT="exit"
+
+
+# --Configuration-- #
+# Note: If left empty it'll capture input at script execution time with confirmation
+
+# Master Directory::contains::Ripple stack software(s)
+targetDir=""
+
+# Server Domain
+domain=""
+
+# cikey (Required by pep.py). Hint: can be random like password, not necessarily anything specific.
+cikey=""
+
+# OSU!API Key (https://old.ppy.sh/p/api). Note: Requires OSU! Account.
+api=""
+
+# API Secret. Hint: can be random like password, not necessarily anything specific.
+api_secret=""
+
+# Database (Mysql)
+mysql_user=""
+mysql_password=""
+database_name=""
+
+# Read from the config file
+if [ -f "$(pwd)/config.sh" ]; then
+	. "$(pwd)/config.sh"	
+fi
 
 
 
@@ -255,7 +299,7 @@ checksum_checker="true"
 if [ "$checksum_checker" = "true" ]; then
 	if [ ! -f "ripple.sha1" ]; then
 		RPRINT "file integrity data not found" ; GPRINT "Fetching the latest file integrity data"
-		wget -O "ripple.sha1" "$RIPPLE_SHA1"
+		WGET "ripple.sha1" "$RIPPLE_SHA1"
 		if [ ! -f "ripple.sha1" ]; then
 			RPRINT "Failed to fetch the latest file integrity data" ; EXIT 1
 		fi
@@ -265,13 +309,14 @@ if [ "$checksum_checker" = "true" ]; then
 		sha1sum -c ripple.sha1 || match="false"
 		if [ "$match" = "false" ]; then
 			GPRINT "Fetching the latest script, please try again..."
-			wget -O "ripple.sh" "$RIPPLE_SH"
+			WGET "ripple.sh" "$RIPPLE_SH"
 			EXIT 1
 		fi
 	else
 		RPRINT "file integrity data not found" ; EXIT 1
 	fi
 fi
+
 
 # Simplified Network Checker (IPv4 & DNS connectivity) 
 checkNetwork() {
@@ -336,23 +381,25 @@ INPUTS() {
 	if [ -n "$targetDir" ]; then
 		master_dir="$(pwd)/$targetDir"
 		if [ -d "$master_dir" ]; then
-			while [ -z "$confirmation0" ]; do
+			while [ -z "$confirmation" ]; do
 				BPRINT "Master Directory: '$master_dir' exists. Continue ? y/n "
-				READ confirmation0
+				READ confirmation
 			done
 
-			if [ "$confirmation0" = "y" ]; then
+			if [ "$confirmation" = "y" ]; then
 				GPRINT "Using Directory '$master_dir'."
 			else
 				DIE 1 "Input Declined by the user!"
 			fi
+			
+			unset confirmation
 		else
-			while [ -z "$confirmation1" ]; do
+			while [ -z "$confirmation" ]; do
 				BPRINT "Create Master Directory: '$master_dir' ? y/n "
-				READ confirmation1
+				READ confirmation
 			done
 
-			if [ "$confirmation1" = "y" ]; then
+			if [ "$confirmation" = "y" ]; then
 				CREATE_DIRECTORY "$master_dir"
 				if [ -d "$master_dir" ]; then
 					GPRINT "'$master_dir' has been created!"
@@ -360,6 +407,8 @@ INPUTS() {
 					DIE 1 "Failed to create '$master_dir'!"
 				fi
 			fi
+			
+			unset confirmation
 		fi
 
 		if [ -d "$master_dir" ]; then
@@ -376,16 +425,19 @@ INPUTS() {
 		READ domain
 	done
 
-	while [ -z "$confirmation2" ]; do
-		BPRINT "Are you sure you want to use '$domain' ? y/n "
-		READ confirmation2
+	while [ -z "$confirmation" ]; do
+		BPRINT "Are you sure you want to use domain: '$domain' ? y/n "
+		READ confirmation
 	done
 
-	if [ "$confirmation2" = "y" ]; then
+	if [ "$confirmation" = "y" ]; then
 		EXPORT domain
 	else
 		DIE 1 "Domain Not specified!"
 	fi
+	
+	unset confirmation
+	
 
 	# Cikey
 	while [ -z "$cikey" ]; do
@@ -393,16 +445,19 @@ INPUTS() {
 		READ cikey
 	done
 
-	while [ -z "$confirmation3" ]; do
-		BPRINT "Are you sure you want to use '$cikey' ? y/n "
-		READ confirmation3
+	while [ -z "$confirmation" ]; do
+		BPRINT "Are you sure you want to use cikey: '$cikey' ? y/n "
+		READ confirmation
 	done
 
-	if [ "$confirmation3" = "y" ]; then
+	if [ "$confirmation" = "y" ]; then
 		EXPORT cikey
 	else
 		DIE 1 "cikey Not specified!"
 	fi
+	
+	unset confirmation
+	
 
 	# OSU!API
 	GPRINT "Get OSU!API Key Here: https://old.ppy.sh/p/api"
@@ -412,16 +467,19 @@ INPUTS() {
 		READ api
 	done
 
-	while [ -z "$confirmation4" ]; do
-		BPRINT "Are you sure you want to use '$api' ? y/n "
-		READ confirmation4
+	while [ -z "$confirmation" ]; do
+		BPRINT "Are you sure you want to use api: '$api' ? y/n "
+		READ confirmation
 	done
 
-	if [ "$confirmation4" = "y" ]; then
+	if [ "$confirmation" = "y" ]; then
 		EXPORT api
 	else
 		DIE 1 "OSU!API Key Not specified!"
 	fi
+	
+	unset confirmation
+	
 
 	# API-Secret
 	while [ -z "$api_secret" ]; do
@@ -429,16 +487,19 @@ INPUTS() {
 		READ api_secret
 	done
 
-	while [ -z "$confirmation5" ]; do
-		BPRINT "Are you sure you want to use '$api_secret' ? y/n "
-		READ confirmation5
+	while [ -z "$confirmation" ]; do
+		BPRINT "Are you sure you want to use api secret: '$api_secret' ? y/n "
+		READ confirmation
 	done
 
-	if [ "$confirmation5" = "y" ]; then
+	if [ "$confirmation" = "y" ]; then
 		EXPORT api_secret
 	else
 		DIE 1 "API Secret Not specified!"
 	fi
+	
+	unset confirmation
+	
 
 	# MySQL USERNAME
 	while [ -z "$mysql_user" ]; do
@@ -446,16 +507,19 @@ INPUTS() {
 		READ mysql_user
 	done
 
-	while [ -z "$confirmation6" ]; do
-		BPRINT "Are you sure you want to use '$mysql_user' ? y/n "
-		READ confirmation6
+	while [ -z "$confirmation" ]; do
+		BPRINT "Are you sure you want to use mysql username: '$mysql_user' ? y/n "
+		READ confirmation
 	done
 
-	if [ "$confirmation6" = "y" ]; then
+	if [ "$confirmation" = "y" ]; then
 		EXPORT mysql_user
 	else
 		DIE 1 "MYSQL Username Not specified!"
 	fi
+	
+	unset confirmation
+	
 
 	# MySQL PASSWORD
 	while [ -z "$mysql_password" ]; do
@@ -463,16 +527,19 @@ INPUTS() {
 		READ mysql_password
 	done
 
-	while [ -z "$confirmation7" ]; do
-		BPRINT "Are you sure you want to use '$mysql_password' ? y/n "
-		READ confirmation7
+	while [ -z "$confirmation" ]; do
+		BPRINT "Are you sure you want to use mysql password: '$mysql_password' ? y/n "
+		READ confirmation
 	done
 
-	if [ "$confirmation7" = "y" ]; then
+	if [ "$confirmation" = "y" ]; then
 		EXPORT mysql_password
 	else
 		DIE 1 "MYSQL Password Not specified!"
 	fi
+	
+	unset confirmation
+	
 
 	# MySQL DATABASE NAME
 	while [ -z "$database_name" ]; do
@@ -480,16 +547,19 @@ INPUTS() {
 		READ database_name
 	done
 
-	while [ -z "$confirmation8" ]; do
-		BPRINT "Are you sure you want to use '$database_name' ? y/n "
-		READ confirmation8
+	while [ -z "$confirmation" ]; do
+		BPRINT "Are you sure you want to use mysql database: '$database_name' ? y/n "
+		READ confirmation
 	done
 
-	if [ "$confirmation8" = "y" ]; then
+	if [ "$confirmation" = "y" ]; then
 		EXPORT database_name
 	else
 		DIE 1 "MYSQL Database Name Not specified!"
 	fi
+	
+	unset confirmation
+	
 
 	GPRINT "All necessary '$TASK' obtained."
 
@@ -633,7 +703,7 @@ python3_5() {
 		(
 			if [ -d "/usr/src" ]; then
 				CHANGE_DIRECTORY /usr/src || DIE 1 "Could not change directory into '/usr/src'!"
-				WGET "Python-3.5.9.tar.xz" https://www.python.org/ftp/python/3.5.9/Python-3.5.9.tar.xz || DIE 1 "Could not download file 'Python-3.5.9.tar.xz'."
+				WGET "Python-3.5.9.tar.xz" "$python35_dl_url" || DIE 1 "Could not download file 'Python-3.5.9.tar.xz'."
 			fi
 
 			if [ -f "Python-3.5.9.tar.xz" ]; then
@@ -646,8 +716,8 @@ python3_5() {
 
 				if [ -f "Makefile.pre.in" ]; then
 					./configure --enable-optimizations --with-ensurepip=install
-					make --jobs "$procNum" build_all
-					make install
+					make --jobs "$procNum" build_all || DIE 1 "'Python-3.5.9' make returned error at build_all!"
+					make install || DIE 1 "'Python-3.5.9' make returned error at install!"
 				else
 					DIE 1 "Makefile not found. Cannot build/install python3.5 from source!"
 				fi
@@ -693,7 +763,7 @@ python3_6() {
 	(
 		if [ -d "/usr/src" ]; then
 			CHANGE_DIRECTORY /usr/src || DIE 1 "Could not change directory into '/usr/src'!"
-			WGET "Python-3.6.8.tar.xz" https://www.python.org/ftp/python/3.6.8/Python-3.6.8.tar.xz || DIE 11 "Could not download file 'Python-3.6.8.tar.xz'."
+			WGET "Python-3.6.8.tar.xz" "$python36_dl_url" || DIE 11 "Could not download file 'Python-3.6.8.tar.xz'."
 		fi
 
 		if [ -f "Python-3.6.8.tar.xz" ]; then
@@ -706,8 +776,8 @@ python3_6() {
 
 			if [ -f "Makefile.pre.in" ]; then
 				./configure --enable-optimizations --with-ensurepip=install
-				make --jobs "$procNum" build_all
-				make install
+				make --jobs "$procNum" build_all || DIE 1 "'Python-3.6.8' make returned error at build_all!"
+				make install || DIE 1 "'Python-3.6.8' make returned error at install!"
 			else
 				DIE 1 "Makefile not found. Cannot build/install python3.6 from source!"
 			fi
@@ -756,9 +826,9 @@ golang() {
 				if [ -d "/usr/src" ]; then
 					CHANGE_DIRECTORY /usr/src || DIE 1 "Could not change directory into '/usr/src'!"
 
-					# golang 1.14+ for Hanayo & Api (Needed::Verified from UPSTREAM)
-					WGET "go1.14.tar.gz" https://golang.org/dl/go1.14.linux-amd64.tar.gz
-					tar -xvf go1.14.tar.gz
+					# golang 1.15+ for Hanayo & Api (Needed. Verified from UPSTREAM)
+					WGET "golang" "$golang_dl_url"
+					tar -xvf golang
 					CHOWN "$USER":"$USER" go
 
 					if [ -d "/usr/local" ]; then
@@ -787,12 +857,12 @@ golang() {
 			"$package_manager_frontend" -S go
 
 		elif [ "$package_manager_frontend" = "emerge" ]; then
-			# Latest stable (Gentoo package database) [02:20 PM | 30/10/2020 | Sun | GMT+6]
-			"$package_manager_frontend" -q =dev-lang/go-1.14.10
+			# Latest stable (Gentoo package database) [10:10 AM | 14/12/2020 | Mon | GMT+6]
+			"$package_manager_frontend" -q =dev-lang/go-1.15.5
 
 		elif [ "$package_manager_frontend" = "cave" ]; then
-			# Latest stable (Exherbo package database) [02:20 PM | 30/10/2020 | Sun | GMT+6]
-			"$package_manager_frontend" resolve -x =dev-lang/go-1.14.10
+			# Latest stable (Exherbo package database) [10:10 AM | 14/12/2020 | Mon | GMT+6]
+			"$package_manager_frontend" resolve -qx =dev-lang/go-1.15.5
 		fi
 
 		if command -v go 1>/dev/null; then
@@ -860,64 +930,65 @@ mysql_database() {
 	else	
 		YPRINT "Setting up '$TASK'!"
 
-	# Dependencies
-	case "$package_manager_frontend" in
-		"apt")
-			"$package_manager_frontend" install gnupg -y
-			if command -v wget >/dev/null; then
-				WGET "mysql.deb" https://repo.mysql.com//mysql-apt-config_0.8.15-1_all.deb
-				# Choose MySQL 8.0+
-				dpkg -i mysql.deb
+		# Dependencies
+		case "$package_manager_frontend" in
+			"apt")
+				"$package_manager_frontend" install gnupg -y
+				if command -v wget >/dev/null; then
+					WGET "mysql.deb" "$mysql_deb_url"
+					# Choose MySQL 8.0+
+					dpkg -i mysql.deb
 
-				if [ -f "mysql.deb" ]; then
-					REMOVE mysql.deb
+					if [ -f "mysql.deb" ]; then
+						REMOVE mysql.deb
+					fi
+				else
+					DIE 1 "wget not found on this system!"
 				fi
-			else
-				DIE 1 "wget not found on this system!"
-			fi
 
-			packageManagerUpgrade
-			"$package_manager_frontend" install mysql-community-server -y
-			service mysql start
-
-			if command -v systemctl >/dev/null; then
-				systemctl restart mysql
-			fi
-			
-			;;
-			
-		"pacman")
-			"$package_manager_frontend" --noconfirm -S mariadb
-			mariadb-install-db --user=mysql --basedir=/usr --datadir=/var/lib/mysql
-			systemctl start mariadb.service
-			
-			;;
-			
-		"emerge")
-			"$package_manager_frontend" -q dev-db/mysql
-			if command -v rc >/dev/null; then
-				rc-update add mysql default ; rc-service mysql start
-			elif command -v service >/dev/null; then
+				packageManagerUpgrade
+				
+				"$package_manager_frontend" install mysql-community-server -y
 				service mysql start
-			else
-				DIE 1 "Unable to Detect init system and start Mysql service!"
-			fi
-			
-			;;
-			
-		"cave")
-			"$package_manager_frontend" resolve -x virtual/mysql
-			if command -v rc >/dev/null; then
-				rc-update add mysql default ; rc-service mysql start
-			elif command -v service >/dev/null; then
-				service mysql start
-			else
-				DIE 1 "Unable to Detect init system and start Mysql service!"
-			fi
-			
-			;;
-	esac
 
+				if command -v systemctl >/dev/null; then
+					systemctl restart mysql
+				fi
+
+				;;
+
+			"pacman")
+				"$package_manager_frontend" --noconfirm -S mariadb
+				mariadb-install-db --user=mysql --basedir=/usr --datadir=/var/lib/mysql
+				systemctl start mariadb.service
+
+				;;
+
+			"emerge")
+				"$package_manager_frontend" -q dev-db/mysql
+				if command -v rc >/dev/null; then
+					rc-update add mysql default
+					rc-service mysql start
+				elif command -v service >/dev/null; then
+					service mysql start
+				else
+					DIE 1 "Unable to Detect init system and start Mysql service!"
+				fi
+
+				;;
+
+			"cave")
+				"$package_manager_frontend" resolve -qx virtual/mysql
+				if command -v rc >/dev/null; then
+					rc-update add mysql default ; rc-service mysql start
+				elif command -v service >/dev/null; then
+					service mysql start
+				else
+					DIE 1 "Unable to Detect init system and start Mysql service!"
+				fi
+
+				;;
+		esac
 
 		if command -v mysql >/dev/null; then
 			GPRINT "Done Installing necessary Dependencies required for '$TASK'!"
@@ -980,7 +1051,7 @@ phpmyadmin() {
 			;;
 			
 		"cave")
-			"$package_manager_frontend" resolve -x dev-lang/php
+			"$package_manager_frontend" resolve -qx dev-lang/php
 			
 			;;	
 	esac
@@ -1016,7 +1087,8 @@ peppy () {
 			CHANGE_DIRECTORY "$directory" || DIE 1 "Could not change directory into '$directory'!"
 
 			if command -v git 1>/dev/null; then
-				GCLONE "$peppy_url" ; CHANGE_DIRECTORY pep.py || DIE 1 "Could not change directory into '$TASK'!"
+				GCLONE "$peppy_url"
+				CHANGE_DIRECTORY pep.py || DIE 1 "Could not change directory into '$TASK'!"
 				SUBMODULE
 			else
 				DIE 1 "git not found on this system!"
@@ -1025,6 +1097,7 @@ peppy () {
 			if command -v python3.5 >/dev/null; then
 				python3.5 -m pip install -r requirements.txt
 				python3.5 setup.py build_ext --inplace
+				
 				if [ -f "pep.py" ]; then
 					python3.5 pep.py
 					if [ -f "config.ini" ]; then
@@ -1104,7 +1177,8 @@ lets() {
 			CHANGE_DIRECTORY "$directory" || DIE 1 "Could not change directory into '$directory'!"
 
 			if command -v git 1>/dev/null; then
-				GCLONE "$lets_url" ; CHANGE_DIRECTORY lets || DIE 1 "Could not change directory into '$TASK'!"
+				GCLONE "$lets_url"
+				CHANGE_DIRECTORY lets || DIE 1 "Could not change directory into '$TASK'!"
 			else
 				DIE 1 "git not found on this system!"
 			fi
@@ -1354,7 +1428,8 @@ NGINX() {
 	if [ -d "$directory" ]; then
 		(
 			CHANGE_DIRECTORY "$directory" || DIE 1 "Could not change directory into '$directory'!"
-			CREATE_DIRECTORY nginx ; CHANGE_DIRECTORY nginx || DIE 1 "Could not change directory into 'nginx'!"
+			CREATE_DIRECTORY nginx
+			CHANGE_DIRECTORY nginx || DIE 1 "Could not change directory into 'nginx'!"
 
 			WGET "nginx.conf" "$nginx_config2_url" || DIE 11 "Could not download file 'nginx.conf'!"
 
@@ -1402,7 +1477,7 @@ SSL() {
 		(
 			CHANGE_DIRECTORY "$directory" || DIE 1 "Could not change directory into '$directory'!"
 			if command -v git 1>/dev/null; then
-				GCLONE https://github.com/Neilpang/acme.sh
+				GCLONE "$acme_sh_dl_url"
 			else
 				DIE 1 "git not found on this system!"
 			fi
@@ -1451,9 +1526,11 @@ old_frontend() {
 			apt install apt-transport-https lsb-release ca-certificates -y
 			WGET /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
 			PRINT "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list
+			
 			"$package_manager_frontend" update
 			"$package_manager_frontend" install curl php7.2 php7.2-cli php7.2-common php7.2-json \
 			php7.2-opcache php7.2-mysql php7.2-zip php7.2-fpm php7.2-mbstring -y
+			
 			"$CURL" https://getcomposer.org/installer -o composer-setup.php
 			php -r "if (hash_file('SHA384', 'composer-setup.php') === '$HASH') \
 			{ PRINT 'Installer verified'; } else { PRINT 'Installer corrupt'; unlink('composer-setup.php'); } PRINT PHP_EOL;"
@@ -1472,7 +1549,7 @@ old_frontend() {
 			;;
 			
 		"cave")
-			"$package_manager_frontend" resolve -x dev-lang/php dev-php/composer
+			"$package_manager_frontend" resolve -qx dev-lang/php dev-php/composer
 			
 			;;
 	esac
@@ -1547,8 +1624,8 @@ while [ "$#" -ge 0 ]; do case "$1" in
 	"--all" | "-A")
 		case "$2" in
 			"--nodependencies" | "--nodep")
-				GPRINT "[NO Dependencies MODE]"
 				checkRoot
+				GPRINT "[NO Dependencies MODE]"
 				DetectPackageManager
 				INPUTS
 				checkNetwork
@@ -1565,8 +1642,8 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				EXIT 0 ;;
 
 			"")
-				GPRINT "[Dependencies MODE]"
 				checkRoot
+				GPRINT "[Dependencies MODE]"
 				DetectPackageManager
 				INPUTS
 				checkNetwork
@@ -1640,8 +1717,8 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		EXIT 0 ;;
 
 	"--dependencies" | "-dep")
-		GPRINT "[Dependencies MODE]"
 		checkRoot
+		GPRINT "[Dependencies MODE]"
 		DetectPackageManager
 		checkNetwork
 		packageManagerUpgrade
@@ -1656,8 +1733,8 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		EXIT 0 ;;
 
 	"--mysql" | "-M")
-		GPRINT "[Dependencies MODE]"
 		checkRoot
+		GPRINT "[Dependencies MODE]"
 		DetectPackageManager
 		INPUTS
 		checkNetwork
@@ -1676,8 +1753,8 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				EXIT 0 ;;
 
 			"")
-				GPRINT "[Dependencies MODE]"
 				checkRoot
+				GPRINT "[Dependencies MODE]"
 				DetectPackageManager
 				INPUTS
 				checkNetwork
@@ -1705,8 +1782,8 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				EXIT 0 ;;
 
 			"")
-				GPRINT "[Dependencies MODE]"
 				checkRoot
+				GPRINT "[Dependencies MODE]"
 				DetectPackageManager
 				INPUTS
 				checkNetwork
@@ -1734,8 +1811,8 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				EXIT 0 ;;
 
 			"")
-				GPRINT "[Dependencies MODE]"
 				checkRoot
+				GPRINT "[Dependencies MODE]"
 				DetectPackageManager
 				INPUTS
 				checkNetwork
@@ -1763,8 +1840,8 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				EXIT 0 ;;
 
 			"")
-				GPRINT "[Dependencies MODE]"
 				checkRoot
+				GPRINT "[Dependencies MODE]"
 				DetectPackageManager
 				INPUTS
 				checkNetwork
@@ -1790,8 +1867,8 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				EXIT 0 ;;
 
 			"")
-				GPRINT "[Dependencies MODE]"
 				checkRoot
+				GPRINT "[Dependencies MODE]"
 				DetectPackageManager
 				INPUTS
 				checkNetwork
@@ -1810,8 +1887,8 @@ while [ "$#" -ge 0 ]; do case "$1" in
 	"--oldfrontend" | "-OF")
 		case "$2" in
 			"--nodependencies" | "--nodep")
-				GPRINT "[NO Dependencies MODE]"
 				checkRoot
+				GPRINT "[NO Dependencies MODE]"
 				DetectPackageManager
 				INPUTS
 				checkNetwork
@@ -1819,8 +1896,8 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				EXIT 0 ;;
 
 			"")
-				GPRINT "[Dependencies MODE]"
 				checkRoot
+				GPRINT "[Dependencies MODE]"
 				DetectPackageManager
 				INPUTS
 				checkNetwork
@@ -1839,8 +1916,8 @@ while [ "$#" -ge 0 ]; do case "$1" in
 	"--nginx" | "-N")
 		case "$2" in
 			"--nodependencies" | "--nodep")
-				GPRINT "[NO Dependencies MODE]"
 				checkRoot
+				GPRINT "[NO Dependencies MODE]"
 				DetectPackageManager
 				checkNetwork
 				INPUTS
@@ -1848,8 +1925,8 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				EXIT 0 ;;
 
 			"")
-				GPRINT "[Dependencies MODE]"
 				checkRoot
+				GPRINT "[Dependencies MODE]"
 				DetectPackageManager
 				checkNetwork
 				INPUTS

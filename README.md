@@ -11,10 +11,11 @@
   <img src="https://img.shields.io/github/stars/Uniminin/Ripple-Auto-Installer?style=for-the-badge">
   <img src="https://img.shields.io/github/forks/Uniminin/Ripple-Auto-Installer?color=teal&style=for-the-badge">
   <img src="https://img.shields.io/codefactor/grade/github/Uniminin/Ripple-Auto-Installer?style=for-the-badge">
-  
-  <img src="https://github.com/Uniminin/Ripple-Auto-Installer/blob/master/Miscellaneous/ripple.svg">
 </p>
 
+<p align="center">
+  <img src="https://github.com/Uniminin/Ripple-Auto-Installer/blob/master/Miscellaneous/ripple.svg">
+</p>
 
 ## ATTENTION
 <b>**FOR ADVANCED USERS!**</b><br>
@@ -75,12 +76,15 @@ This project gives you a base and foundation if you're willing to setup your own
 ├── Database files
 │  └── ripple.sql
 ├── LICENSE
-├── ain
+├── Main
+│  ├── config.sh
 │  ├── gencert.sh
 │  ├── openssl.cnf
 │  ├── ripple.conf
 │  ├── ripple.sh
-│  └── ripple.sha1
+│  ├── ripple.sha1
+│  ├── tmux.sh
+│  └── tmux.sha1
 ├── Miscellaneous
 │  ├── certificate.md
 │  ├── cloudflare.png
@@ -130,18 +134,29 @@ With Git
 # Clone the Repository
 git clone https://github.com/Uniminin/Ripple-Auto-Installer ; cd Ripple-Auto-Installer
 cd Main
+
 # Make the script readable, writable, and executable to root and your user:
 chmod 770 ripple.sh
+
+# edit the ripple.sh or config.sh file located in `./Main/` if necessary (optional)
+
+# Finally read the output of
 ./ripple.sh --help
 ```
 With wget (Recommended)
 ```bash
 # Download the latest script
 wget -O "ripple.sh" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/ripple.sh
+
 # Download the latest file integrity data
 wget -O "ripple.sha1" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/ripple.sha1
+
 # Make the script readable, writable, and executable to root and your user:
 chmod 770 ripple.sh
+
+# edit the ripple.sh or config.sh file located in `./Main/` if necessary (optional)
+
+# Finally read the output of
 ./ripple.sh --help
 ```
 Bedrock How To:
