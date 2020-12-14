@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|             Last Updated on Monday, December 14, 2020 at 12:20 AM (GMT+6)               |
+|             Last Updated on Monday, December 14, 2020 at 01:05 PM (GMT+6)               |
 -------------------------------------------------------------------------------------------
 '
 
@@ -106,7 +106,7 @@
 '
 
 # Version #
-UPSTREAM_VERSION="2.1.1"
+UPSTREAM_VERSION="2.2.0"
 
 # Upstream File #
 # ripple.sh (main script)
@@ -160,10 +160,11 @@ acme_sh_dl_url="https://github.com/Neilpang/acme.sh"
 
 
 # Colors For Prints
-alias RPRINT="printf '\\033[0;31m%s\\n''\\033[0;37m'"    # Red
-alias GPRINT="printf '\\033[0;32m%s\\n''\\033[0;37m'"    # Green
-alias YPRINT="printf '\\033[0;33m%s\\n''\\033[0;37m'"    # Yellow
-alias BPRINT="printf '\\033[0;34m%s''\\033[0;37m'"       # Blue
+# RPRINT -> prints to standard error instead of standard output
+alias RPRINT="printf '\\033[0;31m%s\\n''\\033[0;37m' >&2"    # Red
+alias GPRINT="printf '\\033[0;32m%s\\n''\\033[0;37m'"        # Green
+alias YPRINT="printf '\\033[0;33m%s\\n''\\033[0;37m'"        # Yellow
+alias BPRINT="printf '\\033[0;34m%s''\\033[0;37m'"           # Blue
 
 
 # Command Overwrites
