@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|             Last Updated on Monday, December 14, 2020 at 11:40 AM (GMT+6)               |
+|             Last Updated on Monday, December 14, 2020 at 11:45 AM (GMT+6)               |
 -------------------------------------------------------------------------------------------
 '
 
@@ -106,7 +106,7 @@
 '
 
 # Version #
-UPSTREAM_VERSION="1.3.12"
+UPSTREAM_VERSION="1.4.1"
 
 # Upstream File #
 # ripple.sh (main script)
@@ -352,23 +352,25 @@ INPUTS() {
 	if [ -n "$targetDir" ]; then
 		master_dir="$(pwd)/$targetDir"
 		if [ -d "$master_dir" ]; then
-			while [ -z "$confirmation0" ]; do
+			while [ -z "$confirmation" ]; do
 				BPRINT "Master Directory: '$master_dir' exists. Continue ? y/n "
-				READ confirmation0
+				READ confirmation
 			done
 
-			if [ "$confirmation0" = "y" ]; then
+			if [ "$confirmation" = "y" ]; then
 				GPRINT "Using Directory '$master_dir'."
 			else
 				DIE 1 "Input Declined by the user!"
 			fi
+			
+			unset confirmation
 		else
-			while [ -z "$confirmation1" ]; do
+			while [ -z "$confirmation" ]; do
 				BPRINT "Create Master Directory: '$master_dir' ? y/n "
-				READ confirmation1
+				READ confirmation
 			done
 
-			if [ "$confirmation1" = "y" ]; then
+			if [ "$confirmation" = "y" ]; then
 				CREATE_DIRECTORY "$master_dir"
 				if [ -d "$master_dir" ]; then
 					GPRINT "'$master_dir' has been created!"
@@ -376,6 +378,8 @@ INPUTS() {
 					DIE 1 "Failed to create '$master_dir'!"
 				fi
 			fi
+			
+			unset confirmation
 		fi
 
 		if [ -d "$master_dir" ]; then
@@ -392,16 +396,19 @@ INPUTS() {
 		READ domain
 	done
 
-	while [ -z "$confirmation2" ]; do
+	while [ -z "$confirmation" ]; do
 		BPRINT "Are you sure you want to use '$domain' ? y/n "
-		READ confirmation2
+		READ confirmation
 	done
 
-	if [ "$confirmation2" = "y" ]; then
+	if [ "$confirmation" = "y" ]; then
 		EXPORT domain
 	else
 		DIE 1 "Domain Not specified!"
 	fi
+	
+	unset confirmation
+	
 
 	# Cikey
 	while [ -z "$cikey" ]; do
@@ -409,16 +416,19 @@ INPUTS() {
 		READ cikey
 	done
 
-	while [ -z "$confirmation3" ]; do
+	while [ -z "$confirmation" ]; do
 		BPRINT "Are you sure you want to use '$cikey' ? y/n "
-		READ confirmation3
+		READ confirmation
 	done
 
-	if [ "$confirmation3" = "y" ]; then
+	if [ "$confirmation" = "y" ]; then
 		EXPORT cikey
 	else
 		DIE 1 "cikey Not specified!"
 	fi
+	
+	unset confirmation
+	
 
 	# OSU!API
 	GPRINT "Get OSU!API Key Here: https://old.ppy.sh/p/api"
@@ -428,16 +438,19 @@ INPUTS() {
 		READ api
 	done
 
-	while [ -z "$confirmation4" ]; do
+	while [ -z "$confirmation" ]; do
 		BPRINT "Are you sure you want to use '$api' ? y/n "
-		READ confirmation4
+		READ confirmation
 	done
 
-	if [ "$confirmation4" = "y" ]; then
+	if [ "$confirmation" = "y" ]; then
 		EXPORT api
 	else
 		DIE 1 "OSU!API Key Not specified!"
 	fi
+	
+	unset confirmation
+	
 
 	# API-Secret
 	while [ -z "$api_secret" ]; do
@@ -445,16 +458,19 @@ INPUTS() {
 		READ api_secret
 	done
 
-	while [ -z "$confirmation5" ]; do
+	while [ -z "$confirmation" ]; do
 		BPRINT "Are you sure you want to use '$api_secret' ? y/n "
-		READ confirmation5
+		READ confirmation
 	done
 
-	if [ "$confirmation5" = "y" ]; then
+	if [ "$confirmation" = "y" ]; then
 		EXPORT api_secret
 	else
 		DIE 1 "API Secret Not specified!"
 	fi
+	
+	unset confirmation
+	
 
 	# MySQL USERNAME
 	while [ -z "$mysql_user" ]; do
@@ -462,16 +478,19 @@ INPUTS() {
 		READ mysql_user
 	done
 
-	while [ -z "$confirmation6" ]; do
+	while [ -z "$confirmation" ]; do
 		BPRINT "Are you sure you want to use '$mysql_user' ? y/n "
-		READ confirmation6
+		READ confirmation
 	done
 
-	if [ "$confirmation6" = "y" ]; then
+	if [ "$confirmation" = "y" ]; then
 		EXPORT mysql_user
 	else
 		DIE 1 "MYSQL Username Not specified!"
 	fi
+	
+	unset confirmation
+	
 
 	# MySQL PASSWORD
 	while [ -z "$mysql_password" ]; do
@@ -479,16 +498,19 @@ INPUTS() {
 		READ mysql_password
 	done
 
-	while [ -z "$confirmation7" ]; do
+	while [ -z "$confirmation" ]; do
 		BPRINT "Are you sure you want to use '$mysql_password' ? y/n "
-		READ confirmation7
+		READ confirmation
 	done
 
-	if [ "$confirmation7" = "y" ]; then
+	if [ "$confirmation" = "y" ]; then
 		EXPORT mysql_password
 	else
 		DIE 1 "MYSQL Password Not specified!"
 	fi
+	
+	unset confirmation
+	
 
 	# MySQL DATABASE NAME
 	while [ -z "$database_name" ]; do
@@ -496,16 +518,19 @@ INPUTS() {
 		READ database_name
 	done
 
-	while [ -z "$confirmation8" ]; do
+	while [ -z "$confirmation" ]; do
 		BPRINT "Are you sure you want to use '$database_name' ? y/n "
-		READ confirmation8
+		READ confirmation
 	done
 
-	if [ "$confirmation8" = "y" ]; then
+	if [ "$confirmation" = "y" ]; then
 		EXPORT database_name
 	else
 		DIE 1 "MYSQL Database Name Not specified!"
 	fi
+	
+	unset confirmation
+	
 
 	GPRINT "All necessary '$TASK' obtained."
 
