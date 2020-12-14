@@ -1,13 +1,13 @@
 #!/bin/sh
 # shellcheck shell=sh # Written to be posix compatible
-# shellcheck disable=SC2154,SC1090 # False Trigger
+# shellcheck disable=SC2154,SC1090,SC1091 # False Trigger
 # USING: APT, Pacman, Portage, Paludis, UNIX or GNU/Linux, Mysql/Mariadb Database.
 # SUPPORTS INIT SYSTEMS: systemd and openrc.
 
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|             Last Updated on Monday, December 14, 2020 at 11:45 AM (GMT+6)               |
+|             Last Updated on Monday, December 14, 2020 at 12:15 AM (GMT+6)               |
 -------------------------------------------------------------------------------------------
 '
 
@@ -106,7 +106,7 @@
 '
 
 # Version #
-UPSTREAM_VERSION="1.4.1"
+UPSTREAM_VERSION="2.0.0"
 
 # Upstream File #
 # ripple.sh (main script)
@@ -185,6 +185,33 @@ alias CHOWN="chown -R"
 alias APPEND="sed -Ei"
 alias MV="mv"
 alias EXIT="exit"
+
+
+# --Configuration-- #
+# Note: If left empty it'll capture input at script execution time with confirmation
+
+# Master Directory::contains::Ripple stack software(s)
+targetDir=""
+
+# Server Domain
+domain=""
+
+# cikey (Required by pep.py). Hint: can be random like password, not necessarily anything specific.
+cikey=""
+
+# OSU!API Key (https://old.ppy.sh/p/api). Note: Requires OSU! Account.
+api=""
+
+# API Secret. Hint: can be random like password, not necessarily anything specific.
+api_secret=""
+
+# Database (Mysql)
+mysql_user=""
+mysql_password=""
+database_name=""
+
+# Read from the config file
+. "$(pwd)/config.sh"
 
 
 
@@ -397,7 +424,7 @@ INPUTS() {
 	done
 
 	while [ -z "$confirmation" ]; do
-		BPRINT "Are you sure you want to use '$domain' ? y/n "
+		BPRINT "Are you sure you want to use domain: '$domain' ? y/n "
 		READ confirmation
 	done
 
@@ -417,7 +444,7 @@ INPUTS() {
 	done
 
 	while [ -z "$confirmation" ]; do
-		BPRINT "Are you sure you want to use '$cikey' ? y/n "
+		BPRINT "Are you sure you want to use cikey: '$cikey' ? y/n "
 		READ confirmation
 	done
 
@@ -439,7 +466,7 @@ INPUTS() {
 	done
 
 	while [ -z "$confirmation" ]; do
-		BPRINT "Are you sure you want to use '$api' ? y/n "
+		BPRINT "Are you sure you want to use api: '$api' ? y/n "
 		READ confirmation
 	done
 
@@ -459,7 +486,7 @@ INPUTS() {
 	done
 
 	while [ -z "$confirmation" ]; do
-		BPRINT "Are you sure you want to use '$api_secret' ? y/n "
+		BPRINT "Are you sure you want to use api secret: '$api_secret' ? y/n "
 		READ confirmation
 	done
 
@@ -479,7 +506,7 @@ INPUTS() {
 	done
 
 	while [ -z "$confirmation" ]; do
-		BPRINT "Are you sure you want to use '$mysql_user' ? y/n "
+		BPRINT "Are you sure you want to use mysql username: '$mysql_user' ? y/n "
 		READ confirmation
 	done
 
@@ -499,7 +526,7 @@ INPUTS() {
 	done
 
 	while [ -z "$confirmation" ]; do
-		BPRINT "Are you sure you want to use '$mysql_password' ? y/n "
+		BPRINT "Are you sure you want to use mysql password: '$mysql_password' ? y/n "
 		READ confirmation
 	done
 
@@ -519,7 +546,7 @@ INPUTS() {
 	done
 
 	while [ -z "$confirmation" ]; do
-		BPRINT "Are you sure you want to use '$database_name' ? y/n "
+		BPRINT "Are you sure you want to use mysql database: '$database_name' ? y/n "
 		READ confirmation
 	done
 
@@ -1595,8 +1622,8 @@ while [ "$#" -ge 0 ]; do case "$1" in
 	"--all" | "-A")
 		case "$2" in
 			"--nodependencies" | "--nodep")
-				GPRINT "[NO Dependencies MODE]"
 				checkRoot
+				GPRINT "[NO Dependencies MODE]"
 				DetectPackageManager
 				INPUTS
 				checkNetwork
@@ -1613,8 +1640,8 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				EXIT 0 ;;
 
 			"")
-				GPRINT "[Dependencies MODE]"
 				checkRoot
+				GPRINT "[Dependencies MODE]"
 				DetectPackageManager
 				INPUTS
 				checkNetwork
@@ -1688,8 +1715,8 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		EXIT 0 ;;
 
 	"--dependencies" | "-dep")
-		GPRINT "[Dependencies MODE]"
 		checkRoot
+		GPRINT "[Dependencies MODE]"
 		DetectPackageManager
 		checkNetwork
 		packageManagerUpgrade
@@ -1704,8 +1731,8 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		EXIT 0 ;;
 
 	"--mysql" | "-M")
-		GPRINT "[Dependencies MODE]"
 		checkRoot
+		GPRINT "[Dependencies MODE]"
 		DetectPackageManager
 		INPUTS
 		checkNetwork
@@ -1724,8 +1751,8 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				EXIT 0 ;;
 
 			"")
-				GPRINT "[Dependencies MODE]"
 				checkRoot
+				GPRINT "[Dependencies MODE]"
 				DetectPackageManager
 				INPUTS
 				checkNetwork
@@ -1753,8 +1780,8 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				EXIT 0 ;;
 
 			"")
-				GPRINT "[Dependencies MODE]"
 				checkRoot
+				GPRINT "[Dependencies MODE]"
 				DetectPackageManager
 				INPUTS
 				checkNetwork
@@ -1782,8 +1809,8 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				EXIT 0 ;;
 
 			"")
-				GPRINT "[Dependencies MODE]"
 				checkRoot
+				GPRINT "[Dependencies MODE]"
 				DetectPackageManager
 				INPUTS
 				checkNetwork
@@ -1811,8 +1838,8 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				EXIT 0 ;;
 
 			"")
-				GPRINT "[Dependencies MODE]"
 				checkRoot
+				GPRINT "[Dependencies MODE]"
 				DetectPackageManager
 				INPUTS
 				checkNetwork
@@ -1838,8 +1865,8 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				EXIT 0 ;;
 
 			"")
-				GPRINT "[Dependencies MODE]"
 				checkRoot
+				GPRINT "[Dependencies MODE]"
 				DetectPackageManager
 				INPUTS
 				checkNetwork
@@ -1858,8 +1885,8 @@ while [ "$#" -ge 0 ]; do case "$1" in
 	"--oldfrontend" | "-OF")
 		case "$2" in
 			"--nodependencies" | "--nodep")
-				GPRINT "[NO Dependencies MODE]"
 				checkRoot
+				GPRINT "[NO Dependencies MODE]"
 				DetectPackageManager
 				INPUTS
 				checkNetwork
@@ -1867,8 +1894,8 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				EXIT 0 ;;
 
 			"")
-				GPRINT "[Dependencies MODE]"
 				checkRoot
+				GPRINT "[Dependencies MODE]"
 				DetectPackageManager
 				INPUTS
 				checkNetwork
@@ -1887,8 +1914,8 @@ while [ "$#" -ge 0 ]; do case "$1" in
 	"--nginx" | "-N")
 		case "$2" in
 			"--nodependencies" | "--nodep")
-				GPRINT "[NO Dependencies MODE]"
 				checkRoot
+				GPRINT "[NO Dependencies MODE]"
 				DetectPackageManager
 				checkNetwork
 				INPUTS
@@ -1896,8 +1923,8 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				EXIT 0 ;;
 
 			"")
-				GPRINT "[Dependencies MODE]"
 				checkRoot
+				GPRINT "[Dependencies MODE]"
 				DetectPackageManager
 				checkNetwork
 				INPUTS
