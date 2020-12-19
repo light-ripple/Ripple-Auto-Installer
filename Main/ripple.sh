@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|             Last Updated on Monday, December 14, 2020 at 01:05 PM (GMT+6)               |
+|            Last Updated on Saturday, December 19, 2020 at 01:45 PM (GMT+6)              |
 -------------------------------------------------------------------------------------------
 '
 
@@ -105,8 +105,22 @@
 * MAINTAINER_NAME="uniminin"
 '
 
+# Don't exit the script if anything returns false
+set +e
+
+# Disable unicode since they're not required!
+LC_ALL=C
+LANG=C
+
 # Version #
-UPSTREAM_VERSION="2.2.0"
+UPSTREAM_VERSION="2.4.0"
+
+# Reserved for the future use #
+# Execute XYZ on script exiting
+# trap 'XYZ' EXIT
+# Execute XYZ before execution of every command
+# trap 'code_here' DEBUG
+
 
 # Upstream File #
 # ripple.sh (main script)
@@ -146,7 +160,7 @@ key_url="https://raw.githubusercontent.com/osuthailand/ainu-certificate/master/k
 # Golang Bin
 golang_dl_url="https://golang.org/dl/go1.15.6.linux-amd64.tar.gz"
 
-# Python
+# Python #
 # python3.5
 python35_dl_url="https://www.python.org/ftp/python/3.5.9/Python-3.5.9.tar.xz"
 # python3.6
@@ -211,11 +225,22 @@ mysql_user=""
 mysql_password=""
 database_name=""
 
-# Read from the config file
-if [ -f "$(pwd)/config.sh" ]; then
-	. "$(pwd)/config.sh"	
-fi
 
+# Read from the config file (config.sh)
+config_file="disabled"
+if [ "$config_file" = "enabled" ]; then
+	if [ -f "$(pwd)/config.sh" ]; then
+		sha1sum -c config.sha1 || match="false"
+
+		if [ "$match" = "false" ]; then
+			RPRINT "Invalid 'config.sh' file!"
+		else
+			. "$(pwd)/config.sh"
+		fi	
+	else
+		RPRINT "Config file 'config.sh' not found!"
+	fi
+fi
 
 
 # Part of uniminin's Simplified Assertion.
@@ -235,23 +260,16 @@ lineno() {
 }
 
 
-: '
-* For capturing Bugs
-* kills the script if anything returns false
-* Temporarily Disabled
-'
-# set -e
-
+# Usage: date "format" | 'man strftime' for format.
+date() {
+    printf "%($1)T\\n" "-1"
+}
 
 # Simplified Assersion by uniminin <uniminin@zoho.com> under the terms of AGPLv3
 # Usage: DIE "EXIT-CODE" "msg..."
 execution_=0
 
 die() {
-
-	# Current Date
-	Date="$(date)"
-
 
 	case "$2" in
 		*) RPRINT "FATAL ""$2"": $3 $1"
@@ -268,7 +286,8 @@ die() {
 	fi
 	
 	if [ -f "$log_file" ]; then
-		printf "[$Date]\\nFATAL: %s\\n\\n" "$3 $1" >> "$log_file" || EXIT 4
+		date "[ %I:%M:%S %p | %a %d %b | %D ]" >> "$log_file" || EXIT 4
+		printf "\\nFATAL: %s\\n\\n" "$3 $1" >> "$log_file" || EXIT 4
 		GPRINT "Successfully Written into '$log_file'"
 	else
 		RPRINT "Could not write into logfile!"
@@ -673,14 +692,14 @@ python_dependencies() {
 	esac
 
 	for package in gcc make git wget cython; do
-		if command -v "$package" >/dev/null; then
-			GPRINT "Done Installing necessary Dependencies required for '$TASK'!"
-		elif ! command -v "$package" >/dev/null; then
+		if ! command -v "$package" >/dev/null; then
 			DIE 1 "Required '$package' is not installed!"
 		else
 			DIE 123 "Failed to Install necessary Dependencies required for '$TASK'"
 		fi
 	done
+	
+	GPRINT "Done Installing necessary Dependencies required for '$TASK'!"
 
 }
 
@@ -908,14 +927,14 @@ extra_dependencies() {
 	esac
 
 	for package in tmux nginx redis-cli; do
-		if command -v "$package" >/dev/null; then
-			GPRINT "Done Installing necessary Dependencies required for '$TASK'!"
-		elif ! command -v "$package" >/dev/null; then
+		if ! command -v "$package" >/dev/null; then
 			DIE 1 "Required '$package' is not installed!"
 		else
-			DIE 1 "Failed to Install necessary Dependencies required for '$TASK'!"
+			DIE 123 "Failed to Install necessary Dependencies required for '$TASK'"
 		fi
 	done
+	
+	GPRINT "Done Installing necessary Dependencies required for '$TASK'!"
 
 }
 
@@ -1556,14 +1575,14 @@ old_frontend() {
 	esac
 
 	for package in php composer; do
-		if command -v "$package" >/dev/null; then
-			GPRINT "Done Installing necessary Dependencies required for '$TASK'!"
-		elif ! command -v "$package" >/dev/null; then
+		if ! command -v "$package" >/dev/null; then
 			DIE 1 "Required '$package' is not installed!"
 		else
-			DIE 1 "Failed to Install necessary Dependencies required for '$TASK'!"
+			DIE 123 "Failed to Install necessary Dependencies required for '$TASK'"
 		fi
 	done
+	
+	GPRINT "Done Installing necessary Dependencies required for '$TASK'!"
 
 		if [ ! -d "/var/www" ]; then
 			CREATE_DIRECTORY /var/www
