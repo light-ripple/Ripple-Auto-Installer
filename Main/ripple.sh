@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|            Last Updated on Saturday, December 19, 2020 at 02:10 PM (GMT+6)              |
+|            Last Updated on Saturday, December 19, 2020 at 02:12 PM (GMT+6)              |
 -------------------------------------------------------------------------------------------
 '
 
@@ -113,7 +113,7 @@ LC_ALL=C
 LANG=C
 
 # Version #
-UPSTREAM_VERSION="2.4.1"
+UPSTREAM_VERSION="2.4.3"
 
 # Reserved for the future use #
 # Execute XYZ on script exiting
