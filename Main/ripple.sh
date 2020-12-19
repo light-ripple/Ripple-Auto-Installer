@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|            Last Updated on Saturday, December 19, 2020 at 01:45 PM (GMT+6)              |
+|            Last Updated on Saturday, December 19, 2020 at 02:10 PM (GMT+6)              |
 -------------------------------------------------------------------------------------------
 '
 
@@ -255,9 +255,7 @@ lineno() {
 
 
 # Usage: date "format" | 'man strftime' for format.
-date() {
-    printf "%($1)T\\n" "-1"
-}
+date() { printf "%($1)T\\n" "-1"; }
 
 # Simplified Assersion by uniminin <uniminin@zoho.com> under the terms of AGPLv3
 # Usage: DIE "EXIT-CODE" "msg..."
@@ -268,17 +266,17 @@ die() {
 	case "$2" in
 		*) RPRINT "FATAL ""$2"": $3 $1"
 	esac
-	
+
 	if [ ! "$execution_" = 1 ]; then
 		log_file="$(pwd)/ErrorLog.txt"
 		export log_file
 		execution_=1
 	fi
-	
+
 	if [ ! -f "$log_file" ]; then
 		CREATE_FILE "$log_file"
 	fi
-	
+
 	if [ -f "$log_file" ]; then
 		date "[ %I:%M:%S %p | %a %d %b | %D ]" >> "$log_file" || EXIT 4
 		printf "\\nFATAL: %s\\n\\n" "$3 $1" >> "$log_file" || EXIT 4
@@ -286,18 +284,18 @@ die() {
 	else
 		RPRINT "Could not write into logfile!"
 	fi
-	
+
 	# Confirm :DIE: -> Die :?:
 	while [ -z "$CONFIRMATION" ]; do
 		BPRINT "Do you want to Continue ? y/n "
 		READ CONFIRMATION
 	done
-	
+
 	if [ ! "$CONFIRMATION" = "y" ]; then
 		RPRINT "EXITING..."
 		EXIT 4
 	fi
-	
+
 	unset CONFIRMATION
 
 }
@@ -405,7 +403,7 @@ INPUTS() {
 			else
 				DIE 1 "Input Declined by the user!"
 			fi
-			
+
 			unset confirmation
 		else
 			while [ -z "$confirmation" ]; do
@@ -421,7 +419,7 @@ INPUTS() {
 					DIE 1 "Failed to create '$master_dir'!"
 				fi
 			fi
-			
+
 			unset confirmation
 		fi
 
@@ -449,7 +447,7 @@ INPUTS() {
 	else
 		DIE 1 "Domain Not specified!"
 	fi
-	
+
 	unset confirmation
 	
 
@@ -469,9 +467,9 @@ INPUTS() {
 	else
 		DIE 1 "cikey Not specified!"
 	fi
-	
+
 	unset confirmation
-	
+
 
 	# OSU!API
 	GPRINT "Get OSU!API Key Here: https://old.ppy.sh/p/api"
@@ -491,9 +489,9 @@ INPUTS() {
 	else
 		DIE 1 "OSU!API Key Not specified!"
 	fi
-	
+
 	unset confirmation
-	
+
 
 	# API-Secret
 	while [ -z "$api_secret" ]; do
@@ -511,9 +509,9 @@ INPUTS() {
 	else
 		DIE 1 "API Secret Not specified!"
 	fi
-	
+
 	unset confirmation
-	
+
 
 	# MySQL USERNAME
 	while [ -z "$mysql_user" ]; do
@@ -531,9 +529,9 @@ INPUTS() {
 	else
 		DIE 1 "MYSQL Username Not specified!"
 	fi
-	
+
 	unset confirmation
-	
+
 
 	# MySQL PASSWORD
 	while [ -z "$mysql_password" ]; do
@@ -551,9 +549,9 @@ INPUTS() {
 	else
 		DIE 1 "MYSQL Password Not specified!"
 	fi
-	
+
 	unset confirmation
-	
+
 
 	# MySQL DATABASE NAME
 	while [ -z "$database_name" ]; do
@@ -571,9 +569,9 @@ INPUTS() {
 	else
 		DIE 1 "MYSQL Database Name Not specified!"
 	fi
-	
+
 	unset confirmation
-	
+
 
 	GPRINT "All necessary '$TASK' obtained."
 
@@ -634,17 +632,17 @@ packageManagerUpgrade() {
 	TASK="Packages"
 
 	GPRINT "Upgrading/Updating system '$TASK'!"
-	
+
 	case "$package_manager_frontend" in
 		"apt")
 			apt update ; apt upgrade -y ; apt update ;;
-			
+
 		"pacman")
 			pacman --noconfirm -Syyu ;;
-			
+
 		"emerge")
 			emerge --sync ; emerge -qvuDN @world ;;
-			
+
 		"cave")
 			cave sync ; cave resolve world -qx ;;
 	esac
@@ -664,24 +662,24 @@ python_dependencies() {
 		"apt")
 			"$package_manager_frontend" install build-essential libssl-dev zlib1g-dev openssl libbz2-dev libsqlite3-dev \
 			git wget python-dev default-libmysqlclient-dev tar make cython -y
-			
+
 			;;
-			
+
 		"pacman")
 			"$package_manager_frontend" --noconfirm -S gcc git wget tar make cython
-			
+
 			;;
-			
+
 		"emerge")
 			"$package_manager_frontend" -q sys-devel/gcc dev-vcs/git net-misc/wget \
 			sys-devel/make app-arch/tar dev-python/cython
-			
+
 			;;
-			
+
 		"cave")
 			"$package_manager_frontend" resolve -qx sys-devel/gcc dev-scm/git sys-devel/make \
 			app-arch/tar dev-python/shiboken2
-			
+
 			;;
 	esac
 
@@ -692,7 +690,7 @@ python_dependencies() {
 			DIE 123 "Failed to Install necessary Dependencies required for '$TASK'"
 		fi
 	done
-	
+
 	GPRINT "Done Installing necessary Dependencies required for '$TASK'!"
 
 }
@@ -766,8 +764,8 @@ python3_6() {
 		GPRINT "Python3.6 has been found on this system. Skipping.."
 	else
 		YPRINT "Setting up '$TASK'!"
-		
-		
+
+
 	if command -v PING 1>/dev/null; then
 		PING -i 0.5 -c 5 python.org || DIE 121 "Domain 'python.org' is not reachable from this environment."
 	else
@@ -827,7 +825,7 @@ golang() {
 		GPRINT "Golang has be found on this system. Skipping.."
 	else
 		YPRINT "Setting up '$TASK'!"
-		
+
 		if [ "$package_manager_frontend" = "apt" ]; then
 			if command -v PING 1>/dev/null; then
 				PING -i 0.5 -c 5 golang.org || DIE 121 "Domain 'golang.org' is not reachable from this environment."
@@ -858,7 +856,7 @@ golang() {
 
 						PRINT "export GOPATH=/$USER/go" >> /"$USER"/.bashrc
 						PRINT "export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin" >> /"$USER"/.bashrc
-						
+
 						. /"$USER"/.bashrc
 
 					else
@@ -866,7 +864,7 @@ golang() {
 					fi
 				fi
 			)
-			
+
 		elif [ "$package_manager_frontend" = "pacman" ]; then
 			"$package_manager_frontend" -S go
 
@@ -900,23 +898,23 @@ extra_dependencies() {
 	case "$package_manager_frontend" in
 		"apt")
 			"$package_manager_frontend" install tmux nginx redis-server socat -y
-			
+
 			;;
-			
+
 		"pacman")
 			"$package_manager_frontend" --noconfirm -S tmux nginx redis socat
-			
+
 			;;
-			
+
 		"emerge")
 			"$package_manager_frontend" -q app-misc/tmux www-servers/nginx dev-db/redis net-misc/soca
-			
+
 			;;
-			
+
 		"cave")
 			"$package_manager_frontend" resolve -x app-terminal/tmux www-servers/nginx \
 			dev-db/redis net-misc/socat
-			
+
 			;;
 	esac
 
@@ -927,7 +925,7 @@ extra_dependencies() {
 			DIE 123 "Failed to Install necessary Dependencies required for '$TASK'"
 		fi
 	done
-	
+
 	GPRINT "Done Installing necessary Dependencies required for '$TASK'!"
 
 }
@@ -961,7 +959,7 @@ mysql_database() {
 				fi
 
 				packageManagerUpgrade
-				
+
 				"$package_manager_frontend" install mysql-community-server -y
 				service mysql start
 
@@ -1051,22 +1049,22 @@ phpmyadmin() {
 	case "$package_manager_frontend" in
 		"apt")
 			"$package_manager_frontend" install phpmyadmin php-mbstring php-gettext -y
-			
+
 			;;
-			
+
 		"pacman")
 			"$package_manager_frontend" --noconfirm -S phpmyadmin
-			
+
 			;;
-			
+
 		"emerge")
 			"$package_manager_frontend" -q dev-db/phpmyadmin
-			
+
 			;;
-			
+
 		"cave")
 			"$package_manager_frontend" resolve -qx dev-lang/php
-			
+
 			;;	
 	esac
 
@@ -1111,7 +1109,7 @@ peppy () {
 			if command -v python3.5 >/dev/null; then
 				python3.5 -m pip install -r requirements.txt
 				python3.5 setup.py build_ext --inplace
-				
+
 				if [ -f "pep.py" ]; then
 					python3.5 pep.py
 					if [ -f "config.ini" ]; then
@@ -1241,6 +1239,7 @@ lets() {
 	else
 		DIE 1 "Directory '$directory' doesn't exist!"
 	fi
+
 }
 
 
@@ -1404,6 +1403,7 @@ avatar_server() {
 	else
 		DIE 1 "Directory '$directory' doesn't exist!"
 	fi
+
 }
 
 
@@ -1540,31 +1540,31 @@ old_frontend() {
 			apt install apt-transport-https lsb-release ca-certificates -y
 			WGET /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
 			PRINT "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list
-			
+
 			"$package_manager_frontend" update
 			"$package_manager_frontend" install curl php7.2 php7.2-cli php7.2-common php7.2-json \
 			php7.2-opcache php7.2-mysql php7.2-zip php7.2-fpm php7.2-mbstring -y
-			
+
 			"$CURL" https://getcomposer.org/installer -o composer-setup.php
 			php -r "if (hash_file('SHA384', 'composer-setup.php') === '$HASH') \
 			{ PRINT 'Installer verified'; } else { PRINT 'Installer corrupt'; unlink('composer-setup.php'); } PRINT PHP_EOL;"
 			php composer-setup.php --install-dir=/usr/local/bin --filename=composer
-			
+
 			;;
-			
+
 		"pacman")
 			"$package_manager_frontend" --noconfirm -S php composer
-			
+
 			;;
-			
+
 		"emerge")
 			"$package_manager_frontend" -q dev-lang/php dev-lang/composer
-			
+
 			;;
-			
+
 		"cave")
 			"$package_manager_frontend" resolve -qx dev-lang/php dev-php/composer
-			
+
 			;;
 	esac
 
@@ -1575,21 +1575,21 @@ old_frontend() {
 			DIE 123 "Failed to Install necessary Dependencies required for '$TASK'"
 		fi
 	done
-	
+
 	GPRINT "Done Installing necessary Dependencies required for '$TASK'!"
 
 		if [ ! -d "/var/www" ]; then
 			CREATE_DIRECTORY /var/www
 		fi
-		
+
 	(
-		
+
 		if [ -d "/var/www" ]; then
 			CHANGE_DIRECTORY /var/www || DIE 1 "Could not change directory into '/var/www/'!"
 		else
 			DIE 61 "Unexpected!"
 		fi
-		
+
 		if command -v git 1>/dev/null; then
 			GCLONE "$old_frontend_url" osu.ppy.sh
 		else
