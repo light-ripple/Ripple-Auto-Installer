@@ -113,7 +113,7 @@ LC_ALL=C
 LANG=C
 
 # Version #
-UPSTREAM_VERSION="2.4.0"
+UPSTREAM_VERSION="2.4.1"
 
 # Reserved for the future use #
 # Execute XYZ on script exiting
@@ -230,13 +230,7 @@ database_name=""
 config_file="disabled"
 if [ "$config_file" = "enabled" ]; then
 	if [ -f "$(pwd)/config.sh" ]; then
-		sha1sum -c config.sha1 || match="false"
-
-		if [ "$match" = "false" ]; then
-			RPRINT "Invalid 'config.sh' file!"
-		else
-			. "$(pwd)/config.sh"
-		fi	
+		. "$(pwd)/config.sh"	
 	else
 		RPRINT "Config file 'config.sh' not found!"
 	fi
