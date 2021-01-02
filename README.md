@@ -171,18 +171,10 @@ Note: Execute the script as superuser. For example: `sudo/X/doas -- ./ripple.sh 
 * To start the server: <a href=https://github.com/Uniminin/Ripple-Auto-Installer/blob/master/Miscellaneous/start.md>start.md</a>.
 * To connect to the server (with osu client): <a href=https://github.com/Uniminin/Ripple-Auto-Installer/blob/master/Miscellaneous/connect.md>connect.md</a>.
 
-
-### CONTACT
-Found Bug(s)? Want to contribute? You may join the Discord server or ask me in Discord. 
-* Server: <a href=https://discord.gg/W2VSJnA>Developer I/O</a>
-* Discord: `uniminin#7522`
-* EMAIL: `uniminin@zoho.com` (Message me on Discord after sending me mail)
-
-
 ### CREDITS
-* Thanks to <a href=https://github.com/Hazuki-san>Aoba-Suzukaze</a> and <a href=https://github.com/osuthailand>osuthailand</a> for their help, stack softwares, certificate & Database schema.
-* Thanks to <a href=https://github.com/semyon422>semyon422</a> for their <a href=https://github.com/semyon422/open-ripple>open-ripple</a>.
-* Thanks to <a href=https://github.com/EmilySunpy>EmilySunpy</a> for their <a href=https://github.com/osufx/lets>lets</a> & <a href=https://github.com/osufx/secret>secret</a>.
+* <a href=https://github.com/Hazuki-san>Aoba-Suzukaze</a> and <a href=https://github.com/osuthailand>osuthailand</a> for their help, stack softwares, certificate & Database schema.
+* <a href=https://github.com/semyon422>semyon422</a> for their <a href=https://github.com/semyon422/open-ripple>open-ripple</a>.
+* <a href=https://github.com/EmilySunpy>EmilySunpy</a> for their <a href=https://github.com/osufx/lets>lets</a> & <a href=https://github.com/osufx/secret>secret</a>.
 * And others who supported and contributed to the project.
 
 
