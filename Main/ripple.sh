@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|              Last Updated on Sunday, January 3, 2021 at 11:05 PM (GMT+6)                |
+|              Last Updated on Sunday, January 3, 2021 at 11:40 PM (GMT+6)                |
 -------------------------------------------------------------------------------------------
 '
 
@@ -113,7 +113,7 @@ LC_ALL=C
 LANG=C
 
 # Version #
-UPSTREAM_VERSION="2.6.0"
+UPSTREAM_VERSION="2.6.1"
 
 # Reserved for the future use #
 # Execute XYZ on script exiting
@@ -283,7 +283,7 @@ die() {
 
 	if [ -f "$log_file" ]; then
 		date "[ %I:%M:%S %p | %a %d %b | %D ]" >> "$log_file" || EXIT 4
-		printf "\\nFATAL: %s\\n\\n" "$3 $1" >> "$log_file" || EXIT 4
+		printf "\n- FATAL: %s\n\n\n" "$3 $1" >> "$log_file" || EXIT 4
 		
 		GPRINT "Successfully Written into '$log_file'"
 	else
