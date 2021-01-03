@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|            Last Updated on Saturday, December 19, 2020 at 02:12 PM (GMT+6)              |
+|              Last Updated on Sunday, January 3, 2021 at 11:40 PM (GMT+6)                |
 -------------------------------------------------------------------------------------------
 '
 
@@ -113,7 +113,7 @@ LC_ALL=C
 LANG=C
 
 # Version #
-UPSTREAM_VERSION="2.4.3"
+UPSTREAM_VERSION="2.6.1"
 
 # Reserved for the future use #
 # Execute XYZ on script exiting
@@ -255,7 +255,11 @@ lineno() {
 
 
 # Usage: date "format" | 'man strftime' for format.
-date() { printf "%($1)T\\n" "-1"; }
+date() { 
+
+	printf "%($1)T\\n" "-1"
+	
+}
 
 # Simplified Assersion by uniminin <uniminin@zoho.com> under the terms of AGPLv3
 # Usage: DIE "EXIT-CODE" "msg..."
@@ -279,7 +283,8 @@ die() {
 
 	if [ -f "$log_file" ]; then
 		date "[ %I:%M:%S %p | %a %d %b | %D ]" >> "$log_file" || EXIT 4
-		printf "\\nFATAL: %s\\n\\n" "$3 $1" >> "$log_file" || EXIT 4
+		printf "\n- FATAL: %s\n\n\n" "$3 $1" >> "$log_file" || EXIT 4
+		
 		GPRINT "Successfully Written into '$log_file'"
 	else
 		RPRINT "Could not write into logfile!"
@@ -312,8 +317,10 @@ if [ "$checksum_checker" = "true" ]; then
 	if [ ! -f "ripple.sha1" ]; then
 		RPRINT "file integrity data not found" ; GPRINT "Fetching the latest file integrity data"
 		WGET "ripple.sha1" "$RIPPLE_SHA1"
+		
 		if [ ! -f "ripple.sha1" ]; then
-			RPRINT "Failed to fetch the latest file integrity data" ; EXIT 1
+			RPRINT "Failed to fetch the latest file integrity data"
+			EXIT 1
 		fi
 	fi
 
@@ -685,9 +692,16 @@ python_dependencies() {
 
 	for package in gcc make git wget cython; do
 		if ! command -v "$package" >/dev/null; then
-			DIE 1 "Required '$package' is not installed!"
-		else
-			DIE 123 "Failed to Install necessary Dependencies required for '$TASK'"
+			while [ -z "$package_confirmation" ]; do
+				BPRINT "'$package' is not installed! Do you want to Continue ? y/n "
+				READ package_confirmation
+			done
+
+			if [ ! "$package_confirmation" = "y" ]; then
+				DIE 123 "Required '$package' is not installed!"
+			fi
+			
+			unset package_confirmation
 		fi
 	done
 
@@ -740,11 +754,11 @@ python3_5() {
 					DIE 1 "python3.5 pip not found!"
 				fi
 
-			if command -v python3.5 >/dev/null; then
-				GPRINT "Python3.5 has been installed on this system."
-			else
-				DIE 1 "Failed to install python3.5!"
-			fi
+				if command -v python3.5 >/dev/null; then
+					GPRINT "Python3.5 has been installed on this system."
+				else
+					DIE 1 "Failed to install python3.5!"
+				fi
 
 			else
 				DIE 1 "Python3.5.9 couldn't be installed because file 'Python-3.5.9.tar.xz' was not found!"
@@ -800,11 +814,11 @@ python3_6() {
 				DIE 1 "python3.6 pip not found!"
 			fi
 
-		if command -v python3.6 >/dev/null; then
-			GPRINT "Python3.6 has been installed on this system."
-		else
-			DIE 1 "Failed to install python3.6!"
-		fi
+			if command -v python3.6 >/dev/null; then
+				GPRINT "Python3.6 has been installed on this system."
+			else
+				DIE 1 "Failed to install python3.6!"
+			fi
 
 		else
 			DIE 1 "Python3.6.8 couldn't be installed because file 'Python-3.6.8.tar.xz' was not found!"
@@ -920,9 +934,16 @@ extra_dependencies() {
 
 	for package in tmux nginx redis-cli; do
 		if ! command -v "$package" >/dev/null; then
-			DIE 1 "Required '$package' is not installed!"
-		else
-			DIE 123 "Failed to Install necessary Dependencies required for '$TASK'"
+			while [ -z "$package_confirmation" ]; do
+				BPRINT "'$package' is not installed! Do you want to Continue ? y/n "
+				READ package_confirmation
+			done
+
+			if [ ! "$package_confirmation" = "y" ]; then
+				DIE 123 "Required '$package' is not installed!"
+			fi
+			
+			unset package_confirmation
 		fi
 	done
 
@@ -1019,7 +1040,9 @@ mysql_database() {
 		if [ -d "$directory" ]; then
 			CHANGE_DIRECTORY "$directory" || DIE 1 "Could not change directory into '$directory'!"
 			mysql_dir="mysql_db"
+			
 			CREATE_DIRECTORY $mysql_dir ; CHANGE_DIRECTORY $mysql_dir || DIE 1 "Could not change directory into '$mysql_dir'!"
+			
 			WGET "ripple.sql" "$sql_schema_url" || DIE 11 "Could not download file 'ripple.sql'!"
 			
 			if [ -f "ripple.sql" ]; then
@@ -1442,8 +1465,7 @@ NGINX() {
 	if [ -d "$directory" ]; then
 		(
 			CHANGE_DIRECTORY "$directory" || DIE 1 "Could not change directory into '$directory'!"
-			CREATE_DIRECTORY nginx
-			CHANGE_DIRECTORY nginx || DIE 1 "Could not change directory into 'nginx'!"
+			CREATE_DIRECTORY nginx ; CHANGE_DIRECTORY nginx || DIE 1 "Could not change directory into 'nginx'!"
 
 			WGET "nginx.conf" "$nginx_config2_url" || DIE 11 "Could not download file 'nginx.conf'!"
 
@@ -1469,6 +1491,7 @@ NGINX() {
 		)
 
 		nginx || DIE 1 "Nginx: BAD CONFIG!"
+		
 		GPRINT "Done setting up '$TASK'!"
 	fi
 
@@ -1570,9 +1593,16 @@ old_frontend() {
 
 	for package in php composer; do
 		if ! command -v "$package" >/dev/null; then
-			DIE 1 "Required '$package' is not installed!"
-		else
-			DIE 123 "Failed to Install necessary Dependencies required for '$TASK'"
+			while [ -z "$package_confirmation" ]; do
+				BPRINT "'$package' is not installed! Do you want to Continue ? y/n "
+				READ package_confirmation
+			done
+
+			if [ ! "$package_confirmation" = "y" ]; then
+				DIE 123 "Required '$package' is not installed!"
+			fi
+			
+			unset package_confirmation
 		fi
 	done
 
@@ -1723,8 +1753,8 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		"sudo $0 --all            | To Setup Entire Ripple Stack with Dependencies!" \
 		"sudo $0 -peppy --nodep   | To Clone & Setup peppy without Dependencies." \
 		"" \
-		"Report bugs to: 'uniminin@zoho.com' or Discord: 'uniminin#7522'" \
-		"RAI Repository URL: <https://github.com/Uniminin/Ripple-Auto-Installer/>" \
+		"Report bugs to: 'uniminin@zoho.com'" \
+		"RAI Upstream Repository URL: <https://github.com/Uniminin/Ripple-Auto-Installer/>" \
 		"GNU AGPLv3 Licence: <https://www.gnu.org/licenses/agpl-3.0.en.html/>" \
 		"General help using GNU software: <https://www.gnu.org/gethelp/>"
 
