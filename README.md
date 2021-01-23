@@ -39,18 +39,6 @@ This project gives you a base and foundation if you're willing to setup your own
 * Init System: <a href=https://www.freedesktop.org/wiki/Software/systemd>systemd</a> & <a href=https://wiki.gentoo.org/wiki/OpenRC>OpenRC</a>.
 
 
-### SUPPORTED PACKAGE MANAGERS
-* <a href=https://wiki.debian.org/Apt>APT</a>
-* <a href=https://wiki.archlinux.org/index.php/pacman>Pacman</a>
-* <a href=https://wiki.gentoo.org/wiki/Portage>Portage</a>
-* <a href=https://paludis.exherbo.org/>Paludis</a>
-
-
-### SUPPORTED INIT SYSTEMS
-* <a href=https://wiki.archlinux.org/index.php/systemd>systemd</a>
-* <a href=https://wiki.gentoo.org/wiki/OpenRC>openrc</a>
-
-
 ### FEATURES
 * A configurable shell script for installing <a href=https://ripple.moe>Ripple</a> Stack
 * Everything is Pre-ready
@@ -63,44 +51,7 @@ This project gives you a base and foundation if you're willing to setup your own
 * Configuration File
 
 
-### FILE STRUCTURE
-```
-.
-├── .deepsource.toml
-├── .github
-│  └── workflows
-│     └── shell.yml
-├── .gitpod.yml
-├── .travis.yml
-├── Database files
-│  └── ripple.sql
-├── LICENSE
-├── Main
-│  ├── config.sh
-│  ├── gencert.sh
-│  ├── openssl.cnf
-│  ├── ripple.conf
-│  ├── ripple.sh
-│  ├── ripple.sha1
-│  ├── tmux.sh
-│  └── tmux.sha1
-├── Miscellaneous
-│  ├── certificate.md
-│  ├── cloudflare.png
-│  ├── configs.md
-│  ├── connect.md
-│  ├── inbound-rules.png
-│  ├── old_ripple.svg
-│  ├── ripple.svg
-│  └── start.md
-├── Nginx
-│  ├── N1.conf
-│  ├── N2.conf
-│  └── old-frontend.conf
-└── README.md
-```
-
-
+## Pre-Configuration
 ### DOMAIN
 Make sure you set your DNS like this:
 ```
@@ -120,7 +71,7 @@ Make sure you've configured your inbound-rules properly.
 </p>
 
 
-### CLOUDFLARE CONFIGURATION
+### CLOUDFLARE
 Make sure you've configured cloudflare properly.
 <p align="center">
   <img src="https://github.com/Uniminin/Ripple-Auto-Installer/blob/master/Miscellaneous/cloudflare.png"/>
@@ -169,6 +120,45 @@ Note: Execute the script as superuser. For example: `sudo/X/doas -- ./ripple.sh 
 * For manual configuration, see all markdowns in <a href=https://github.com/Uniminin/Ripple-Auto-Installer/tree/master/Miscellaneous>Miscellaneous</a>.
 * To start the server: <a href=https://github.com/Uniminin/Ripple-Auto-Installer/blob/master/Miscellaneous/start.md>start.md</a>.
 * To connect to the server (with osu client): <a href=https://github.com/Uniminin/Ripple-Auto-Installer/blob/master/Miscellaneous/connect.md>connect.md</a>.
+
+
+### FILE STRUCTURE
+```
+.
+├── .deepsource.toml
+├── .github
+│  └── workflows
+│     └── shell.yml
+├── .gitpod.yml
+├── .travis.yml
+├── Database files
+│  └── ripple.sql
+├── LICENSE
+├── Main
+│  ├── config.sh
+│  ├── gencert.sh
+│  ├── openssl.cnf
+│  ├── ripple.conf
+│  ├── ripple.sh
+│  ├── ripple.sha1
+│  ├── tmux.sh
+│  └── tmux.sha1
+├── Miscellaneous
+│  ├── certificate.md
+│  ├── cloudflare.png
+│  ├── configs.md
+│  ├── connect.md
+│  ├── inbound-rules.png
+│  ├── old_ripple.svg
+│  ├── ripple.svg
+│  └── start.md
+├── Nginx
+│  ├── N1.conf
+│  ├── N2.conf
+│  └── old-frontend.conf
+└── README.md
+```
+
 
 ### CREDITS
 * <a href=https://github.com/Hazuki-san>Aoba-Suzukaze</a> and <a href=https://github.com/osuthailand>osuthailand</a> for their help, stack softwares, certificate & Database schema.
