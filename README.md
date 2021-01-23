@@ -29,13 +29,13 @@ This project gives you a base and foundation if you're willing to setup your own
 ### REQUIREMENTS
 * Knowledge on Computers, Softwares, *nix or GNU/Linux, Servers, Game Hosting, Database, Computer Networks, Computer Security, Virtual Private Server, Web hosting, Software Programming & Full stack web development. All of them are not 100% required but essential.
 * <a href=https://en.wikipedia.org/wiki/Virtual_private_server>Virtual Private Server</a>.
-* <a href=https://archlinux.org>Arch</a>/<a href=https://debian.org>Debian</a>/<a href=https://gentoo.org>Gentoo</a>/<a href=https://exherbo.org>Exherbo</a> GNU/Linux Based Distro with APT, Pacman, Portage or Paludis package manager.
+* <a href=https://archlinux.org>Arch</a>/<a href=https://debian.org>Debian</a>/<a href=https://gentoo.org>Gentoo</a>/<a href=https://exherbo.org>Exherbo</a> GNU/Linux Based Distro with <a href=https://wiki.debian.org/Apt>APT</a>, <a href=https://wiki.archlinux.org/index.php/pacman>Pacman</a>, <a href=https://wiki.gentoo.org/wiki/Portage>Portage</a> or <a href=https://paludis.exherbo.org>Paludis</a> package manager.
 * <a href=https://www.freedesktop.org/wiki/Software/systemd>systemd</a> or <a href=https://wiki.gentoo.org/wiki/OpenRC>OpenRC</a>.
 
 
 ### SUPPORTED SYSTEMS
 * Operating System: <a href=https://archlinux.org>Arch Linux</a>, <a href=https://debian.org>Debian</a>, <a href=https://gentoo.org>Gentoo Linux</a> & <a href=https://exherbo.org>Exherbo Linux</a>.
-* Package Manager: APT, Pacman, Portage & Paludis.
+* Package Manager: <a href=https://wiki.debian.org/Apt>APT</a>, <a href=https://wiki.archlinux.org/index.php/pacman>Pacman</a>, <a href=https://wiki.gentoo.org/wiki/Portage>Portage</a> & <a href=https://paludis.exherbo.org>Paludis</a> package manager.
 * Init System: <a href=https://www.freedesktop.org/wiki/Software/systemd>systemd</a> & <a href=https://wiki.gentoo.org/wiki/OpenRC>OpenRC</a>.
 
 
