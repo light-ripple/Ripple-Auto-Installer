@@ -2,7 +2,6 @@
 -- Host:                         Ripple
 -- Server OS:                    Linux
 -- --------------------------------------------------------
-
 -- Dumping structure for table 2fa
 CREATE TABLE IF NOT EXISTS `2fa` (
   `userid` int(11) NOT NULL, 
@@ -964,10 +963,10 @@ INSERT IGNORE INTO `rx_stats` (
 ) 
 VALUES 
   (
-    999, 'Ripple', '', 'black', '', 0, 1, 1, 1, 
-    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'JP', 
-    1, 1
+    999, 'Ripple', '', 'black', '', 0, 1, 
+    1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 'JP', 1, 1
   );
 -- Dumping structure for table scores
 CREATE TABLE IF NOT EXISTS `scores` (
@@ -1084,7 +1083,8 @@ INSERT IGNORE INTO `users` (
 ) 
 VALUES 
   (
-    999, NULL, 'Ripple', 'ripple', '0', '*0', '5e/AceVLS7jJtxTJA1U6rmVqrWREYg==', 
+    999, NULL, 'Ripple', 'ripple', '0', 
+    '*0', '5e/AceVLS7jJtxTJA1U6rmVqrWREYg==', 
     'fo@kab.ot', 1566228790, 4, 1, 1569775752, 
     0, '', 1, 3145727, 2147483647, 0, 0, 
     1, 1, '', 'check'
