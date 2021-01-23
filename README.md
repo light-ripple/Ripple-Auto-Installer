@@ -81,11 +81,11 @@ Make sure you've configured cloudflare properly.
 ### RUNNING THE SCRIPT
 With Git
 ```bash
-# Clone the Repository
-git clone https://github.com/Uniminin/Ripple-Auto-Installer ; cd Ripple-Auto-Installer
-cd Main
+# Clone and cd into the Repository
+git clone https://github.com/Uniminin/Ripple-Auto-Installer ; \
+cd Ripple-Auto-Installer/Main
 
-# Make the script readable, writable, and executable to root and your user:
+# Make the script readable, writable, and executable to root and your user
 chmod 770 ripple.sh
 
 # Edit the ripple.sh or config.sh file located in `./Main/` if necessary (optional)
@@ -101,17 +101,17 @@ wget -O "ripple.sh" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Insta
 # Download the latest file integrity data
 wget -O "ripple.sha1" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/ripple.sha1
 
-# Make the script readable, writable, and executable to root and your user:
+# Make the script readable, writable, and executable to root and your user
 chmod 770 ripple.sh
 
-# Edit the ripple.sh or config.sh file located in `./Main/` if necessary (optional)
+# Edit the ripple.sh or config.sh file located in `./Main/` directory if necessary (optional)
 
 # Finally read the output of
 ./ripple.sh --help
 ```
 Bedrock How To:
 ```bash
-$ sudo strat -r stratum ./ripple.sh -h  # stratum --> stratum name
+$ strat -r stratum ./ripple.sh -h  # stratum --> stratum name
 ```
 Note: Execute the script as superuser. For example: `sudo/X/doas -- ./ripple.sh ...`.
 
