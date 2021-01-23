@@ -1,25 +1,25 @@
 name: Shell
-
-# Relevant to events - https://help.github.com/en/actions/automating-your-workflow-with-github-actions/events-that-trigger-workflows
-on:
+'on':
   pull_request:
-    types: [ready_for_review]
+    types:
+      - ready_for_review
     paths:
-    - "**.sh"
-    - "Main/ripple.sh"
-    - "Main/tmux.sh"
-
+      - '**.sh'
+      - Main/ripple.sh
+      - Main/tmux.sh
 jobs:
-  # Linting
   lint:
     runs-on: ubuntu-latest
-    container: debian:stable
+    container: 'debian:stable'
     steps:
       - name: Installing dependencies..
-        run: |
+        run: >
           # Sync repos
+
           # Check for git
-          if ! apt list --installed 2>/dev/null | grep -qP "^git\/stable.*"; then
+
+          if ! apt list --installed 2>/dev/null | grep -qP "^git\/stable.*";
+          then
             # Check if we can install git
             if ! apt list | grep -qP "^git\/stable.*"; then
               apt update
@@ -30,13 +30,17 @@ jobs:
             fi
             # Install git
             apt install -y git
-          elif apt list --installed 2>/dev/null | grep -qP "^git\/stable.*"; then
+          elif apt list --installed 2>/dev/null | grep -qP "^git\/stable.*";
+          then
             true
           else
             exit 255
           fi
+
           # Check for shellcheck
-          if ! apt list --installed 2>/dev/null | grep -qP "^shellcheck\s{1}-.*"; then
+
+          if ! apt list --installed 2>/dev/null | grep -qP
+          "^shellcheck\s{1}-.*"; then
             # Check if we can install shellcheck
             if ! apt list | grep -qP "^shellcheck\s{1}-.*"; then
               apt update
@@ -47,21 +51,18 @@ jobs:
             fi
             # Install shellcheck
             apt install -y shellcheck
-          elif apt list --installed 2>/dev/null | grep -qP "^shellcheck\s{1}-.*"; then
+          elif apt list --installed 2>/dev/null | grep -qP
+          "^shellcheck\s{1}-.*"; then
             true
           else
             exit 255
           fi
-
       - name: Checking for execution error(s)..
-        # Make sure that bash is used
         shell: bash
         run: |
           cd "$GITHUB_WORKSPACE"/Main
           ./ripple.sh -h | exit 1
-          
       - name: Checking for shellcheck error(s)..
-        # Make sure that bash is used
         shell: bash
         run: |
           cd "$GITHUB_WORKSPACE"/Main

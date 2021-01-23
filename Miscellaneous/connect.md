@@ -1,7 +1,10 @@
 ## Connecting TO OSU!
+
 ### Manually (without switcher)
-* Install the certificate.
-* Edit and Add these lines in your `C:\Windows\System32\Drivers\etc\hosts`.
+
+- Install the certificate.
+- Edit and Add these lines in your `C:\Windows\System32\Drivers\etc\hosts`:
+
 ```
 <VPS's Public IP> osu.ppy.sh
 <VPS's Public IP> c.ppy.sh
@@ -21,5 +24,7 @@
 <VPS's Public IP> a.<domain that support in certificate>
 <VPS's Public IP> old.<domain that support in certificate>
 ```
+
 ### Using Switcher
+
 Edit Ripple's Server switcher and create a server switcher for your server: <a href=https://zxq.co/ripple/ripple-server-switcher>Ripple-Server-Switcher</a>.

@@ -4,4 +4,4 @@ tasks:
   - before: brew install shellcheck
 vscode:
   extensions:
-    - timonwong.shellcheck@0.9.0:HV7fROO4OHK245UUeWPLRw==
+    - 'timonwong.shellcheck@0.9.0:HV7fROO4OHK245UUeWPLRw=='
