@@ -27,17 +27,16 @@ This project gives you a base and foundation if you're willing to setup your own
 
 
 ### REQUIREMENTS
-* Knowledge on Computers, Softwares, Unix or GNU/Linux, Servers, Game Hosting, Database, Computer Networks, Computer Security & Encyption, Virtual Private Server, Web hosting, Programming & Full stack web development. All of them are not 100% required but essential.
+* Knowledge on Computers, Softwares, *nix or GNU/Linux, Servers, Game Hosting, Database, Computer Networks, Computer Security, Virtual Private Server, Web hosting, Software Programming & Full stack web development. All of them are not 100% required but essential.
 * <a href=https://en.wikipedia.org/wiki/Virtual_private_server>Virtual Private Server</a>.
-* A Arch/Debian/Gentoo/Exherbo GNU/Linux Based Distro with APT, Pacman, Portage or paludis package manager.
-* Systemd or Openrc.
+* <a href=https://archlinux.org>Arch</a>/<a href=https://debian.org>Debian</a>/<a href=https://gentoo.org>Gentoo</a>/<a href=https://exherbo.org>Exherbo</a> GNU/Linux Based Distro with APT, Pacman, Portage or Paludis package manager.
+* <a href=https://www.freedesktop.org/wiki/Software/systemd>systemd</a> or <a href=https://wiki.gentoo.org/wiki/OpenRC>OpenRC</a>.
 
 
 ### SUPPORTED SYSTEMS
-* <a href=https://debian.org>Debian</a> Based distros.
-* <a href=https://archlinux.org>Arch Linux</a> Based distros.
-* <a href=https://gentoo.org>Gentoo Linux</a> Based distros.
-* <a href=https://exherbo.org>Exherbo Linux</a> Based distros.
+* Operating System: <a href=https://archlinux.org>Arch Linux</a>, <a href=https://debian.org>Debian</a>, <a href=https://gentoo.org>Gentoo Linux</a> & <a href=https://exherbo.org>Exherbo Linux</a>.
+* Package Manager: APT, Pacman, Portage & Paludis.
+* Init System: <a href=https://www.freedesktop.org/wiki/Software/systemd>systemd</a> & <a href=https://wiki.gentoo.org/wiki/OpenRC>OpenRC</a>.
 
 
 ### SUPPORTED PACKAGE MANAGERS
@@ -55,13 +54,13 @@ This project gives you a base and foundation if you're willing to setup your own
 ### FEATURES
 * A configurable shell script for installing <a href=https://ripple.moe>Ripple</a> Stack
 * Everything is Pre-ready
-* Simple and user friendly Installation
-* Installs stack software(s) within minute(s)
+* Simple and user friendly installation
 * Integrated Error-logging system
 * Ability to Install specific stack software(s) chosen by a user
 * Higly Productive & Customizable
 * OS and Package manager detection
 * Posix compatible
+* Configuration File
 
 
 ### FILE STRUCTURE
@@ -115,14 +114,14 @@ Make sure you set your DNS like this:
 
 
 ### VPS
-Make sure you configure your inbound-rules properly.
+Make sure you've configured your inbound-rules properly.
 <p align="center">
   <img src="https://github.com/Uniminin/Ripple-Auto-Installer/blob/master/Miscellaneous/inbound-rules.png"/>
 </p>
 
 
 ### CLOUDFLARE CONFIGURATION
-Make sure you configure cloudflare properly.
+Make sure you've configured cloudflare properly.
 <p align="center">
   <img src="https://github.com/Uniminin/Ripple-Auto-Installer/blob/master/Miscellaneous/cloudflare.png"/>
 </p>
