@@ -1,13 +1,13 @@
 #!/bin/sh
 # shellcheck shell=sh # Written to be posix compatible
-# shellcheck disable=SC2154,SC1090,SC1091 # False Trigger
+# shellcheck disable=SC2016,SC1090,SC1091,SC2154 # False Trigger
 # USING: APT, Pacman, Portage, Paludis, UNIX or GNU/Linux, Mysql/Mariadb Database.
 # SUPPORTS INIT SYSTEMS: systemd and openrc.
 
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|              Last Updated on Sunday, January 3, 2021 at 11:40 PM (GMT+6)                |
+|             Last Updated on Friday, January 29, 2021 at 04:00 PM (GMT+6)                |
 -------------------------------------------------------------------------------------------
 '
 
@@ -99,10 +99,10 @@
 
 : '
 > Maintainer info <
-* UPSTREAM="https://github.com/Uniminin/Ripple-Auto-Installer"
-* MAINTAINER_EMAIL="uniminin@zoho.com"
-* MAINTAINER_NICKNAME="Uniminin"
-* MAINTAINER_NAME="uniminin"
+* UPSTREAM: "https://github.com/Uniminin/Ripple-Auto-Installer"
+* NAME: "uniminin"
+* EMAIL: "uniminin@zoho.com"
+* MAINTAINERS: ["uniminin"]
 '
 
 # Don't exit the script if anything returns false
@@ -113,21 +113,13 @@ LC_ALL=C
 LANG=C
 
 # Version #
-UPSTREAM_VERSION="2.6.1"
+UPSTREAM_VERSION="2.7.0"
 
 # Reserved for the future use #
 # Execute XYZ on script exiting
 # trap 'XYZ' EXIT
 # Execute XYZ before execution of every command
 # trap 'code_here' DEBUG
-
-
-# Upstream File #
-# ripple.sh (main script)
-RIPPLE_SH="https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/ripple.sh"
-
-# ripple.sha1 (checksum)
-RIPPLE_SHA1="https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/ripple.sha1"
 
 
 # Repositories
@@ -227,8 +219,8 @@ database_name=""
 
 
 # Read from the config file (config.sh)
-config_file="disabled"
-if [ "$config_file" = "enabled" ]; then
+read_config_file="false"
+if [ "$read_config_file" = "true" ]; then
 	if [ -f "$(pwd)/config.sh" ]; then
 		. "$(pwd)/config.sh"	
 	else
@@ -309,7 +301,19 @@ die() {
 # DIE with lineno
 alias DIE="die \"[ line \$LINENO\"\\ ]"
 
+
+: ' -Deprecated-
+# Simplified File Integrity Checker by uniminin <uniminin@zoho.com> under the terms of AGPLv3
+# CHECK FILE INTEGRITY
+
 checksum_checker="true"
+
+# Upstream File #
+# ripple.sh (main script)
+RIPPLE_SH="https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/ripple.sh"
+
+# ripple.sha1 (checksum)
+RIPPLE_SHA1="https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/ripple.sha1"
 
 # Simplified File Integrity Checker by uniminin <uniminin@zoho.com> under the terms of AGPLv3
 # CHECK FILE INTEGRITY
@@ -335,6 +339,7 @@ if [ "$checksum_checker" = "true" ]; then
 		RPRINT "file integrity data not found" ; EXIT 1
 	fi
 fi
+'
 
 
 # Simplified Network Checker (IPv4 & DNS connectivity) 
@@ -634,10 +639,11 @@ DetectPackageManager() {
 }
 
 
-packageManagerUpgrade() {
+packageManagerUpdate() {
 
 	TASK="Packages"
 
+	# Sync DB/Repository + Upgrade Package(s)
 	GPRINT "Upgrading/Updating system '$TASK'!"
 
 	case "$package_manager_frontend" in
@@ -651,7 +657,7 @@ packageManagerUpgrade() {
 			emerge --sync ; emerge -qvuDN @world ;;
 
 		"cave")
-			cave sync ; cave resolve world -qx ;;
+			cave sync ; cave resolve world -x ;;
 	esac
 
 }
@@ -684,7 +690,7 @@ python_dependencies() {
 			;;
 
 		"cave")
-			"$package_manager_frontend" resolve -qx sys-devel/gcc dev-scm/git sys-devel/make \
+			"$package_manager_frontend" resolve -x sys-devel/gcc dev-scm/git sys-devel/make \
 			app-arch/tar dev-python/shiboken2
 
 			;;
@@ -888,7 +894,7 @@ golang() {
 
 		elif [ "$package_manager_frontend" = "cave" ]; then
 			# Latest stable (Exherbo package database) [10:10 AM | 14/12/2020 | Mon | GMT+6]
-			"$package_manager_frontend" resolve -qx =dev-lang/go-1.15.5
+			"$package_manager_frontend" resolve -x =dev-lang/go-1.15.5
 		fi
 
 		if command -v go 1>/dev/null; then
@@ -979,7 +985,7 @@ mysql_database() {
 					DIE 1 "wget not found on this system!"
 				fi
 
-				packageManagerUpgrade
+				packageManagerUpdate
 
 				"$package_manager_frontend" install mysql-community-server -y
 				service mysql start
@@ -1011,7 +1017,7 @@ mysql_database() {
 				;;
 
 			"cave")
-				"$package_manager_frontend" resolve -qx virtual/mysql
+				"$package_manager_frontend" resolve -x virtual/mysql
 				if command -v rc >/dev/null; then
 					rc-update add mysql default ; rc-service mysql start
 				elif command -v service >/dev/null; then
@@ -1086,7 +1092,7 @@ phpmyadmin() {
 			;;
 
 		"cave")
-			"$package_manager_frontend" resolve -qx dev-lang/php
+			"$package_manager_frontend" resolve -x dev-lang/php
 
 			;;	
 	esac
@@ -1586,7 +1592,7 @@ old_frontend() {
 			;;
 
 		"cave")
-			"$package_manager_frontend" resolve -qx dev-lang/php dev-php/composer
+			"$package_manager_frontend" resolve -x dev-lang/php dev-php/composer
 
 			;;
 	esac
@@ -1691,7 +1697,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				DetectPackageManager
 				INPUTS
 				checkNetwork
-				packageManagerUpgrade
+				packageManagerUpdate
 				mysql_database
 				python_dependencies
 				nproc_detector
@@ -1765,7 +1771,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		GPRINT "[Dependencies MODE]"
 		DetectPackageManager
 		checkNetwork
-		packageManagerUpgrade
+		packageManagerUpdate
 		python_dependencies
 		nproc_detector
 		python3_5
@@ -1782,7 +1788,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		DetectPackageManager
 		INPUTS
 		checkNetwork
-		packageManagerUpgrade
+		packageManagerUpdate
 		mysql_database
 
 		EXIT 0 ;;
@@ -1802,7 +1808,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				DetectPackageManager
 				INPUTS
 				checkNetwork
-				packageManagerUpgrade
+				packageManagerUpdate
 				python_dependencies
 				nproc_detector
 				python3_5
@@ -1831,7 +1837,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				DetectPackageManager
 				INPUTS
 				checkNetwork
-				packageManagerUpgrade
+				packageManagerUpdate
 				python_dependencies
 				nproc_detector
 				python3_6
@@ -1860,7 +1866,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				DetectPackageManager
 				INPUTS
 				checkNetwork
-				packageManagerUpgrade
+				packageManagerUpdate
 				python_dependencies
 				nproc_detector
 				python3_6
@@ -1889,7 +1895,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				DetectPackageManager
 				INPUTS
 				checkNetwork
-				packageManagerUpgrade
+				packageManagerUpdate
 				golang
 				hanayo
 				EXIT 0 ;;
@@ -1916,7 +1922,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				DetectPackageManager
 				INPUTS
 				checkNetwork
-				packageManagerUpgrade
+				packageManagerUpdate
 				golang
 				rippleapi
 				EXIT 0 ;;
@@ -1945,7 +1951,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				DetectPackageManager
 				INPUTS
 				checkNetwork
-				packageManagerUpgrade
+				packageManagerUpdate
 				php
 				old_frontend
 				EXIT 0 ;;
@@ -1974,7 +1980,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				DetectPackageManager
 				checkNetwork
 				INPUTS
-				packageManagerUpgrade
+				packageManagerUpdate
 				extra_dependencies
 				NGINX
 				EXIT 0 ;;
