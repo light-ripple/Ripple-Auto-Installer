@@ -639,10 +639,11 @@ DetectPackageManager() {
 }
 
 
-packageManagerUpgrade() {
+packageManagerUpdate() {
 
 	TASK="Packages"
 
+	# Sync DB/Repository + Upgrade Package(s)
 	GPRINT "Upgrading/Updating system '$TASK'!"
 
 	case "$package_manager_frontend" in
@@ -656,7 +657,7 @@ packageManagerUpgrade() {
 			emerge --sync ; emerge -qvuDN @world ;;
 
 		"cave")
-			cave sync ; cave resolve world -qx ;;
+			cave sync ; cave resolve world -x ;;
 	esac
 
 }
@@ -689,7 +690,7 @@ python_dependencies() {
 			;;
 
 		"cave")
-			"$package_manager_frontend" resolve -qx sys-devel/gcc dev-scm/git sys-devel/make \
+			"$package_manager_frontend" resolve -x sys-devel/gcc dev-scm/git sys-devel/make \
 			app-arch/tar dev-python/shiboken2
 
 			;;
@@ -893,7 +894,7 @@ golang() {
 
 		elif [ "$package_manager_frontend" = "cave" ]; then
 			# Latest stable (Exherbo package database) [10:10 AM | 14/12/2020 | Mon | GMT+6]
-			"$package_manager_frontend" resolve -qx =dev-lang/go-1.15.5
+			"$package_manager_frontend" resolve -x =dev-lang/go-1.15.5
 		fi
 
 		if command -v go 1>/dev/null; then
@@ -984,7 +985,7 @@ mysql_database() {
 					DIE 1 "wget not found on this system!"
 				fi
 
-				packageManagerUpgrade
+				packageManagerUpdate
 
 				"$package_manager_frontend" install mysql-community-server -y
 				service mysql start
@@ -1016,7 +1017,7 @@ mysql_database() {
 				;;
 
 			"cave")
-				"$package_manager_frontend" resolve -qx virtual/mysql
+				"$package_manager_frontend" resolve -x virtual/mysql
 				if command -v rc >/dev/null; then
 					rc-update add mysql default ; rc-service mysql start
 				elif command -v service >/dev/null; then
@@ -1091,7 +1092,7 @@ phpmyadmin() {
 			;;
 
 		"cave")
-			"$package_manager_frontend" resolve -qx dev-lang/php
+			"$package_manager_frontend" resolve -x dev-lang/php
 
 			;;	
 	esac
@@ -1591,7 +1592,7 @@ old_frontend() {
 			;;
 
 		"cave")
-			"$package_manager_frontend" resolve -qx dev-lang/php dev-php/composer
+			"$package_manager_frontend" resolve -x dev-lang/php dev-php/composer
 
 			;;
 	esac
@@ -1696,7 +1697,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				DetectPackageManager
 				INPUTS
 				checkNetwork
-				packageManagerUpgrade
+				packageManagerUpdate
 				mysql_database
 				python_dependencies
 				nproc_detector
@@ -1770,7 +1771,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		GPRINT "[Dependencies MODE]"
 		DetectPackageManager
 		checkNetwork
-		packageManagerUpgrade
+		packageManagerUpdate
 		python_dependencies
 		nproc_detector
 		python3_5
@@ -1787,7 +1788,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		DetectPackageManager
 		INPUTS
 		checkNetwork
-		packageManagerUpgrade
+		packageManagerUpdate
 		mysql_database
 
 		EXIT 0 ;;
@@ -1807,7 +1808,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				DetectPackageManager
 				INPUTS
 				checkNetwork
-				packageManagerUpgrade
+				packageManagerUpdate
 				python_dependencies
 				nproc_detector
 				python3_5
@@ -1836,7 +1837,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				DetectPackageManager
 				INPUTS
 				checkNetwork
-				packageManagerUpgrade
+				packageManagerUpdate
 				python_dependencies
 				nproc_detector
 				python3_6
@@ -1865,7 +1866,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				DetectPackageManager
 				INPUTS
 				checkNetwork
-				packageManagerUpgrade
+				packageManagerUpdate
 				python_dependencies
 				nproc_detector
 				python3_6
@@ -1894,7 +1895,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				DetectPackageManager
 				INPUTS
 				checkNetwork
-				packageManagerUpgrade
+				packageManagerUpdate
 				golang
 				hanayo
 				EXIT 0 ;;
@@ -1921,7 +1922,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				DetectPackageManager
 				INPUTS
 				checkNetwork
-				packageManagerUpgrade
+				packageManagerUpdate
 				golang
 				rippleapi
 				EXIT 0 ;;
@@ -1950,7 +1951,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				DetectPackageManager
 				INPUTS
 				checkNetwork
-				packageManagerUpgrade
+				packageManagerUpdate
 				php
 				old_frontend
 				EXIT 0 ;;
@@ -1979,7 +1980,7 @@ while [ "$#" -ge 0 ]; do case "$1" in
 				DetectPackageManager
 				checkNetwork
 				INPUTS
-				packageManagerUpgrade
+				packageManagerUpdate
 				extra_dependencies
 				NGINX
 				EXIT 0 ;;
