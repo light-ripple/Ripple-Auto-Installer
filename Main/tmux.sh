@@ -5,12 +5,14 @@
 : '
 -----------------------------------------------------------------------------------------------
 |  Created by LiveEmily <d.claassen2003@outlook.com> in 2020 under the terms of GNU AGPL-3.0  |
-|               Last Updated on Friday, January 29, 2021 at 03:50 AM (GMT+6)                  |
+|               Last Updated on Friday, January 29, 2021 at 04:30 AM (GMT+6)                  |
 -----------------------------------------------------------------------------------------------
 '
 
 ###! Script to start, configure and kill tmux sessions for Ripple Stack instance.
 ###! UPSTREAM: (https://github.com/Uniminin/Ripple-Auto-Installer)
+
+# [ WARNING ]: Script Untested. Use at your own Risk!
 
 : '
 > Contributor info <
@@ -30,14 +32,12 @@ session="Ripple"
 
 # Colors For Prints
 # RPRINT -> prints to standard error instead of standard output
-alias RPRINT="printf '\\033[0;31m%s\\n''\\033[0;37m' >&2"    # Red
-alias GPRINT="printf '\\033[0;32m%s\\n''\\033[0;37m'"        # Green
-
+alias RPRINT="printf '\\033[0;31m%s\\n''\\033[0;37m' >&2" # Red
+alias GPRINT="printf '\\033[0;32m%s\\n''\\033[0;37m'"     # Green
 
 # Command Overwrites
 alias EXIT="exit"
 alias READ="read -r"
-
 
 : ' -Deprecated-
 # Simplified File Integrity Checker by uniminin <uniminin@zoho.com> under the terms of AGPLv3
@@ -74,8 +74,8 @@ if [ "$checksum_checker" = "true" ]; then
 fi
 '
 
-
-while [ "$#" -ge 0 ]; do case "$1" in
+while [ "$#" -ge 0 ]; do
+	case "$1" in
 	"--new" | "-N")
 		if command -v tmux >/dev/null; then
 			GPRINT "Directory: "
@@ -90,35 +90,44 @@ while [ "$#" -ge 0 ]; do case "$1" in
 			RPRINT "Fatal: tmux is not executable on this system!"
 			EXIT 1
 		fi
-		EXIT 0 ;;
+		EXIT 0
+		;;
 
 	"--attach" | "-A")
 		tmux attach-session -t "$session"
-		EXIT 0 ;;
-	
+		EXIT 0
+		;;
+
 	"--kill" | "-K")
 		tmux kill-session -t "$session"
-		EXIT 0 ;;
-	
+		EXIT 0
+		;;
+
 	"--help" | "-H")
 		GPRINT "Arguments: " \
-		"    --new, -N  <directory_name>   | Create a new Ripple session." \
-		"    --attach, -A                  | Reattach to the Ripple session." \
-		"    --kill, -K                    | Kills the current Ripple session." \
-		"    --version, -V                 | Prints the upstream version of the script." \
-		"    --help, -H                    | Shows the list of all arguments including relevant informations."
-		EXIT 0 ;;
+			"    --new, -N  <directory_name>   | Create a new Ripple session." \
+			"    --attach, -A                  | Reattach to the Ripple session." \
+			"    --kill, -K                    | Kills the current Ripple session." \
+			"    --version, -V                 | Prints the upstream version of the script." \
+			"    --help, -H                    | Shows the list of all arguments including relevant informations."
+		EXIT 0
+		;;
 
 	"--version" | "-V")
 		GPRINT "Version: $UPSTREAM_VERSION"
-		EXIT 0 ;;
+		EXIT 0
+		;;
 
 	"")
 		RPRINT "Fatal: No argument was provided | Try: $0 --help"
-		EXIT 74 ;;
+		EXIT 74
+		;;
 
 	*)
 		RPRINT "Fatal: Unknown argument | Try: $0 --help"
-		EXIT 74 ;;
+		EXIT 74
+		;;
 
-esac; shift; done
+	esac
+	shift
+done
