@@ -7,7 +7,7 @@
 : '
 -------------------------------------------------------------------------------------------
 |  Created by Angel Uniminin <uniminin@zoho.com> in 2019 under the terms of GNU AGPL-3.0  |
-|             Last Updated on Friday, January 29, 2021 at 04:00 PM (GMT+6)                |
+|             Last Updated on Friday, January 29, 2021 at 04:30 PM (GMT+6)                |
 -------------------------------------------------------------------------------------------
 '
 
@@ -93,9 +93,7 @@
 ###!  TODO:
 ###!   - [] System Detection
 
-
 # [ WARNING ]: Script Untested. Use at your own Risk!
-
 
 : '
 > Maintainer info <
@@ -113,14 +111,13 @@ LC_ALL=C
 LANG=C
 
 # Version #
-UPSTREAM_VERSION="2.7.0"
+UPSTREAM_VERSION="3.0.0"
 
 # Reserved for the future use #
 # Execute XYZ on script exiting
 # trap 'XYZ' EXIT
 # Execute XYZ before execution of every command
 # trap 'code_here' DEBUG
-
 
 # Repositories
 peppy_url="https://github.com/light-ripple/pep.py"
@@ -130,7 +127,6 @@ avatar_server_url="https://github.com/light-ripple/avatar-server"
 old_frontend_url="https://github.com/light-ripple/old-frontend"
 hanayo_url="https://github.com/light-ripple/hanayo"
 rippleapi_url="https://github.com/light-ripple/api"
-
 
 # Database File(s)
 sql_schema_url="https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Database%20files/ripple.sql"
@@ -142,12 +138,10 @@ nginx_config2_url="https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Instal
 # Old-frontend File(s)
 old_frontend_config_url="https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Nginx/old-frontend.conf"
 
-
 # SSL File(s)
 # Using osuthailand certificate
 certificate_url="https://raw.githubusercontent.com/osuthailand/ainu-certificate/master/cert.pem"
 key_url="https://raw.githubusercontent.com/osuthailand/ainu-certificate/master/key.key"
-
 
 # Golang Bin
 golang_dl_url="https://golang.org/dl/go1.15.6.linux-amd64.tar.gz"
@@ -164,14 +158,12 @@ mysql_deb_url="https://repo.mysql.com//mysql-apt-config_0.8.15-1_all.deb"
 # acme.sh
 acme_sh_dl_url="https://github.com/Neilpang/acme.sh"
 
-
 # Colors For Prints
 # RPRINT -> prints to standard error instead of standard output
-alias RPRINT="printf '\\033[0;31m%s\\n''\\033[0;37m' >&2"    # Red
-alias GPRINT="printf '\\033[0;32m%s\\n''\\033[0;37m'"        # Green
-alias YPRINT="printf '\\033[0;33m%s\\n''\\033[0;37m'"        # Yellow
-alias BPRINT="printf '\\033[0;34m%s''\\033[0;37m'"           # Blue
-
+alias RPRINT="printf '\\033[0;31m%s\\n''\\033[0;37m' >&2" # Red
+alias GPRINT="printf '\\033[0;32m%s\\n''\\033[0;37m'"     # Green
+alias YPRINT="printf '\\033[0;33m%s\\n''\\033[0;37m'"     # Yellow
+alias BPRINT="printf '\\033[0;34m%s''\\033[0;37m'"        # Blue
 
 # Command Overwrites
 alias SUBMODULE="git submodule init ; git submodule update"
@@ -192,7 +184,6 @@ alias CHOWN="chown -R"
 alias APPEND="sed -Ei"
 alias MV="mv"
 alias EXIT="exit"
-
 
 # --Configuration-- #
 # Note: If left empty it'll capture input at script execution time with confirmation
@@ -217,17 +208,15 @@ mysql_user=""
 mysql_password=""
 database_name=""
 
-
 # Read from the config file (config.sh)
 read_config_file="false"
 if [ "$read_config_file" = "true" ]; then
 	if [ -f "$(pwd)/config.sh" ]; then
-		. "$(pwd)/config.sh"	
+		. "$(pwd)/config.sh"
 	else
 		RPRINT "Config file 'config.sh' not found!"
 	fi
 fi
-
 
 # Part of uniminin's Simplified Assertion.
 # prints line number
@@ -245,12 +234,11 @@ lineno() {
 
 }
 
-
 # Usage: date "format" | 'man strftime' for format.
-date() { 
+date() {
 
 	printf "%($1)T\\n" "-1"
-	
+
 }
 
 # Simplified Assersion by uniminin <uniminin@zoho.com> under the terms of AGPLv3
@@ -260,7 +248,7 @@ execution_=0
 die() {
 
 	case "$2" in
-		*) RPRINT "FATAL ""$2"": $3 $1"
+	*) RPRINT "FATAL ""$2"": $3 $1" ;;
 	esac
 
 	if [ ! "$execution_" = 1 ]; then
@@ -274,9 +262,9 @@ die() {
 	fi
 
 	if [ -f "$log_file" ]; then
-		date "[ %I:%M:%S %p | %a %d %b | %D ]" >> "$log_file" || EXIT 4
-		printf "\n- FATAL: %s\n\n\n" "$3 $1" >> "$log_file" || EXIT 4
-		
+		date "[ %I:%M:%S %p | %a %d %b | %D ]" >>"$log_file" || EXIT 4
+		printf "\n- FATAL: %s\n\n\n" "$3 $1" >>"$log_file" || EXIT 4
+
 		GPRINT "Successfully Written into '$log_file'"
 	else
 		RPRINT "Could not write into logfile!"
@@ -297,10 +285,8 @@ die() {
 
 }
 
-
 # DIE with lineno
 alias DIE="die \"[ line \$LINENO\"\\ ]"
-
 
 : ' -Deprecated-
 # Simplified File Integrity Checker by uniminin <uniminin@zoho.com> under the terms of AGPLv3
@@ -341,8 +327,7 @@ if [ "$checksum_checker" = "true" ]; then
 fi
 '
 
-
-# Simplified Network Checker (IPv4 & DNS connectivity) 
+# Simplified Network Checker (IPv4 & DNS connectivity)
 checkNetwork() {
 
 	if command -v PING 1>/dev/null; then
@@ -363,7 +348,6 @@ checkNetwork() {
 
 }
 
-
 # Check for root permission
 checkRoot() {
 
@@ -374,22 +358,21 @@ checkRoot() {
 
 }
 
-
 # Detect the total number of cpu threads for faster compilation/builds. If fails then returns 1.
 nproc_detector() {
 
 	case "$(nproc)" in
-		[1-9] | [1-9][0-9] | [1-9][0-9][0-9] | [1-9][0-9][0-9][0-9]) procNum="$(nproc)" EXPORT procNum EXIT ;;
-		*)
-			case "$LANG" in
-				en-*|*) DIE 5 "Command 'nproc' does not return an expected value on this system, setting the processor count on '1' which will negatively affect performance on systems with more then one thread"
-			esac
+	[1-9] | [1-9][0-9] | [1-9][0-9][0-9] | [1-9][0-9][0-9][0-9]) procNum="$(nproc)" EXPORT procNum EXIT ;;
+	*)
+		case "$LANG" in
+		en-* | *) DIE 5 "Command 'nproc' does not return an expected value on this system, setting the processor count on '1' which will negatively affect performance on systems with more then one thread" ;;
+		esac
 
-			EXPORT procNum="1"
+		EXPORT procNum="1"
+		;;
 	esac
 
 }
-
 
 # Obtain necessary data from input. Required to setup & configure Ripple stack softwares.
 INPUTS() {
@@ -461,7 +444,6 @@ INPUTS() {
 	fi
 
 	unset confirmation
-	
 
 	# Cikey
 	while [ -z "$cikey" ]; do
@@ -481,7 +463,6 @@ INPUTS() {
 	fi
 
 	unset confirmation
-
 
 	# OSU!API
 	GPRINT "Get OSU!API Key Here: https://old.ppy.sh/p/api"
@@ -504,7 +485,6 @@ INPUTS() {
 
 	unset confirmation
 
-
 	# API-Secret
 	while [ -z "$api_secret" ]; do
 		BPRINT "API Secret: "
@@ -523,7 +503,6 @@ INPUTS() {
 	fi
 
 	unset confirmation
-
 
 	# MySQL USERNAME
 	while [ -z "$mysql_user" ]; do
@@ -544,7 +523,6 @@ INPUTS() {
 
 	unset confirmation
 
-
 	# MySQL PASSWORD
 	while [ -z "$mysql_password" ]; do
 		BPRINT "Enter MySQL Password: "
@@ -563,7 +541,6 @@ INPUTS() {
 	fi
 
 	unset confirmation
-
 
 	# MySQL DATABASE NAME
 	while [ -z "$database_name" ]; do
@@ -584,11 +561,9 @@ INPUTS() {
 
 	unset confirmation
 
-
 	GPRINT "All necessary '$TASK' obtained."
 
 }
-
 
 # Supports: apt, pacman, portage and paludis.
 DetectPackageManager() {
@@ -601,67 +576,73 @@ DetectPackageManager() {
 		frontend="emerge"
 	elif command -v cave >/dev/null; then
 		frontend="cave"
-	elif ! command -v apt >/dev/null || ! command -v pacman >/dev/null \
-	  || ! command -v emerge >/dev/null || ! command -v cave >/dev/null; then
+	elif ! command -v apt >/dev/null || ! command -v pacman >/dev/null ||
+		! command -v emerge >/dev/null || ! command -v cave >/dev/null; then
 		DIE 8 "Any of apt, pacman, portage or paludis is not executable on this system! The script is programmed to work on APT, Pacman and Portage only."
 	else
 		DIE 14 "Unexpected Error!"
 	fi
 
 	case "$frontend" in
-		"apt")
-			GPRINT "Found Package Manager: 'APT [ $frontend ]'"
-			EXPORT package_manager_frontend="$frontend"
-			
-			;;
+	"apt")
+		GPRINT "Found Package Manager: 'APT [ $frontend ]'"
+		EXPORT package_manager_frontend="$frontend"
 
-		"pacman")
-			GPRINT "Found Package Manager: 'Pacman [ $frontend ]'"
-			EXPORT package_manager_frontend="$frontend"
+		;;
 
-			;;
+	"pacman")
+		GPRINT "Found Package Manager: 'Pacman [ $frontend ]'"
+		EXPORT package_manager_frontend="$frontend"
 
-		"emerge")
-			GPRINT "Found Package Manager: 'Portage [ $frontend ]'"
-			EXPORT package_manager_frontend="emerge"
+		;;
 
-			;;
+	"emerge")
+		GPRINT "Found Package Manager: 'Portage [ $frontend ]'"
+		EXPORT package_manager_frontend="emerge"
 
-		"cave")
-			GPRINT "Found Package Manager: 'Paludis [ $frontend ]'"
-			EXPORT package_manager_frontend="cave"
+		;;
 
-			;;
+	"cave")
+		GPRINT "Found Package Manager: 'Paludis [ $frontend ]'"
+		EXPORT package_manager_frontend="cave"
+
+		;;
 	esac
-	
+
 	YPRINT "Using Package Manager Frontend: '$package_manager_frontend'."
 
 }
 
-
+# Sync DB/Repository + Upgrade Package(s)
 packageManagerUpdate() {
 
 	TASK="Packages"
 
-	# Sync DB/Repository + Upgrade Package(s)
 	GPRINT "Upgrading/Updating system '$TASK'!"
 
 	case "$package_manager_frontend" in
-		"apt")
-			apt update ; apt upgrade -y ; apt update ;;
+	"apt")
+		apt update
+		apt upgrade -y
+		apt update
+		;;
 
-		"pacman")
-			pacman --noconfirm -Syyu ;;
+	"pacman")
+		pacman --noconfirm -Syyu
+		;;
 
-		"emerge")
-			emerge --sync ; emerge -qvuDN @world ;;
+	"emerge")
+		emerge --sync
+		emerge -qvuDN @world
+		;;
 
-		"cave")
-			cave sync ; cave resolve world -x ;;
+	"cave")
+		cave sync
+		cave resolve world -x
+		;;
 	esac
 
 }
-
 
 # Dependencies Requires for Python3.5 & Python3.6
 python_dependencies() {
@@ -672,28 +653,28 @@ python_dependencies() {
 
 	# Dependencies
 	case "$package_manager_frontend" in
-		"apt")
-			"$package_manager_frontend" install build-essential libssl-dev zlib1g-dev openssl libbz2-dev libsqlite3-dev \
+	"apt")
+		"$package_manager_frontend" install build-essential libssl-dev zlib1g-dev openssl libbz2-dev libsqlite3-dev \
 			git wget python-dev default-libmysqlclient-dev tar make cython -y
 
-			;;
+		;;
 
-		"pacman")
-			"$package_manager_frontend" --noconfirm -S gcc git wget tar make cython
+	"pacman")
+		"$package_manager_frontend" --noconfirm -S gcc git wget tar make cython
 
-			;;
+		;;
 
-		"emerge")
-			"$package_manager_frontend" -q sys-devel/gcc dev-vcs/git net-misc/wget \
+	"emerge")
+		"$package_manager_frontend" -q sys-devel/gcc dev-vcs/git net-misc/wget \
 			sys-devel/make app-arch/tar dev-python/cython
 
-			;;
+		;;
 
-		"cave")
-			"$package_manager_frontend" resolve -x sys-devel/gcc dev-scm/git sys-devel/make \
+	"cave")
+		"$package_manager_frontend" resolve -x sys-devel/gcc dev-scm/git sys-devel/make \
 			app-arch/tar dev-python/shiboken2
 
-			;;
+		;;
 	esac
 
 	for package in gcc make git wget cython; do
@@ -706,7 +687,7 @@ python_dependencies() {
 			if [ ! "$package_confirmation" = "y" ]; then
 				DIE 123 "Required '$package' is not installed!"
 			fi
-			
+
 			unset package_confirmation
 		fi
 	done
@@ -714,7 +695,6 @@ python_dependencies() {
 	GPRINT "Done Installing necessary Dependencies required for '$TASK'!"
 
 }
-
 
 # Python 3.5 for pep.py
 python3_5() {
@@ -774,7 +754,6 @@ python3_5() {
 
 }
 
-
 # Python 3.6 for lets
 python3_6() {
 
@@ -785,56 +764,54 @@ python3_6() {
 	else
 		YPRINT "Setting up '$TASK'!"
 
-
-	if command -v PING 1>/dev/null; then
-		PING -i 0.5 -c 5 python.org || DIE 121 "Domain 'python.org' is not reachable from this environment."
-	else
-		DIE 127 "ping is not executable on this system!"
-	fi
-
-	(
-		if [ -d "/usr/src" ]; then
-			CHANGE_DIRECTORY /usr/src || DIE 1 "Could not change directory into '/usr/src'!"
-			WGET "Python-3.6.8.tar.xz" "$python36_dl_url" || DIE 11 "Could not download file 'Python-3.6.8.tar.xz'."
-		fi
-
-		if [ -f "Python-3.6.8.tar.xz" ]; then
-			tar -xvf Python-3.6.8.tar.xz
-			if [ -d "Python-3.6.8" ]; then
-				CHANGE_DIRECTORY Python-3.6.8 || DIE 1 "Could not change directory into 'Python-3.6.8'!"
-			else
-				DIE 1 "Failed to extract 'Python-3.6.8.tar.xz'!"
-			fi
-
-			if [ -f "Makefile.pre.in" ]; then
-				./configure --enable-optimizations --with-ensurepip=install
-				make --jobs "$procNum" build_all || DIE 1 "'Python-3.6.8' make returned error at build_all!"
-				make install || DIE 1 "'Python-3.6.8' make returned error at install!"
-			else
-				DIE 1 "Makefile not found. Cannot build/install python3.6 from source!"
-			fi
-
-			if command -v python3.6 -m pip >/dev/null; then
-				python3.6 -m pip install --upgrade pip
-			else
-				DIE 1 "python3.6 pip not found!"
-			fi
-
-			if command -v python3.6 >/dev/null; then
-				GPRINT "Python3.6 has been installed on this system."
-			else
-				DIE 1 "Failed to install python3.6!"
-			fi
-
+		if command -v PING 1>/dev/null; then
+			PING -i 0.5 -c 5 python.org || DIE 121 "Domain 'python.org' is not reachable from this environment."
 		else
-			DIE 1 "Python3.6.8 couldn't be installed because file 'Python-3.6.8.tar.xz' was not found!"
+			DIE 127 "ping is not executable on this system!"
 		fi
-	)
+
+		(
+			if [ -d "/usr/src" ]; then
+				CHANGE_DIRECTORY /usr/src || DIE 1 "Could not change directory into '/usr/src'!"
+				WGET "Python-3.6.8.tar.xz" "$python36_dl_url" || DIE 11 "Could not download file 'Python-3.6.8.tar.xz'."
+			fi
+
+			if [ -f "Python-3.6.8.tar.xz" ]; then
+				tar -xvf Python-3.6.8.tar.xz
+				if [ -d "Python-3.6.8" ]; then
+					CHANGE_DIRECTORY Python-3.6.8 || DIE 1 "Could not change directory into 'Python-3.6.8'!"
+				else
+					DIE 1 "Failed to extract 'Python-3.6.8.tar.xz'!"
+				fi
+
+				if [ -f "Makefile.pre.in" ]; then
+					./configure --enable-optimizations --with-ensurepip=install
+					make --jobs "$procNum" build_all || DIE 1 "'Python-3.6.8' make returned error at build_all!"
+					make install || DIE 1 "'Python-3.6.8' make returned error at install!"
+				else
+					DIE 1 "Makefile not found. Cannot build/install python3.6 from source!"
+				fi
+
+				if command -v python3.6 -m pip >/dev/null; then
+					python3.6 -m pip install --upgrade pip
+				else
+					DIE 1 "python3.6 pip not found!"
+				fi
+
+				if command -v python3.6 >/dev/null; then
+					GPRINT "Python3.6 has been installed on this system."
+				else
+					DIE 1 "Failed to install python3.6!"
+				fi
+
+			else
+				DIE 1 "Python3.6.8 couldn't be installed because file 'Python-3.6.8.tar.xz' was not found!"
+			fi
+		)
 
 	fi
 
 }
-
 
 # Golang1.14+ for Hanayo & RippleApi
 golang() {
@@ -874,8 +851,8 @@ golang() {
 							CREATE_FILE /"$USER"/.bashrc
 						fi
 
-						PRINT "export GOPATH=/$USER/go" >> /"$USER"/.bashrc
-						PRINT "export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin" >> /"$USER"/.bashrc
+						PRINT "export GOPATH=/$USER/go" >>/"$USER"/.bashrc
+						PRINT "export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin" >>/"$USER"/.bashrc
 
 						. /"$USER"/.bashrc
 
@@ -906,7 +883,6 @@ golang() {
 
 }
 
-
 # Extra Dependencies required to run stack softwares and get the server online.
 extra_dependencies() {
 
@@ -916,26 +892,26 @@ extra_dependencies() {
 
 	# Dependencies
 	case "$package_manager_frontend" in
-		"apt")
-			"$package_manager_frontend" install tmux nginx redis-server socat -y
+	"apt")
+		"$package_manager_frontend" install tmux nginx redis-server socat -y
 
-			;;
+		;;
 
-		"pacman")
-			"$package_manager_frontend" --noconfirm -S tmux nginx redis socat
+	"pacman")
+		"$package_manager_frontend" --noconfirm -S tmux nginx redis socat
 
-			;;
+		;;
 
-		"emerge")
-			"$package_manager_frontend" -q app-misc/tmux www-servers/nginx dev-db/redis net-misc/soca
+	"emerge")
+		"$package_manager_frontend" -q app-misc/tmux www-servers/nginx dev-db/redis net-misc/soca
 
-			;;
+		;;
 
-		"cave")
-			"$package_manager_frontend" resolve -x app-terminal/tmux www-servers/nginx \
+	"cave")
+		"$package_manager_frontend" resolve -x app-terminal/tmux www-servers/nginx \
 			dev-db/redis net-misc/socat
 
-			;;
+		;;
 	esac
 
 	for package in tmux nginx redis-cli; do
@@ -948,7 +924,7 @@ extra_dependencies() {
 			if [ ! "$package_confirmation" = "y" ]; then
 				DIE 123 "Required '$package' is not installed!"
 			fi
-			
+
 			unset package_confirmation
 		fi
 	done
@@ -957,8 +933,7 @@ extra_dependencies() {
 
 }
 
-
-# Database is required to access, read, write & manage all the user's data. 
+# Database is required to access, read, write & manage all the user's data.
 # (Required for all Ripple's Softwares i.e lets, peppy..)
 mysql_database() {
 
@@ -966,67 +941,68 @@ mysql_database() {
 
 	if command -v mysql 1>/dev/null; then
 		GPRINT "MySQL has been found on this system. Skipping.."
-	else	
+	else
 		YPRINT "Setting up '$TASK'!"
 
 		# Dependencies
 		case "$package_manager_frontend" in
-			"apt")
-				"$package_manager_frontend" install gnupg -y
-				if command -v wget >/dev/null; then
-					WGET "mysql.deb" "$mysql_deb_url"
-					# Choose MySQL 8.0+
-					dpkg -i mysql.deb
+		"apt")
+			"$package_manager_frontend" install gnupg -y
+			if command -v wget >/dev/null; then
+				WGET "mysql.deb" "$mysql_deb_url"
+				# Choose MySQL 8.0+
+				dpkg -i mysql.deb
 
-					if [ -f "mysql.deb" ]; then
-						REMOVE mysql.deb
-					fi
-				else
-					DIE 1 "wget not found on this system!"
+				if [ -f "mysql.deb" ]; then
+					REMOVE mysql.deb
 				fi
+			else
+				DIE 1 "wget not found on this system!"
+			fi
 
-				packageManagerUpdate
+			packageManagerUpdate
 
-				"$package_manager_frontend" install mysql-community-server -y
+			"$package_manager_frontend" install mysql-community-server -y
+			service mysql start
+
+			if command -v systemctl >/dev/null; then
+				systemctl restart mysql
+			fi
+
+			;;
+
+		"pacman")
+			"$package_manager_frontend" --noconfirm -S mariadb
+			mariadb-install-db --user=mysql --basedir=/usr --datadir=/var/lib/mysql
+			systemctl start mariadb.service
+
+			;;
+
+		"emerge")
+			"$package_manager_frontend" -q dev-db/mysql
+			if command -v rc >/dev/null; then
+				rc-update add mysql default
+				rc-service mysql start
+			elif command -v service >/dev/null; then
 				service mysql start
+			else
+				DIE 1 "Unable to Detect init system and start Mysql service!"
+			fi
 
-				if command -v systemctl >/dev/null; then
-					systemctl restart mysql
-				fi
+			;;
 
-				;;
+		"cave")
+			"$package_manager_frontend" resolve -x virtual/mysql
+			if command -v rc >/dev/null; then
+				rc-update add mysql default
+				rc-service mysql start
+			elif command -v service >/dev/null; then
+				service mysql start
+			else
+				DIE 1 "Unable to Detect init system and start Mysql service!"
+			fi
 
-			"pacman")
-				"$package_manager_frontend" --noconfirm -S mariadb
-				mariadb-install-db --user=mysql --basedir=/usr --datadir=/var/lib/mysql
-				systemctl start mariadb.service
-
-				;;
-
-			"emerge")
-				"$package_manager_frontend" -q dev-db/mysql
-				if command -v rc >/dev/null; then
-					rc-update add mysql default
-					rc-service mysql start
-				elif command -v service >/dev/null; then
-					service mysql start
-				else
-					DIE 1 "Unable to Detect init system and start Mysql service!"
-				fi
-
-				;;
-
-			"cave")
-				"$package_manager_frontend" resolve -x virtual/mysql
-				if command -v rc >/dev/null; then
-					rc-update add mysql default ; rc-service mysql start
-				elif command -v service >/dev/null; then
-					service mysql start
-				else
-					DIE 1 "Unable to Detect init system and start Mysql service!"
-				fi
-
-				;;
+			;;
 		esac
 
 		if command -v mysql >/dev/null; then
@@ -1046,15 +1022,16 @@ mysql_database() {
 		if [ -d "$directory" ]; then
 			CHANGE_DIRECTORY "$directory" || DIE 1 "Could not change directory into '$directory'!"
 			mysql_dir="mysql_db"
-			
-			CREATE_DIRECTORY $mysql_dir ; CHANGE_DIRECTORY $mysql_dir || DIE 1 "Could not change directory into '$mysql_dir'!"
-			
+
+			CREATE_DIRECTORY $mysql_dir
+			CHANGE_DIRECTORY $mysql_dir || DIE 1 "Could not change directory into '$mysql_dir'!"
+
 			WGET "ripple.sql" "$sql_schema_url" || DIE 11 "Could not download file 'ripple.sql'!"
-			
+
 			if [ -f "ripple.sql" ]; then
 				YPRINT "Note: Enter MySql Password. Same for each prompt"
-				mysql -u "$mysql_user" -p -e 'CREATE DATABASE '"$database_name"'';
-				mysql -p -u "$mysql_user" "$database_name" < ripple.sql
+				mysql -u "$mysql_user" -p -e 'CREATE DATABASE '"$database_name"''
+				mysql -p -u "$mysql_user" "$database_name" <ripple.sql
 				GPRINT "Done Setting Up '$TASK'!"
 			else
 				DIE 1 "Failed to Setup '$TASK'!"
@@ -1066,7 +1043,6 @@ mysql_database() {
 
 }
 
-
 # For Interacting with Database online.
 phpmyadmin() {
 
@@ -1076,25 +1052,25 @@ phpmyadmin() {
 
 	# Dependencies
 	case "$package_manager_frontend" in
-		"apt")
-			"$package_manager_frontend" install phpmyadmin php-mbstring php-gettext -y
+	"apt")
+		"$package_manager_frontend" install phpmyadmin php-mbstring php-gettext -y
 
-			;;
+		;;
 
-		"pacman")
-			"$package_manager_frontend" --noconfirm -S phpmyadmin
+	"pacman")
+		"$package_manager_frontend" --noconfirm -S phpmyadmin
 
-			;;
+		;;
 
-		"emerge")
-			"$package_manager_frontend" -q dev-db/phpmyadmin
+	"emerge")
+		"$package_manager_frontend" -q dev-db/phpmyadmin
 
-			;;
+		;;
 
-		"cave")
-			"$package_manager_frontend" resolve -x dev-lang/php
+	"cave")
+		"$package_manager_frontend" resolve -x dev-lang/php
 
-			;;	
+		;;
 	esac
 
 	if [ -d "/var/www/osu.ppy.sh" ]; then
@@ -1109,9 +1085,8 @@ phpmyadmin() {
 
 }
 
-
 # peppy is the backend of osu/bancho, starting from client login, it handles most of the stuff.
-peppy () {
+peppy() {
 
 	TASK="pep.py"
 
@@ -1169,7 +1144,6 @@ peppy () {
 
 }
 
-
 secret() {
 
 	TASK="secret"
@@ -1187,10 +1161,10 @@ secret() {
 
 		if command -v git 1>/dev/null; then
 			GCLONE "$secret_url"
-		(
-			CHANGE_DIRECTORY secret || DIE 1 "Could not change directory into 'secret'!"
-			SUBMODULE
-		)
+			(
+				CHANGE_DIRECTORY secret || DIE 1 "Could not change directory into 'secret'!"
+				SUBMODULE
+			)
 		else
 			DIE 1 "git not found on this system!"
 		fi
@@ -1198,7 +1172,6 @@ secret() {
 	GPRINT "Done Setting Up '$TASK'!"
 
 }
-
 
 # LETS is the Ripple's score server. It manages scores, osu!direct etc.
 lets() {
@@ -1229,7 +1202,7 @@ lets() {
 				SUBMODULE
 				python3.6 -m pip install -r requirements.txt
 				python3.6 setup.py build_ext --inplace
-				
+
 				if [ -f "lets.py" ]; then
 					python3.6 lets.py
 					if [ -f "config.ini" ]; then
@@ -1257,9 +1230,10 @@ lets() {
 			if [ -d "pp/oppai-ng" ]; then
 				(
 					CHANGE_DIRECTORY pp/oppai-ng || DIE 1 "Could not change directory into 'pp/oppai-ng'!"
-					
+
 					if [ -f "build" ]; then
-						CHMOD +x build ; ./build
+						CHMOD +x build
+						./build
 					fi
 				)
 			fi
@@ -1270,7 +1244,6 @@ lets() {
 	fi
 
 }
-
 
 # Hanayo: The Ripple's Frontend.
 hanayo() {
@@ -1290,7 +1263,8 @@ hanayo() {
 			CHANGE_DIRECTORY "$directory" || DIE 1 "Could not change directory into '$directory'!"
 
 			if command -v git 1>/dev/null; then
-				GCLONE "$hanayo_url" ; CHANGE_DIRECTORY hanayo || DIE 1 "Could not change directory into '$TASK'!"
+				GCLONE "$hanayo_url"
+				CHANGE_DIRECTORY hanayo || DIE 1 "Could not change directory into '$TASK'!"
 			else
 				DIE 1 "git not found on this system!"
 			fi
@@ -1332,7 +1306,7 @@ hanayo() {
 				fi
 
 				GPRINT "Done Setting Up '$TASK'!"
-				
+
 			else
 				DIE 1 "Could not install '$TASK' because golang wasn't found on this system!"
 			fi
@@ -1343,7 +1317,6 @@ hanayo() {
 	fi
 
 }
-
 
 # Ripple API is required to talk with the frontend (hanayo), and all other Ripple's Software (lets, peppy..)
 rippleapi() {
@@ -1363,7 +1336,8 @@ rippleapi() {
 			CHANGE_DIRECTORY "$directory" || DIE 1 "Could not change directory into '$directory'!"
 
 			if command -v git 1>/dev/null; then
-				GCLONE "$rippleapi_url" ; CHANGE_DIRECTORY api || DIE 1 "Could not change directory into '$TASK'!"
+				GCLONE "$rippleapi_url"
+				CHANGE_DIRECTORY api || DIE 1 "Could not change directory into '$TASK'!"
 			else
 				DIE 1 "git not found on this system!"
 			fi
@@ -1396,7 +1370,6 @@ rippleapi() {
 	fi
 
 }
-
 
 # Avatar-Server handles/manages ingame & frontend's avatars of all users.
 avatar_server() {
@@ -1435,7 +1408,6 @@ avatar_server() {
 
 }
 
-
 # Nginx to balance loads & for proxies
 NGINX() {
 
@@ -1453,7 +1425,7 @@ NGINX() {
 		if command -v pkill 1>/dev/null; then
 			pkill -f nginx
 		fi
-		
+
 		(
 			CHANGE_DIRECTORY /etc/nginx || DIE 1 "Could not change directory into '/etc/nginx'!"
 
@@ -1471,7 +1443,8 @@ NGINX() {
 	if [ -d "$directory" ]; then
 		(
 			CHANGE_DIRECTORY "$directory" || DIE 1 "Could not change directory into '$directory'!"
-			CREATE_DIRECTORY nginx ; CHANGE_DIRECTORY nginx || DIE 1 "Could not change directory into 'nginx'!"
+			CREATE_DIRECTORY nginx
+			CHANGE_DIRECTORY nginx || DIE 1 "Could not change directory into 'nginx'!"
 
 			WGET "nginx.conf" "$nginx_config2_url" || DIE 11 "Could not download file 'nginx.conf'!"
 
@@ -1488,7 +1461,7 @@ NGINX() {
 			YPRINT "Downloading Certificates!"
 			WGET "cert.pem" "$certificate_url" || DIE 11 "Could not download file 'cert.pem'!"
 			WGET "key.pem" "$key_url" || DIE 11 "Could not download file 'key.pem'!"
-			
+
 			if [ -f "cert.pem" ] && [ -f "key.pem" ]; then
 				GPRINT "Done downloading Certificates."
 			else
@@ -1497,12 +1470,11 @@ NGINX() {
 		)
 
 		nginx || DIE 1 "Nginx: BAD CONFIG!"
-		
+
 		GPRINT "Done setting up '$TASK'!"
 	fi
 
 }
-
 
 SSL() {
 
@@ -1540,11 +1512,10 @@ SSL() {
 			fi
 		)
 	else
-			DIE 1 "Directory '$directory' doesn't exist!"
+		DIE 1 "Directory '$directory' doesn't exist!"
 	fi
 
 }
-
 
 # OLD-FRONTEND is the Ripple's Admin Panel. Which can be accessed at old.domain
 old_frontend() {
@@ -1561,40 +1532,40 @@ old_frontend() {
 	fi
 
 	YPRINT "Installing Necessary Dependencies required for '$TASK'!"
-	
+
 	# Dependencies
 	case "$package_manager_frontend" in
-		"apt")
-			"$package_manager_frontend" install build-essential \
+	"apt")
+		"$package_manager_frontend" install build-essential \
 			apt install apt-transport-https lsb-release ca-certificates -y
-			WGET /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
-			PRINT "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list
+		WGET /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
+		PRINT "deb https://packages.sury.org/php/ $(lsb_release -sc) main" >/etc/apt/sources.list.d/php.list
 
-			"$package_manager_frontend" update
-			"$package_manager_frontend" install curl php7.2 php7.2-cli php7.2-common php7.2-json \
+		"$package_manager_frontend" update
+		"$package_manager_frontend" install curl php7.2 php7.2-cli php7.2-common php7.2-json \
 			php7.2-opcache php7.2-mysql php7.2-zip php7.2-fpm php7.2-mbstring -y
 
-			"$CURL" https://getcomposer.org/installer -o composer-setup.php
-			php -r "if (hash_file('SHA384', 'composer-setup.php') === '$HASH') \
+		"$CURL" https://getcomposer.org/installer -o composer-setup.php
+		php -r "if (hash_file('SHA384', 'composer-setup.php') === '$HASH') \
 			{ PRINT 'Installer verified'; } else { PRINT 'Installer corrupt'; unlink('composer-setup.php'); } PRINT PHP_EOL;"
-			php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+		php composer-setup.php --install-dir=/usr/local/bin --filename=composer
 
-			;;
+		;;
 
-		"pacman")
-			"$package_manager_frontend" --noconfirm -S php composer
+	"pacman")
+		"$package_manager_frontend" --noconfirm -S php composer
 
-			;;
+		;;
 
-		"emerge")
-			"$package_manager_frontend" -q dev-lang/php dev-lang/composer
+	"emerge")
+		"$package_manager_frontend" -q dev-lang/php dev-lang/composer
 
-			;;
+		;;
 
-		"cave")
-			"$package_manager_frontend" resolve -x dev-lang/php dev-php/composer
+	"cave")
+		"$package_manager_frontend" resolve -x dev-lang/php dev-php/composer
 
-			;;
+		;;
 	esac
 
 	for package in php composer; do
@@ -1607,16 +1578,16 @@ old_frontend() {
 			if [ ! "$package_confirmation" = "y" ]; then
 				DIE 123 "Required '$package' is not installed!"
 			fi
-			
+
 			unset package_confirmation
 		fi
 	done
 
 	GPRINT "Done Installing necessary Dependencies required for '$TASK'!"
 
-		if [ ! -d "/var/www" ]; then
-			CREATE_DIRECTORY /var/www
-		fi
+	if [ ! -d "/var/www" ]; then
+		CREATE_DIRECTORY /var/www
+	fi
 
 	(
 
@@ -1629,7 +1600,7 @@ old_frontend() {
 		if command -v git 1>/dev/null; then
 			GCLONE "$old_frontend_url" osu.ppy.sh
 		else
-			 1 "git not found on this system!"
+			1 "git not found on this system!"
 		fi
 
 		if [ -d "osu.ppy.sh" ]; then
@@ -1668,103 +1639,107 @@ old_frontend() {
 
 }
 
-
-
-while [ "$#" -ge 0 ]; do case "$1" in
+while [ "$#" -ge 0 ]; do
+	case "$1" in
 	"--all" | "-A")
 		case "$2" in
-			"--nodependencies" | "--nodep")
-				checkRoot
-				GPRINT "[NO Dependencies MODE]"
-				DetectPackageManager
-				INPUTS
-				checkNetwork
-				mysql_database
-				peppy
-				lets
-				avatar_server
-				hanayo
-				rippleapi
-				frontend
-				phpmyadmin
-				NGINX
-				SSL
-				EXIT 0 ;;
+		"--nodependencies" | "--nodep")
+			checkRoot
+			GPRINT "[NO Dependencies MODE]"
+			DetectPackageManager
+			INPUTS
+			checkNetwork
+			mysql_database
+			peppy
+			lets
+			avatar_server
+			hanayo
+			rippleapi
+			frontend
+			phpmyadmin
+			NGINX
+			SSL
+			EXIT 0
+			;;
 
-			"")
-				checkRoot
-				GPRINT "[Dependencies MODE]"
-				DetectPackageManager
-				INPUTS
-				checkNetwork
-				packageManagerUpdate
-				mysql_database
-				python_dependencies
-				nproc_detector
-				python3_5
-				peppy
-				python3_6
-				lets
-				avatar_server
-				golang
-				hanayo
-				rippleapi
-				extra_dependencies
-				old_frontend
-				phpmyadmin
-				NGINX
-				SSL
-				EXIT 0 ;;
+		"")
+			checkRoot
+			GPRINT "[Dependencies MODE]"
+			DetectPackageManager
+			INPUTS
+			checkNetwork
+			packageManagerUpdate
+			mysql_database
+			python_dependencies
+			nproc_detector
+			python3_5
+			peppy
+			python3_6
+			lets
+			avatar_server
+			golang
+			hanayo
+			rippleapi
+			extra_dependencies
+			old_frontend
+			phpmyadmin
+			NGINX
+			SSL
+			EXIT 0
+			;;
 
-			*)
-				RPRINT "Fatal: Unknown argument | Try: $0 --help"
-				EXIT 74 ;;
+		*)
+			RPRINT "Fatal: Unknown argument | Try: $0 --help"
+			EXIT 74
+			;;
 		esac
 
-		EXIT 0 ;;
+		EXIT 0
+		;;
 
 	"--help" | "-h")
 		GPRINT \
-		"Version: $UPSTREAM_VERSION" \
-		"" \
-		"Usage: <superuser> $0 -/--<argument>" \
-		" arguments:" \
-		"    -[hAdepMPLHapiASOFNV]" \
-		"     help(1) | all(2) | dependencies(3) | mysql(4)" \
-		"     peppy(5) | lets(6) | hanayo(7) | rippleapi(8)" \
-		"     avatarserver(9) | oldfrontend(10) | nginx(11)" \
-		"     version(12)" \
-		"" \
-		"Script Specific:" \
-		"   --help, -h             | Shows the list of all arguments including relevant informations." \
-		"   --version, -V          | Prints the upstream version of the script." \
-		"" \
-		"With Dependencies:" \
-		"" \
-		"   --all, -A              | To Setup Entire Ripple Stack with Dependencies!" \
-		"   --dependencies, -dep   | To Install all the necessary dependencies required for Ripple Stack." \
-		"   --mysql, -M            | To Install & Setup MySQL DB with Dependencies." \
-		"   --peppy, -P            | To Clone & Setup peppy with Dependencies." \
-		"   --lets, -L             | To Clone & Setup lets with Dependencies." \
-		"   --hanayo, -H           | To Clone & Setup hanayo with Dependencies." \
-		"   --rippleapi, -api      | To Clone & Setup rippleapi with Dependencies." \
-		"   --avatarserver, -AS    | To Clone & Setup avatar-server with Dependencies." \
-		"   --oldfrontend, -OF     | To Clone & Setup oldfrontend with Dependencies." \
-		"   --nginx, -N            | To Install & Configure Nginx with nginx Dependencies." \
-		"" \
-		"Without Dependencies:" \
-		"   --nodependencies, --nodep" \
-		"" \
-		"Examples:" \
-		"sudo $0 --all            | To Setup Entire Ripple Stack with Dependencies!" \
-		"sudo $0 -peppy --nodep   | To Clone & Setup peppy without Dependencies." \
-		"" \
-		"Report bugs to: 'uniminin@zoho.com'" \
-		"RAI Upstream Repository URL: <https://github.com/Uniminin/Ripple-Auto-Installer/>" \
-		"GNU AGPLv3 Licence: <https://www.gnu.org/licenses/agpl-3.0.en.html/>" \
-		"General help using GNU software: <https://www.gnu.org/gethelp/>"
+			"Version: $UPSTREAM_VERSION" \
+			"" \
+			"Usage: <superuser> $0 -/--<argument>" \
+			" arguments:" \
+			"    -[hAdepMPLHapiASOFNV]" \
+			"     help(1) | all(2) | dependencies(3) | mysql(4)" \
+			"     peppy(5) | lets(6) | hanayo(7) | rippleapi(8)" \
+			"     avatarserver(9) | oldfrontend(10) | nginx(11)" \
+			"     version(12)" \
+			"" \
+			"Script Specific:" \
+			"   --help, -h             | Shows the list of all arguments including relevant informations." \
+			"   --version, -V          | Prints the upstream version of the script." \
+			"" \
+			"With Dependencies:" \
+			"" \
+			"   --all, -A              | To Setup Entire Ripple Stack with Dependencies!" \
+			"   --dependencies, -dep   | To Install all the necessary dependencies required for Ripple Stack." \
+			"   --mysql, -M            | To Install & Setup MySQL DB with Dependencies." \
+			"   --peppy, -P            | To Clone & Setup peppy with Dependencies." \
+			"   --lets, -L             | To Clone & Setup lets with Dependencies." \
+			"   --hanayo, -H           | To Clone & Setup hanayo with Dependencies." \
+			"   --rippleapi, -api      | To Clone & Setup rippleapi with Dependencies." \
+			"   --avatarserver, -AS    | To Clone & Setup avatar-server with Dependencies." \
+			"   --oldfrontend, -OF     | To Clone & Setup oldfrontend with Dependencies." \
+			"   --nginx, -N            | To Install & Configure Nginx with nginx Dependencies." \
+			"" \
+			"Without Dependencies:" \
+			"   --nodependencies, --nodep" \
+			"" \
+			"Examples:" \
+			"sudo $0 --all            | To Setup Entire Ripple Stack with Dependencies!" \
+			"sudo $0 -peppy --nodep   | To Clone & Setup peppy without Dependencies." \
+			"" \
+			"Report bugs to: 'uniminin@zoho.com'" \
+			"RAI Upstream Repository URL: <https://github.com/Uniminin/Ripple-Auto-Installer/>" \
+			"GNU AGPLv3 Licence: <https://www.gnu.org/licenses/agpl-3.0.en.html/>" \
+			"General help using GNU software: <https://www.gnu.org/gethelp/>"
 
-		EXIT 0 ;;
+		EXIT 0
+		;;
 
 	"--dependencies" | "-dep")
 		checkRoot
@@ -1780,7 +1755,8 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		phpmyadmin
 		extra_dependencies
 
-		EXIT 0 ;;
+		EXIT 0
+		;;
 
 	"--mysql" | "-M")
 		checkRoot
@@ -1791,217 +1767,251 @@ while [ "$#" -ge 0 ]; do case "$1" in
 		packageManagerUpdate
 		mysql_database
 
-		EXIT 0 ;;
+		EXIT 0
+		;;
 
 	"--peppy" | "-P")
 		case "$2" in
-			"--nodependencies" | "--nodep")
-				GPRINT "[NO Dependencies MODE]"
-				INPUTS
-				checkNetwork
-				peppy
-				EXIT 0 ;;
+		"--nodependencies" | "--nodep")
+			GPRINT "[NO Dependencies MODE]"
+			INPUTS
+			checkNetwork
+			peppy
+			EXIT 0
+			;;
 
-			"")
-				checkRoot
-				GPRINT "[Dependencies MODE]"
-				DetectPackageManager
-				INPUTS
-				checkNetwork
-				packageManagerUpdate
-				python_dependencies
-				nproc_detector
-				python3_5
-				peppy
-				EXIT 0 ;;
+		"")
+			checkRoot
+			GPRINT "[Dependencies MODE]"
+			DetectPackageManager
+			INPUTS
+			checkNetwork
+			packageManagerUpdate
+			python_dependencies
+			nproc_detector
+			python3_5
+			peppy
+			EXIT 0
+			;;
 
-			*)
-				RPRINT "Fatal: Unknown argument | Try: $0 --help"
-				EXIT 74 ;;
+		*)
+			RPRINT "Fatal: Unknown argument | Try: $0 --help"
+			EXIT 74
+			;;
 		esac
 
-		EXIT 0 ;;
+		EXIT 0
+		;;
 
 	"--lets" | "-L")
 		case "$2" in
-			"--nodependencies" | "--nodep")
-				GPRINT "[NO Dependencies MODE]"
-				INPUTS
-				checkNetwork
-				lets
-				EXIT 0 ;;
+		"--nodependencies" | "--nodep")
+			GPRINT "[NO Dependencies MODE]"
+			INPUTS
+			checkNetwork
+			lets
+			EXIT 0
+			;;
 
-			"")
-				checkRoot
-				GPRINT "[Dependencies MODE]"
-				DetectPackageManager
-				INPUTS
-				checkNetwork
-				packageManagerUpdate
-				python_dependencies
-				nproc_detector
-				python3_6
-				lets
-				EXIT 0 ;;
+		"")
+			checkRoot
+			GPRINT "[Dependencies MODE]"
+			DetectPackageManager
+			INPUTS
+			checkNetwork
+			packageManagerUpdate
+			python_dependencies
+			nproc_detector
+			python3_6
+			lets
+			EXIT 0
+			;;
 
-			*)
-				RPRINT "Fatal: Unknown argument | Try: $0 --help"
-				EXIT 74 ;;
+		*)
+			RPRINT "Fatal: Unknown argument | Try: $0 --help"
+			EXIT 74
+			;;
 		esac
 
-		EXIT 0 ;;
+		EXIT 0
+		;;
 
 	"--avatarserver" | "-AS")
 		case "$2" in
-			"--nodependencies" | "--nodep")
-				GPRINT "[NO Dependencies MODE]"
-				INPUTS
-				checkNetwork
-				avatar_server
-				EXIT 0 ;;
+		"--nodependencies" | "--nodep")
+			GPRINT "[NO Dependencies MODE]"
+			INPUTS
+			checkNetwork
+			avatar_server
+			EXIT 0
+			;;
 
-			"")
-				checkRoot
-				GPRINT "[Dependencies MODE]"
-				DetectPackageManager
-				INPUTS
-				checkNetwork
-				packageManagerUpdate
-				python_dependencies
-				nproc_detector
-				python3_6
-				avatar_server
-				EXIT 0 ;;
+		"")
+			checkRoot
+			GPRINT "[Dependencies MODE]"
+			DetectPackageManager
+			INPUTS
+			checkNetwork
+			packageManagerUpdate
+			python_dependencies
+			nproc_detector
+			python3_6
+			avatar_server
+			EXIT 0
+			;;
 
-			*)
-				RPRINT "Fatal: Unknown argument | Try: $0 --help"
-				EXIT 74 ;;
+		*)
+			RPRINT "Fatal: Unknown argument | Try: $0 --help"
+			EXIT 74
+			;;
 		esac
 
-		EXIT 0 ;;
+		EXIT 0
+		;;
 
 	"--hanayo" | "-H")
 		case "$2" in
-			"--nodependencies" | "--nodep")
-				GPRINT "[NO Dependencies MODE]"
-				INPUTS
-				checkNetwork
-				hanayo
-				EXIT 0 ;;
+		"--nodependencies" | "--nodep")
+			GPRINT "[NO Dependencies MODE]"
+			INPUTS
+			checkNetwork
+			hanayo
+			EXIT 0
+			;;
 
-			"")
-				checkRoot
-				GPRINT "[Dependencies MODE]"
-				DetectPackageManager
-				INPUTS
-				checkNetwork
-				packageManagerUpdate
-				golang
-				hanayo
-				EXIT 0 ;;
+		"")
+			checkRoot
+			GPRINT "[Dependencies MODE]"
+			DetectPackageManager
+			INPUTS
+			checkNetwork
+			packageManagerUpdate
+			golang
+			hanayo
+			EXIT 0
+			;;
 
-			*)
-				RPRINT "Fatal: Unknown argument | Try: $0 --help"
-				EXIT 74 ;;
+		*)
+			RPRINT "Fatal: Unknown argument | Try: $0 --help"
+			EXIT 74
+			;;
 		esac
 
-		EXIT 0 ;;
+		EXIT 0
+		;;
 
 	"--rippleapi" | "-api")
 		case "$2" in
-			"--nodependencies" | "--nodep")
-				GPRINT "[NO Dependencies MODE]"
-				INPUTS
-				checkNetwork
-				rippleapi
-				EXIT 0 ;;
+		"--nodependencies" | "--nodep")
+			GPRINT "[NO Dependencies MODE]"
+			INPUTS
+			checkNetwork
+			rippleapi
+			EXIT 0
+			;;
 
-			"")
-				checkRoot
-				GPRINT "[Dependencies MODE]"
-				DetectPackageManager
-				INPUTS
-				checkNetwork
-				packageManagerUpdate
-				golang
-				rippleapi
-				EXIT 0 ;;
+		"")
+			checkRoot
+			GPRINT "[Dependencies MODE]"
+			DetectPackageManager
+			INPUTS
+			checkNetwork
+			packageManagerUpdate
+			golang
+			rippleapi
+			EXIT 0
+			;;
 
-			*)
-				RPRINT "Fatal: Unknown argument | Try: $0 --help"
-				EXIT 74 ;;
+		*)
+			RPRINT "Fatal: Unknown argument | Try: $0 --help"
+			EXIT 74
+			;;
 		esac
 
-		EXIT 0 ;;
+		EXIT 0
+		;;
 
 	"--oldfrontend" | "-OF")
 		case "$2" in
-			"--nodependencies" | "--nodep")
-				checkRoot
-				GPRINT "[NO Dependencies MODE]"
-				DetectPackageManager
-				INPUTS
-				checkNetwork
-				old_frontend
-				EXIT 0 ;;
+		"--nodependencies" | "--nodep")
+			checkRoot
+			GPRINT "[NO Dependencies MODE]"
+			DetectPackageManager
+			INPUTS
+			checkNetwork
+			old_frontend
+			EXIT 0
+			;;
 
-			"")
-				checkRoot
-				GPRINT "[Dependencies MODE]"
-				DetectPackageManager
-				INPUTS
-				checkNetwork
-				packageManagerUpdate
-				php
-				old_frontend
-				EXIT 0 ;;
+		"")
+			checkRoot
+			GPRINT "[Dependencies MODE]"
+			DetectPackageManager
+			INPUTS
+			checkNetwork
+			packageManagerUpdate
+			php
+			old_frontend
+			EXIT 0
+			;;
 
-			*)
-				RPRINT "Fatal: Unknown argument | Try: $0 --help"
-				EXIT 74 ;;
+		*)
+			RPRINT "Fatal: Unknown argument | Try: $0 --help"
+			EXIT 74
+			;;
 		esac
 
-		EXIT 0 ;;
+		EXIT 0
+		;;
 
 	"--nginx" | "-N")
 		case "$2" in
-			"--nodependencies" | "--nodep")
-				checkRoot
-				GPRINT "[NO Dependencies MODE]"
-				DetectPackageManager
-				checkNetwork
-				INPUTS
-				NGINX
-				EXIT 0 ;;
+		"--nodependencies" | "--nodep")
+			checkRoot
+			GPRINT "[NO Dependencies MODE]"
+			DetectPackageManager
+			checkNetwork
+			INPUTS
+			NGINX
+			EXIT 0
+			;;
 
-			"")
-				checkRoot
-				GPRINT "[Dependencies MODE]"
-				DetectPackageManager
-				checkNetwork
-				INPUTS
-				packageManagerUpdate
-				extra_dependencies
-				NGINX
-				EXIT 0 ;;
+		"")
+			checkRoot
+			GPRINT "[Dependencies MODE]"
+			DetectPackageManager
+			checkNetwork
+			INPUTS
+			packageManagerUpdate
+			extra_dependencies
+			NGINX
+			EXIT 0
+			;;
 
-			*)
-				RPRINT "Fatal: Unknown argument | Try: $0 --help"
-				EXIT 74 ;;
+		*)
+			RPRINT "Fatal: Unknown argument | Try: $0 --help"
+			EXIT 74
+			;;
 		esac
 
-		EXIT 0 ;;
+		EXIT 0
+		;;
 
 	"--version" | "-V")
 		YPRINT "Version: $UPSTREAM_VERSION"
-		EXIT 0 ;;
+		EXIT 0
+		;;
 
 	"")
 		RPRINT "Fatal: No argument were provided | Try: $0 --help"
-		EXIT 74 ;;
+		EXIT 74
+		;;
 
 	*)
 		RPRINT "Fatal: Unknown argument | Try: $0 --help"
-		EXIT 74 ;;
+		EXIT 74
+		;;
 
-esac; shift; done
+	esac
+	shift
+done
