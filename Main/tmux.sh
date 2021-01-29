@@ -1,37 +1,32 @@
 #!/bin/sh
 # shellcheck shell=sh # Written to be posix compatible
-# shellcheck disable=SC2154   # False Trigger
+# shellcheck disable=SC2016,SC2154   # False Trigger
 
 : '
 -----------------------------------------------------------------------------------------------
 |  Created by LiveEmily <d.claassen2003@outlook.com> in 2020 under the terms of GNU AGPL-3.0  |
-|               Last Updated on Monday, December 14, 2020 at 09:08 AM (GMT+6)                 |
+|               Last Updated on Friday, January 29, 2021 at 03:50 AM (GMT+6)                  |
 -----------------------------------------------------------------------------------------------
 '
 
-###! Script to start, configure and kill tmux session for Ripple instance.
+###! Script to start, configure and kill tmux sessions for Ripple Stack instance.
 ###! UPSTREAM: (https://github.com/Uniminin/Ripple-Auto-Installer)
 
 : '
 > Contributor info <
-* CONTRIBUTOR_EMAIL="d.claassen2003@outlook.com"
-* CONTRIBUTOR_NICKNAME="LiveEmily"
-* CONTRIBUTOR_NAME="Emily"
+* CONTRIBUTOR: "LiveEmily"
+* EMAIL: "d.claassen2003@outlook.com"
+* MAINTAINERS: ["uniminin", "LiveEmily"]
 '
 
+# Don't exit the script if anything returns false
+set +e
+
 # Version #
-UPSTREAM_VERSION="1.1.0"
+UPSTREAM_VERSION="1.2.0"
 
 # Name
 session="Ripple"
-
-# Upstream File #
-# tmux.sh
-TMUX_SH="https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/tmux.sh"
-
-# tmux.sha1 (checksum)
-TMUX_SHA1="https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/tmux.sha1"
-
 
 # Colors For Prints
 # RPRINT -> prints to standard error instead of standard output
@@ -44,10 +39,19 @@ alias EXIT="exit"
 alias READ="read -r"
 
 
-checksum_checker="true"
-
+: ' -Deprecated-
 # Simplified File Integrity Checker by uniminin <uniminin@zoho.com> under the terms of AGPLv3
 # CHECK FILE INTEGRITY
+
+checksum_checker="true"
+
+# Upstream File #
+# tmux.sh
+TMUX_SH="https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/tmux.sh"
+
+# tmux.sha1 (checksum)
+TMUX_SHA1="https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/tmux.sha1"
+
 if [ "$checksum_checker" = "true" ]; then
 	if [ ! -f "tmux.sha1" ]; then
 		RPRINT "file integrity data not found" ; GPRINT "Fetching the latest file integrity data"
@@ -68,6 +72,7 @@ if [ "$checksum_checker" = "true" ]; then
 		RPRINT "file integrity data not found" ; EXIT 1
 	fi
 fi
+'
 
 
 while [ "$#" -ge 0 ]; do case "$1" in
