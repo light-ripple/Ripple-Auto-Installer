@@ -165,12 +165,6 @@ Note: Execute the script as superuser. For example:
 
 ```
 .
-├── .deepsource.toml
-├── .github
-│  └── workflows
-│     └── shell.yml
-├── .gitpod.yml
-├── .travis.yml
 ├── Database files
 │  └── ripple.sql
 ├── LICENSE
@@ -180,9 +174,7 @@ Note: Execute the script as superuser. For example:
 │  ├── openssl.cnf
 │  ├── ripple.conf
 │  ├── ripple.sh
-│  ├── ripple.sha1
-│  ├── tmux.sh
-│  └── tmux.sha1
+│  └── tmux.sh
 ├── Miscellaneous
 │  ├── certificate.md
 │  ├── cloudflare.png
