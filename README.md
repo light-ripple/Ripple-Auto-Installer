@@ -134,9 +134,6 @@ With wget (Recommended)
 # Download the latest script
 wget -O "ripple.sh" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/ripple.sh
 
-# Download the latest file integrity data
-wget -O "ripple.sha1" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/ripple.sha1
-
 # Make the script readable, writable, and executable to root and your user
 chmod 770 ripple.sh
 
@@ -168,12 +165,6 @@ Note: Execute the script as superuser. For example:
 
 ```
 .
-├── .deepsource.toml
-├── .github
-│  └── workflows
-│     └── shell.yml
-├── .gitpod.yml
-├── .travis.yml
 ├── Database files
 │  └── ripple.sql
 ├── LICENSE
@@ -183,9 +174,7 @@ Note: Execute the script as superuser. For example:
 │  ├── openssl.cnf
 │  ├── ripple.conf
 │  ├── ripple.sh
-│  ├── ripple.sha1
-│  ├── tmux.sh
-│  └── tmux.sha1
+│  └── tmux.sh
 ├── Miscellaneous
 │  ├── certificate.md
 │  ├── cloudflare.png
