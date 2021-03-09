@@ -134,9 +134,6 @@ With wget (Recommended)
 # Download the latest script
 wget -O "ripple.sh" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/ripple.sh
 
-# Download the latest file integrity data
-wget -O "ripple.sha1" https://raw.githubusercontent.com/Uniminin/Ripple-Auto-Installer/master/Main/ripple.sha1
-
 # Make the script readable, writable, and executable to root and your user
 chmod 770 ripple.sh
 
